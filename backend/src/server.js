@@ -1,0 +1,30 @@
+import dotenv from "dotenv";
+
+dotenv.config();
+
+import express from "express";
+import userRoutes from "./routes/userRoutes.js";
+import volunteerRoutes from "./routes/volunteerRoutes.js";
+import { connectDB } from "./config/db.js";
+import cors from "cors";
+
+const app = express();
+
+const PORT = process.env.PORT || 5001;
+
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+  })
+);
+
+app.use(express.json());
+
+app.use("/api/users", userRoutes);
+app.use("/api/volunteers", volunteerRoutes);
+
+connectDB().then(() => {
+  app.listen(PORT, () => {
+    console.log("Server started on port:", PORT);
+  });
+});
