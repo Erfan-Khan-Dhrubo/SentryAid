@@ -12,6 +12,7 @@ import UserLogin from "./../Pages/Users/UserLogin";
 import UserRegister from "./../Pages/Users/UserRegister";
 import AdminLogin from "./../Pages/Admin/AdminLogin";
 import MainRoot from "../Roots/MainRoot";
+import DemoAdminPage from "./../Pages/Admin/DemoAdminPage";
 
 export const router = createBrowserRouter([
   {
@@ -66,6 +67,10 @@ export const router = createBrowserRouter([
           {
             path: "alertMessage",
             element: <AlertMessage />,
+          },
+          {
+            path: "demo",
+            element: <DemoAdminPage />,
           },
         ],
       },

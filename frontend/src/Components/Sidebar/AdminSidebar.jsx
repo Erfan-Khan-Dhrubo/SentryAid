@@ -17,13 +17,13 @@ const AdminSidebar = () => {
             <FaTachometerAlt className="mr-3" /> Dashboard
           </NavLink>
           <NavLink
-            to={"profile"}
+            to={"demo"}
             className="flex items-center px-4 py-2 text-gray-600 hover:bg-pink-50 rounded-lg"
           >
-            <FaUser className="mr-3" /> Profile
+            <FaUser className="mr-3" /> User
           </NavLink>
           <NavLink
-            to={"panel"}
+            to={"demos"}
             className="flex items-center px-4 py-2 text-gray-600 hover:bg-pink-50 rounded-lg"
           >
             <FaUserShield className="mr-3" /> Admin Panel
