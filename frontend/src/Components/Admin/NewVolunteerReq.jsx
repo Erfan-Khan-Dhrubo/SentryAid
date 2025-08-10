@@ -1,4 +1,3 @@
-import React from "react";
 import AdminRequestRow from "./AdminRequestRow";
 
 const NewVolunteerReq = ({ users, setUsers }) => {
@@ -25,13 +24,14 @@ const NewVolunteerReq = ({ users, setUsers }) => {
           </thead>
 
           <tbody>
-            {users.map((user, idx) => (
-              <AdminRequestRow
-                key={idx}
-                user={user}
-                setUsers={setUsers}
-              ></AdminRequestRow>
-            ))}
+            {users.map((user, idx) => {
+              // console.log(user.name);
+              if (user.request === "pending") {
+                return (
+                  <AdminRequestRow key={idx} user={user} setUsers={setUsers} />
+                );
+              }
+            })}
           </tbody>
         </table>
       </div>

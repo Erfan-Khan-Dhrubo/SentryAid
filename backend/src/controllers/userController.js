@@ -26,34 +26,78 @@ export async function getUserById(req, res) {
 
 export async function createUser(req, res) {
   try {
-    const { name, type } = req.body;
+    const {
+      name,
+      email,
+      phone,
+      address,
+      bloodGroup,
+      allergies,
+      medicalCondition,
+      type, // Optional, will default to "user"
+      request, // Optional, will default to "rejected"
+    } = req.body;
 
-    const user = new User({ name, type });
+    // Create a new user based on the schema
+    const user = new User({
+      name,
+      email,
+      phone,
+      address,
+      bloodGroup,
+      allergies,
+      medicalCondition,
+      type,
+      request,
+    });
 
-    const saveUser = await user.save();
+    const savedUser = await user.save();
 
-    res.status(201).json(saveUser);
+    res.status(201).json(savedUser);
   } catch (error) {
-    console.error("error in createUser controller", error);
-    res.status(500).json({ message: "internal server error" });
+    console.error("Error in createUser controller", error);
+    res.status(500).json({ message: "Internal server error" });
   }
 }
 
 export async function updateUser(req, res) {
   try {
-    const { name, type } = req.body;
+    const {
+      name,
+      email,
+      phone,
+      address,
+      bloodGroup,
+      allergies,
+      medicalCondition,
+      type, // Optional, defaults handled in schema
+      request, // Optional, defaults handled in schema
+    } = req.body;
 
-    const updateUser = await User.findByIdAndUpdate(
+    const updatedUser = await User.findByIdAndUpdate(
       req.params.id,
-      { name, type },
-      { new: true }
+      {
+        name,
+        email,
+        phone,
+        address,
+        bloodGroup,
+        allergies,
+        medicalCondition,
+        type,
+        request,
+      },
+      { new: true, runValidators: true }
     );
 
-    if (!updateUser) return res.status(404).json({ message: "User not found" });
-    res.status(200).json({ message: "User updated successfully" });
+    if (!updatedUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json(updatedUser);
   } catch (error) {
-    console.error("error in updateUser controller", error);
-    res.status(500).json({ message: "internal server error" });
+    console.error("Error in updateUser controller", error);
+    res.status(500).json({ message: "Internal server error" });
   }
 }
 

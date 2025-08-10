@@ -4,18 +4,46 @@ const volunteerSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      required: true, // Name must be provided
+      required: true, // Required
+    },
+    email: {
+      type: String,
+      required: true, // Required
+    },
+    phone: {
+      type: String,
+      default: "", // Optional
+    },
+    address: {
+      type: String,
+      default: "", // Optional
+    },
+    bloodGroup: {
+      type: String,
+      default: "", // Optional
+    },
+    allergies: {
+      type: String,
+      default: "", // Optional
+    },
+    medicalCondition: {
+      type: String,
+      default: "", // Optional
+    },
+    type: {
+      type: String,
+      default: "volunteer", // Default role
     },
     request: {
       type: String,
-      default: "pending", // Defaults to empty string if not provided
+      default: "pending", // Default request status
     },
   },
   {
-    timestamps: true, // Automatically adds createdAt & updatedAt
+    timestamps: true, // Adds createdAt & updatedAt
   }
 );
 
-const Volunteer = mongoose.model("volunteer", volunteerSchema);
+const Volunteer = mongoose.model("Volunteer", volunteerSchema);
 
 export default Volunteer;

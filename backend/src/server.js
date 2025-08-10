@@ -5,6 +5,7 @@ dotenv.config();
 import express from "express";
 import userRoutes from "./routes/userRoutes.js";
 import volunteerRoutes from "./routes/volunteerRoutes.js";
+import messageRoutes from "./routes/messageRoutes.js";
 import { connectDB } from "./config/db.js";
 import cors from "cors";
 
@@ -22,6 +23,7 @@ app.use(express.json());
 
 app.use("/api/users", userRoutes);
 app.use("/api/volunteers", volunteerRoutes);
+app.use("/api/messages", messageRoutes);
 
 connectDB().then(() => {
   app.listen(PORT, () => {

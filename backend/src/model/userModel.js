@@ -4,11 +4,40 @@ const userSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      required: true, // Name must be provided
+      required: true, // Name is required
+    },
+    email: {
+      type: String,
+      required: true, // Email is required
+      unique: true, // Prevent duplicate emails
+    },
+    phone: {
+      type: String,
+      default: "", // Optional
+    },
+    address: {
+      type: String,
+      default: "", // Optional
+    },
+    bloodGroup: {
+      type: String,
+      default: "", // Optional
+    },
+    allergies: {
+      type: String,
+      default: "", // Optional
+    },
+    medicalCondition: {
+      type: String,
+      default: "", // Optional
+    },
+    type: {
+      type: String,
+      default: "user", // Default role is "user"
     },
     request: {
       type: String,
-      default: "not", // Defaults to empty string if not provided
+      default: "rejected", // Default request status
     },
   },
   {

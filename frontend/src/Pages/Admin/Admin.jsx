@@ -63,7 +63,9 @@ const Admin = () => {
           {activeTab === "users" && (
             <NewVolunteerReq users={users} setUsers={setUsers} />
           )}
-          {activeTab === "volunteers" && <NewVolunteerReq users={volunteers} />}
+          {activeTab === "volunteers" && (
+            <NewVolunteerReq users={volunteers} setUsers={setVolunteers} />
+          )}
         </div>
       </main>
     </div>
