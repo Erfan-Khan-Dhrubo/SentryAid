@@ -1,36 +1,26 @@
-import React, { useState } from "react";
-import { FaUser, FaBell, FaTachometerAlt, FaUserShield } from "react-icons/fa";
-import AdminSidebar from "../../Components/Sidebar/AdminSidebar";
+import React, { useEffect, useState } from "react";
 import NewVolunteerReq from "../../Components/Admin/NewVolunteerReq";
-import UserToVolunteerReq from "../../Components/Admin/UserToVolunteerReq";
+import axios from "axios";
 
 const Admin = () => {
-  const [activeTab, setActiveTab] = useState("abc");
+  const [activeTab, setActiveTab] = useState("users");
+  const [volunteers, setVolunteers] = useState([]);
+  const [users, setUsers] = useState([]);
 
-  const abc = [
-    {
-      name: "John Doe",
-      email: "john@example.com",
-      location: "Dhaka",
-    },
-    {
-      name: "Jane Smith",
-      email: "jane@example.com",
-      location: "Chittagong",
-    },
-  ];
-  const bc = [
-    {
-      name: "Johnn Doe",
-      email: "john@example.com",
-      location: "Dhaka",
-    },
-    {
-      name: "Jane Smith",
-      email: "jane@example.com",
-      location: "Chittagong",
-    },
-  ];
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const res = await axios.get("http://localhost:5001/api/users");
+        setUsers(res.data);
+        const res2 = await axios.get("http://localhost:5001/api/volunteers");
+        setVolunteers(res2.data);
+      } catch (error) {
+        console.log("error fetching notes");
+      }
+    };
+
+    fetchUsers();
+  }, []);
 
   return (
     <div className="flex min-h-screen bg-pink-50">
@@ -48,9 +38,9 @@ const Admin = () => {
           {/* Toggle Buttons */}
           <div className="flex justify-center mb-4 rounded-xl overflow-hidden">
             <button
-              onClick={() => setActiveTab("abc")}
+              onClick={() => setActiveTab("users")}
               className={`px-4 py-2  flex-1 ${
-                activeTab === "abc"
+                activeTab === "users"
                   ? "bg-pink-400 text-white"
                   : "bg-white text-gray-800"
               }`}
@@ -58,9 +48,9 @@ const Admin = () => {
               Approve New Volunteers
             </button>
             <button
-              onClick={() => setActiveTab("bc")}
+              onClick={() => setActiveTab("volunteers")}
               className={`px-4 py-2  flex-1 ${
-                activeTab === "bc"
+                activeTab === "volunteers"
                   ? "bg-pink-400 text-white"
                   : "bg-white text-gray-800"
               }`}
@@ -70,8 +60,10 @@ const Admin = () => {
           </div>
 
           {/* Content */}
-          {activeTab === "abc" && <NewVolunteerReq abc={abc} />}
-          {activeTab === "bc" && <UserToVolunteerReq bc={bc} />}
+          {activeTab === "users" && (
+            <NewVolunteerReq users={users} setUsers={setUsers} />
+          )}
+          {activeTab === "volunteers" && <NewVolunteerReq users={volunteers} />}
         </div>
       </main>
     </div>

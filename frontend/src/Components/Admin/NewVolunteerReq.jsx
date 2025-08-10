@@ -1,7 +1,7 @@
 import React from "react";
 import AdminRequestRow from "./AdminRequestRow";
 
-const NewVolunteerReq = ({ abc }) => {
+const NewVolunteerReq = ({ users, setUsers }) => {
   return (
     <div>
       {/* Table */}
@@ -25,10 +25,11 @@ const NewVolunteerReq = ({ abc }) => {
           </thead>
 
           <tbody>
-            {abc.map((volunteer, idx) => (
+            {users.map((user, idx) => (
               <AdminRequestRow
                 key={idx}
-                volunteer={volunteer}
+                user={user}
+                setUsers={setUsers}
               ></AdminRequestRow>
             ))}
           </tbody>
