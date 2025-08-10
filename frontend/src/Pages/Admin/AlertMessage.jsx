@@ -6,18 +6,38 @@ const AlertMessage = () => {
   const [message, setMessage] = useState("");
 
   const handleSendBroadcast = () => {
-    toast(
-      <div className="space-y-1 text-black gap-2">
-        <p className="font-bold text-lg">Broadcast Sent</p>
-        <p>
-          <span className="font-semibold">Title:</span> {title}
-        </p>
-        <p>
-          <span className="font-semibold">Message:</span> {message}
-        </p>
-      </div>
-    );
-  };
+  // Validation
+  if (!title && !message) {
+    toast.error("Please fill the Title and Message Section.");
+    return;
+  }
+  if (!title) {
+    toast.error("Please fill the Title Section.");
+    return;
+  }
+  if (!message) {
+    toast.error("Please fill the Message Section.");
+    return;
+  }
+
+  // Success toast
+  toast(
+    <div className="space-y-1 text-black">
+      <p className="font-bold text-lg">Broadcast Sent</p>
+      <p>
+        <span className="font-semibold">Title:</span> {title}
+      </p>
+      <p>
+        <span className="font-semibold">Message:</span> {message}
+      </p>
+    </div>
+  );
+
+  // Reset fields after sending
+  setTitle("");
+  setMessage("");
+};
+
 
   return (
     <div className="min-h-screen flex bg-pink-50">
@@ -86,18 +106,20 @@ const AlertMessage = () => {
           <section className="bg-white rounded-lg p-6 flex-1 shadow-md">
             <h3 className="text-2xl font-bold mb-3">Past Broadcasts</h3>
             <p className="text-gray-500 mb-5">A log of recent alerts.</p>
-
-            <ul className="space-y-4 text-sm">
-              <li className="flex justify-between">
-                <span>Wildfire Alert: North Ridge Area</span>
-                <span className="text-gray-400">2 hours ago</span>
-              </li>
-              <li className="flex justify-between">
-                <span>Severe Weather Warning: High Winds</span>
-                <span className="text-gray-400">4 hours ago</span>
-              </li>
+            <ul className="space-y-4 text-sm font-semibold">
+              {[
+                { title: "Thief Alert : Mohammodpur Area", time: "2 hours ago" },
+                { title: "Severe Harassment Warning : Tejgaon Area", time: "4 hours ago" },
+                { title: "Flood Warning : Basundhara Area", time: "11 hours ago" },
+              ].map((broadcast, index) => (
+                <li key={index} className="flex justify-between">
+                <span>{broadcast.title}</span>
+                 <span className="text-gray-400">{broadcast.time}</span>
+                </li>
+              ))}
             </ul>
-          </section>
+         </section>
+
         </div>
       </main>
       <ToastContainer />
