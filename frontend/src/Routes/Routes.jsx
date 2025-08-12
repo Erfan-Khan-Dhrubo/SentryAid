@@ -37,23 +37,8 @@ export const router = createBrowserRouter([
         element: <AdminLogin />,
       },
       {
-        path: "users",
+        path: "users/:id",
         element: <UserRoot />,
-        errorElement: <ErrorPage />,
-        children: [
-          {
-            index: true,
-            element: <User />,
-          },
-          {
-            path: "viewProfile",
-            element: <ViewProfile />,
-          },
-          {
-            path: "editProfile",
-            element: <EditProfile />,
-          },
-        ],
       },
       {
         path: "admin",

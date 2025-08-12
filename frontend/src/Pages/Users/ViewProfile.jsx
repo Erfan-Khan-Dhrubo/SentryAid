@@ -15,9 +15,8 @@ const ViewProfile = () => {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-pink-50">
+    <div className="flex justify-center items-center  bg-pink-50">
       <div className="bg-white p-6 rounded-2xl shadow-lg w-full max-w-md text-gray-800">
-        
         {/* Avatar */}
         <div className="flex flex-col items-center">
           <div className="w-24 h-24 flex items-center justify-center rounded-full border-4 border-pink-400 bg-pink-200 text-pink-800 text-3xl font-bold">
@@ -50,7 +49,9 @@ const ViewProfile = () => {
             <span>{user.allergies || "—"}</span>
           </div>
           <div className="flex justify-between border-b pb-2">
-            <span className="font-semibold text-gray-700">Medical Condition:</span>
+            <span className="font-semibold text-gray-700">
+              Medical Condition:
+            </span>
             <span>{user.medicalCondition || "—"}</span>
           </div>
           <div className="flex justify-between border-b pb-2">
@@ -78,4 +79,3 @@ const ViewProfile = () => {
 };
 
 export default ViewProfile;
-
