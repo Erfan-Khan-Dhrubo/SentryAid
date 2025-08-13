@@ -1,14 +1,12 @@
-import Navbar from "../Components/Common Components/Navbar";
-
-import AdminSidebar from "../Components/Common Components/AdminSidebar";
-import User from "../Pages/Users/User";
 import { useEffect, useState } from "react";
 import { fetchSpecific } from "../Utilities/Helper";
 import { useParams } from "react-router";
 import UserProfile from "../Components/User/UserProfile";
+import UserNavbar from "../Components/User/UserNavbar";
 
 const UserRoot = () => {
   const [userInfo, setUserInfo] = useState([]);
+  const [type, setType] = useState("");
   const { id } = useParams();
 
   useEffect(() => {
@@ -21,12 +19,11 @@ const UserRoot = () => {
   }, []);
   return (
     <div>
-      <Navbar></Navbar>
       <div className="flex">
         <div>
-          <AdminSidebar userInfo={userInfo}></AdminSidebar>
+          <UserNavbar userInfo={userInfo}></UserNavbar>
         </div>
-        <div>
+        <div className="flex-1">
           <UserProfile userInfo={userInfo}></UserProfile>
         </div>
       </div>
