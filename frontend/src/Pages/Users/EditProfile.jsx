@@ -1,24 +1,80 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router";
+import axios from "axios";
+import { sendMail } from "../../Utilities/SendMail";
 
 const EditProfile = () => {
-  const [formData, setFormData] = useState({
-    name: "John Doe",
-    email: "john@example.com",
-    phone: "+880 1234 567890",
-    location: "Dhaka, Bangladesh",
-    bloodGroup: "A+", // Default value for blood group
-    medicalCondition: "", // Default value for medical condition
-    allergies: "", // Default value for allergies
-  });
+  const [user, setUser] = useState([]);
+  const [preMail, setPreMail] = useState("");
+  const [presentMail, setPresentMail] = useState("");
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+  const { id } = useParams();
 
-  const handleSubmit = (e) => {
+  useEffect(() => {
+    const fetchNote = async () => {
+      try {
+        if (user.type === "user") {
+          const res = await axios.get(`http://localhost:5001/api/users/${id}`);
+          setUser(res.data);
+          setPreMail(res.data.email);
+        } else {
+          const res = await axios.get(`http://localhost:5001/api/users/${id}`);
+          setUser(res.data);
+          setPreMail(res.data.email);
+        }
+      } catch (error) {
+        console.log("Error in fetching note", error);
+      }
+    };
+
+    fetchNote();
+  }, []);
+
+  const handleAccept = async (e, id) => {
+    //navigate("/admin");
     e.preventDefault();
-    console.log("Updated Profile:", formData);
-    alert("Profile updated successfully!");
+
+    if (!window.confirm("Are you sure you want to save?")) return;
+
+    try {
+      // const updateNote = { ...user, request: "accepted" };
+      if (user.type === "user") {
+        const res = await axios.put(
+          `http://localhost:5001/api/users/${id}`,
+          user
+        );
+        setUser(res.data);
+        setPresentMail(res.data.email);
+        sendMail(
+          res.data.email,
+          "Your Profile has been updated",
+          "Profile Update"
+        );
+      } else {
+        const res = await axios.put(
+          `http://localhost:5001/api/users/${id}`,
+          user
+        );
+        setUser(res.data);
+        setPresentMail(res.data.email);
+        sendMail(
+          res.data.email,
+          "Your Profile has been updated",
+          "Profile Update"
+        );
+        console.log("ho");
+      }
+
+      if (preMail !== presentMail) {
+        sendMail(
+          preMail,
+          "your account does belongs to this mail anymore",
+          "Mail change"
+        );
+      }
+    } catch (error) {
+      console.log("Error saving the note:", error);
+    }
   };
 
   return (
@@ -26,57 +82,67 @@ const EditProfile = () => {
       <div className="bg-white p-6 rounded-2xl shadow-lg w-full max-w-md text-gray-800">
         <h2 className="text-2xl font-bold mb-4 text-center">Edit Profile</h2>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={(e) => handleAccept(e, user._id)} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700">Name</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Name
+            </label>
             <input
               type="text"
               name="name"
-              value={formData.name}
-              onChange={handleChange}
+              value={user.name}
+              onChange={(e) => setUser({ ...user, name: e.target.value })}
               className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400 text-gray-900"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">Email</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Email
+            </label>
             <input
               type="email"
               name="email"
-              value={formData.email}
-              onChange={handleChange}
+              value={user.email}
+              onChange={(e) => setUser({ ...user, email: e.target.value })}
               className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400 text-gray-900"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">Phone</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Phone
+            </label>
             <input
               type="text"
               name="phone"
-              value={formData.phone}
-              onChange={handleChange}
+              value={user.phone}
+              onChange={(e) => setUser({ ...user, phone: e.target.value })}
               className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400 text-gray-900"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">Location</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Location
+            </label>
             <input
               type="text"
               name="location"
-              value={formData.location}
-              onChange={handleChange}
+              value={user.address}
+              onChange={(e) => setUser({ ...user, address: e.target.value })}
               className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400 text-gray-900"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">Blood Group</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Blood Group
+            </label>
             <select
               name="bloodGroup"
-              value={formData.bloodGroup}
-              onChange={handleChange}
+              value={user.bloodGroup}
+              onChange={(e) => setUser({ ...user, bloodGroup: e.target.value })}
               className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400 text-gray-900"
             >
               <option value="A+">A+</option>
@@ -91,22 +157,28 @@ const EditProfile = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">Medical Condition</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Medical Condition
+            </label>
             <textarea
               name="medicalCondition"
-              value={formData.medicalCondition}
-              onChange={handleChange}
+              value={user.medicalCondition}
+              onChange={(e) =>
+                setUser({ ...user, medicalCondition: e.target.value })
+              }
               className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400 text-gray-900"
               rows="3"
             ></textarea>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">Allergies</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Allergies
+            </label>
             <textarea
               name="allergies"
-              value={formData.allergies}
-              onChange={handleChange}
+              value={user.allergies}
+              onChange={(e) => setUser({ ...user, allergies: e.target.value })}
               className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400 text-gray-900"
               rows="3"
             ></textarea>

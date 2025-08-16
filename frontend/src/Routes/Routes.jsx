@@ -38,7 +38,7 @@ export const router = createBrowserRouter([
         element: <AdminLogin />,
       },
       {
-        path: "editProfile",
+        path: "editProfile/:id",
         element: <EditProfile />,
       },
       {

@@ -3,6 +3,7 @@ import { NavLink } from "react-router";
 
 const ShowInfoBtn = ({ userInfo }) => {
   const {
+    _id,
     name,
     email,
     phone,
@@ -73,7 +74,10 @@ const ShowInfoBtn = ({ userInfo }) => {
               {/* Edit Button */}
               <div className="mt-12 flex justify-between items-center">
                 <div>
-                  <NavLink to={"/admin"} className="btn bg-pink-400 text-white">
+                  <NavLink
+                    to={`/editProfile/${_id}`}
+                    className="btn bg-pink-400 text-white"
+                  >
                     Edit Profile
                   </NavLink>
                 </div>
