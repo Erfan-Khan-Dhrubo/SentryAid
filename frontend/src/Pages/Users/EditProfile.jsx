@@ -6,6 +6,9 @@ const EditProfile = () => {
     email: "john@example.com",
     phone: "+880 1234 567890",
     location: "Dhaka, Bangladesh",
+    bloodGroup: "A+", // Default value for blood group
+    medicalCondition: "", // Default value for medical condition
+    allergies: "", // Default value for allergies
   });
 
   const handleChange = (e) => {
@@ -68,6 +71,47 @@ const EditProfile = () => {
             />
           </div>
 
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Blood Group</label>
+            <select
+              name="bloodGroup"
+              value={formData.bloodGroup}
+              onChange={handleChange}
+              className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400 text-gray-900"
+            >
+              <option value="A+">A+</option>
+              <option value="A-">A-</option>
+              <option value="B+">B+</option>
+              <option value="B-">B-</option>
+              <option value="O+">O+</option>
+              <option value="O-">O-</option>
+              <option value="AB+">AB+</option>
+              <option value="AB-">AB-</option>
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Medical Condition</label>
+            <textarea
+              name="medicalCondition"
+              value={formData.medicalCondition}
+              onChange={handleChange}
+              className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400 text-gray-900"
+              rows="3"
+            ></textarea>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Allergies</label>
+            <textarea
+              name="allergies"
+              value={formData.allergies}
+              onChange={handleChange}
+              className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400 text-gray-900"
+              rows="3"
+            ></textarea>
+          </div>
+
           <button
             type="submit"
             className="w-full bg-pink-500 hover:bg-pink-600 text-white py-2 rounded-lg transition"
@@ -90,4 +134,3 @@ const EditProfile = () => {
 };
 
 export default EditProfile;
-
