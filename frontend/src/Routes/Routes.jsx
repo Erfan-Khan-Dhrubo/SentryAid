@@ -13,6 +13,7 @@ import UserRegister from "./../Pages/Users/UserRegister";
 import AdminLogin from "./../Pages/Admin/AdminLogin";
 import MainRoot from "../Roots/MainRoot";
 import DemoAdminPage from "./../Pages/Admin/DemoAdminPage";
+import EditProfile from "./../Pages/Users/EditProfile";
 
 export const router = createBrowserRouter([
   {
@@ -35,6 +36,10 @@ export const router = createBrowserRouter([
       {
         path: "adminLogin",
         element: <AdminLogin />,
+      },
+      {
+        path: "editProfile",
+        element: <EditProfile />,
       },
       {
         path: "users/:id",
