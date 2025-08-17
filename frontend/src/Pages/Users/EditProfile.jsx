@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router";
+import { NavLink, useNavigate, useParams } from "react-router";
 import axios from "axios";
 import { sendMail } from "../../Utilities/SendMail";
 
@@ -7,8 +7,11 @@ const EditProfile = () => {
   const [user, setUser] = useState([]);
   const [preMail, setPreMail] = useState("");
   const [presentMail, setPresentMail] = useState("");
+  const [saving, setSaving] = useState(false);
 
   const { id } = useParams();
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchNote = async () => {
@@ -35,6 +38,8 @@ const EditProfile = () => {
     e.preventDefault();
 
     if (!window.confirm("Are you sure you want to save?")) return;
+
+    setSaving(true);
 
     try {
       // const updateNote = { ...user, request: "accepted" };
@@ -74,7 +79,10 @@ const EditProfile = () => {
       }
     } catch (error) {
       console.log("Error saving the note:", error);
+    } finally {
+      setSaving(false);
     }
+    navigate(`/users/${id}`);
   };
 
   return (
@@ -187,18 +195,16 @@ const EditProfile = () => {
           <button
             type="submit"
             className="w-full bg-pink-500 hover:bg-pink-600 text-white py-2 rounded-lg transition"
+            disabled={saving}
           >
-            Save Changes
+            {saving ? "Saving..." : "Save Changes"}
           </button>
         </form>
 
         <div className="mt-4">
-          <a
-            href="/viewprofile"
-            className="block text-center text-pink-500 hover:underline"
-          >
+          <NavLink to={`/users/${id}`} className="btn w-full rounded-lg">
             Cancel
-          </a>
+          </NavLink>
         </div>
       </div>
     </div>
