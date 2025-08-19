@@ -1,5 +1,6 @@
 import { Outlet } from "react-router";
 import AdminSidebar from "../Components/Admin/AdminSidebar";
+
 const AdminRoot = () => {
   return (
     <div>
