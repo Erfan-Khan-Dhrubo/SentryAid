@@ -3,8 +3,7 @@ import { useEffect, useState } from "react";
 
 const UserProfile = ({ userInfo }) => {
   const [notifications, setNotifications] = useState([]);
-  const [activeNotif, setActiveNotif] = useState(null); // currently selected notification
-  const [msg, setMsg] = useState([]);
+  const [activeNotif, setActiveNotif] = useState(null);
 
   useEffect(() => {
     fetch("/notifications.json")
@@ -13,20 +12,27 @@ const UserProfile = ({ userInfo }) => {
       .catch((err) => console.error("Failed to load notifications:", err));
   }, []);
 
+  // 👉 new updates
   const handleNotifClick = (notif) => {
-    // mark the notification as opened
-    setNotifications((prev) =>
-      prev.map((n) => (n.id === notif.id ? { ...n, opened: true } : n))
-    );
+    // Add current user ID to 'seen' list if not already there
+    if (!notif.seen.includes(userInfo._id)) {
+      const updatedNotifications = notifications.map((n) =>
+        n.id === notif.id
+          ? { ...n, seen: [...n.seen, userInfo._id] }
+          : n
+      );
+      setNotifications(updatedNotifications);
+    }
     setActiveNotif(notif);
   };
+
   return (
     <div className="flex flex-col gap-12 bg-pink-50 min-h-screen px-16 py-20">
       <div className="bg-pink-50 flex items-center justify-center">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6  w-full">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
           {/* Profile Card */}
           <div className="bg-blue-200 rounded-lg p-6 text-center text-black shadow-lg py-12">
-            <div className=" flex justify-center ">
+            <div className="flex justify-center">
               <img className="w-24" src="../profile.png" alt="" />
             </div>
             <h2 className="mt-4 text-lg font-bold">{userInfo.name}</h2>
@@ -62,9 +68,9 @@ const UserProfile = ({ userInfo }) => {
           <div className="bg-white rounded-lg shadow-lg p-6 border-t-8 border-pink-400">
             <h2 className="text-xl font-bold text-pink-500 mb-4 flex items-center gap-2">
               Alert Messages
-              {notifications.filter((notif) => !notif.opened).length > 0 && (
+              {notifications.filter((notif) => !notif.seen.includes(userInfo._id)).length > 0 && (
                 <span className="bg-gray-500 text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center">
-                  {notifications.filter((notif) => !notif.opened).length}
+                  {notifications.filter((notif) => !notif.seen.includes(userInfo._id)).length}
                 </span>
               )}
             </h2>
@@ -72,21 +78,24 @@ const UserProfile = ({ userInfo }) => {
               {notifications.length === 0 ? (
                 <li className="text-gray-400">No notifications available.</li>
               ) : (
-                notifications.map((notif) => (
-                  <li key={notif.id}>
-                    <button
-                      className={`border flex items-center px-4 w-full py-3 rounded-lg  border-pink-400 ${
-                        notif.opened ? "font-normal" : "font-bold"
-                      } hover:bg-pink-100 hover:text-pink-600 transition-all duration-200`}
-                      onClick={() => handleNotifClick(notif)}
-                    >
-                      <div className="flex gap-2">
-                        <span>Title: </span>
-                        <span> {notif.title || "View Details"}</span>
-                      </div>
-                    </button>
-                  </li>
-                ))
+                notifications.map((notif) => {
+                  const isSeen = notif.seen.includes(userInfo._id); // 👉 new updates
+                  return (
+                    <li key={notif.id}>
+                      <button
+                        className={`border flex items-center px-4 w-full py-3 rounded-lg border-pink-400 ${
+                          isSeen ? "font-normal" : "font-bold"
+                        } hover:bg-pink-100 hover:text-pink-600 transition-all duration-200`}
+                        onClick={() => handleNotifClick(notif)}
+                      >
+                        <div className="flex gap-2">
+                          <span>Title:</span>
+                          <span>{notif.title || "View Details"}</span>
+                        </div>
+                      </button>
+                    </li>
+                  );
+                })
               )}
             </ul>
           </div>
