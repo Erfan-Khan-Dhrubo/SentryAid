@@ -34,8 +34,9 @@ export async function createUser(req, res) {
       bloodGroup,
       allergies,
       medicalCondition,
-      type, // optional, defaults to "user"
-      request, // optional, defaults to "rejected"
+      type,
+      request,
+      status,
     } = req.body;
 
     const user = new Volunteer({
@@ -48,6 +49,7 @@ export async function createUser(req, res) {
       medicalCondition,
       type,
       request,
+      status,
     });
 
     const savedUser = await user.save();

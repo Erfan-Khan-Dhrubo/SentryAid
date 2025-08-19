@@ -4,19 +4,19 @@ const messageSchema = new mongoose.Schema(
   {
     title: {
       type: String,
-      required: true, // Name is required
+      required: true,
     },
-    msg: {
+    message: {
       type: String,
-      required: true, // Email is required
+      required: true,
     },
-    status: {
-      type: Boolean,
-      default: false, // Default role is "user"
+    seen: {
+      type: [String], // Array of user IDs / emails / names who saw it
+      default: [],
     },
   },
   {
-    timestamps: true, // Automatically adds createdAt & updatedAt
+    timestamps: true, // createdAt & updatedAt
   }
 );
 

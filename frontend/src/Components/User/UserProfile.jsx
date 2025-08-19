@@ -1,29 +1,57 @@
 import ShowInfoBtn from "../Common Components/ShowInfoBtn";
 import { useEffect, useState } from "react";
+import axios from "axios";
+import { TImeFormate } from "./../../Utilities/timeFormater";
 
 const UserProfile = ({ userInfo }) => {
   const [notifications, setNotifications] = useState([]);
-  const [activeNotif, setActiveNotif] = useState(null);
+  const [singleTitle, setSingleTitle] = useState("");
+  const [singleMsg, setSingleMsg] = useState("");
+
+  const fetchMsg = async () => {
+    try {
+      const res = await axios.get("http://localhost:5001/api/messages");
+      setNotifications(res.data);
+    } catch (error) {
+      console.log("error fetching notes");
+    }
+  };
 
   useEffect(() => {
-    fetch("/notifications.json")
-      .then((res) => res.json())
-      .then((data) => setNotifications(data))
-      .catch((err) => console.error("Failed to load notifications:", err));
+    // Run immediately on mount
+    fetchMsg();
+
+    // Run every 10 seconds
+    const interval = setInterval(fetchMsg, 10000);
+
+    // Cleanup interval on component unmount
+    return () => clearInterval(interval);
   }, []);
 
-  // 👉 new updates
-  const handleNotifClick = (notif) => {
-    // Add current user ID to 'seen' list if not already there
-    if (!notif.seen.includes(userInfo._id)) {
-      const updatedNotifications = notifications.map((n) =>
-        n.id === notif.id
-          ? { ...n, seen: [...n.seen, userInfo._id] }
-          : n
+  const handleNotificationClick = async (notificationObj, id) => {
+    document.getElementById("my_modal_2").showModal();
+    console.log(id);
+    setSingleMsg(notificationObj.message);
+    setSingleTitle(notificationObj.title);
+    const updatedNotification = {
+      ...notificationObj,
+      seen: [...notificationObj.seen, id], // push "123"
+    };
+
+    try {
+      const res = await axios.put(
+        `http://localhost:5001/api/messages/${notificationObj._id}`,
+        updatedNotification
       );
-      setNotifications(updatedNotifications);
+      console.log("Updated Volunteer:", res.data);
+    } catch (error) {
+      console.log("Error updating volunteer", error);
     }
-    setActiveNotif(notif);
+
+    // If you have a state of notifications, update it here
+    setNotifications((prev) =>
+      prev.map((n) => (n._id === notificationObj._id ? updatedNotification : n))
+    );
   };
 
   return (
@@ -57,20 +85,26 @@ const UserProfile = ({ userInfo }) => {
             <h2 className="text-lg font-bold text-red-500 mb-4">
               Emergency Actions
             </h2>
-            <div className="h-3/4 w-full flex items-center justify-center">
-              <button className="w-50 h-50 flex items-center justify-center border border-red-500 text-red-500 rounded-full py-2 hover:bg-red-50 mb-3">
-                ⚠ Send SOS
-              </button>
-            </div>
+
+            <button className="w-full flex items-center justify-center border border-red-500 text-red-500 rounded-2xl py-2 hover:bg-red-50 mt-6">
+              ⚠ Send SOS
+            </button>
           </div>
 
           {/* Alert Messages */}
           <div className="bg-white rounded-lg shadow-lg p-6 border-t-8 border-pink-400">
             <h2 className="text-xl font-bold text-pink-500 mb-4 flex items-center gap-2">
               Alert Messages
-              {notifications.filter((notif) => !notif.seen.includes(userInfo._id)).length > 0 && (
+              {notifications.filter(
+                (notification) => !notification.seen.includes(userInfo._id)
+              ).length > 0 && (
                 <span className="bg-gray-500 text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center">
-                  {notifications.filter((notif) => !notif.seen.includes(userInfo._id)).length}
+                  {
+                    notifications.filter(
+                      (notification) =>
+                        !notification.seen.includes(userInfo._id)
+                    ).length
+                  }
                 </span>
               )}
             </h2>
@@ -78,19 +112,24 @@ const UserProfile = ({ userInfo }) => {
               {notifications.length === 0 ? (
                 <li className="text-gray-400">No notifications available.</li>
               ) : (
-                notifications.map((notif) => {
-                  const isSeen = notif.seen.includes(userInfo._id); // 👉 new updates
+                notifications.map((notificationMsg, idx) => {
+                  const isSeen = notificationMsg.seen.includes(userInfo._id);
                   return (
-                    <li key={notif.id}>
+                    <li key={idx}>
                       <button
-                        className={`border flex items-center px-4 w-full py-3 rounded-lg border-pink-400 ${
+                        className={`border flex items-center justify-between px-4 w-full py-3 rounded-lg border-pink-400 ${
                           isSeen ? "font-normal" : "font-bold"
                         } hover:bg-pink-100 hover:text-pink-600 transition-all duration-200`}
-                        onClick={() => handleNotifClick(notif)}
+                        onClick={() =>
+                          handleNotificationClick(notificationMsg, userInfo._id)
+                        }
                       >
                         <div className="flex gap-2">
                           <span>Title:</span>
-                          <span>{notif.title || "View Details"}</span>
+                          <span>{notificationMsg.title}</span>
+                        </div>
+                        <div className="text-sm">
+                          {TImeFormate(new Date(notificationMsg.createdAt))}
                         </div>
                       </button>
                     </li>
@@ -103,21 +142,18 @@ const UserProfile = ({ userInfo }) => {
       </div>
 
       {/* Notification Message */}
-      {activeNotif && (
-        <dialog open className="modal" onClose={() => setActiveNotif(null)}>
-          <div className="modal-box">
-            <h3 className="text-lg font-bold">
-              {activeNotif.title || activeNotif.type}
-            </h3>
-            <p className="py-4">{activeNotif.message}</p>
-            <div className="modal-action">
-              <button className="btn" onClick={() => setActiveNotif(null)}>
-                Close
-              </button>
-            </div>
+      <dialog id="my_modal_2" className="modal">
+        <div className="modal-box">
+          <h3 className="font-bold text-lg">{singleTitle}</h3>
+          <p className="py-4">{singleMsg}</p>
+          <div className="modal-action">
+            <form method="dialog">
+              {/* if there is a button in form, it will close the modal */}
+              <button className="btn">Close</button>
+            </form>
           </div>
-        </dialog>
-      )}
+        </div>
+      </dialog>
     </div>
   );
 };

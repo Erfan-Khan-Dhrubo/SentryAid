@@ -35,19 +35,15 @@ const AlertMessage = () => {
 
     setLoading(true);
     try {
-      await axios.post("http://localhost:5001/api/messages", {
-        title,
-        msg,
-      });
+      const message = { title, message: msg };
+      console.log(message);
+      await axios.post("http://localhost:5001/api/messages", message);
 
       toast(
         <div className="space-y-1 text-black">
           <p className="font-bold text-lg">Broadcast Sent</p>
           <p>
             <span className="font-semibold">Title:</span> {title}
-          </p>
-          <p>
-            <span className="font-semibold">Message:</span> {msg}
           </p>
         </div>
       );

@@ -13,21 +13,46 @@ export async function getAllMessage(req, res) {
 
 export async function createMessage(req, res) {
   try {
-    const { title, msg, status } = req.body;
+    const { title, message, seen } = req.body;
 
-    // Create a new user based on the schema
-    const user = new Message({
+    // Create a new message based on the schema
+    const newMessage = new Message({
       title,
-      msg,
-      status,
+      message,
+      seen: seen || [], // default empty if not provided
     });
 
-    const savedUser = await user.save();
+    const savedMessage = await newMessage.save();
 
-    res.status(201).json(savedUser);
+    res.status(201).json(savedMessage);
   } catch (error) {
     console.error("Error in createMessage controller", error);
-    res.status(500).json({ message: "Internals server error" });
+    res.status(500).json({ message: "Internal server error" });
+  }
+}
+
+export async function updateMessage(req, res) {
+  try {
+    const { title, message, seen } = req.body;
+
+    const updatedMessage = await Message.findByIdAndUpdate(
+      req.params.id, // MongoDB _id
+      {
+        title,
+        message,
+        seen,
+      },
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedMessage) {
+      return res.status(404).json({ message: "Message not found" });
+    }
+
+    res.status(200).json(updatedMessage);
+  } catch (error) {
+    console.error("Error in updateMessage controller", error);
+    res.status(500).json({ message: "Internal server error" });
   }
 }
 
