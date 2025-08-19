@@ -30,6 +30,10 @@ const volunteerSchema = new mongoose.Schema(
       type: String,
       default: "", // Optional
     },
+    status: {
+      type: String,
+      default: "inactive", // Optional
+    },
     type: {
       type: String,
       default: "volunteer", // Default role

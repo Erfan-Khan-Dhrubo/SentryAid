@@ -69,8 +69,9 @@ export async function updateUser(req, res) {
       bloodGroup,
       allergies,
       medicalCondition,
-      type, // Optional, defaults handled in schema
-      request, // Optional, defaults handled in schema
+      type,
+      request,
+      status,
     } = req.body;
 
     const updatedUser = await Volunteer.findByIdAndUpdate(
@@ -85,6 +86,7 @@ export async function updateUser(req, res) {
         medicalCondition,
         type,
         request,
+        status,
       },
       { new: true, runValidators: true }
     );

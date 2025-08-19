@@ -1,10 +1,19 @@
 import ShowInfoBtn from "../Common Components/ShowInfoBtn";
 import { useEffect, useState } from "react";
+import axios from "axios";
 
-const UserProfile = ({ userInfo }) => {
+const VolunteerProfile = ({ volunteerInfo }) => {
   const [notifications, setNotifications] = useState([]);
   const [activeNotif, setActiveNotif] = useState(null); // currently selected notification
   const [msg, setMsg] = useState([]);
+  const [sta, setSta] = useState("");
+
+  useEffect(() => {
+    if (volunteerInfo) {
+      setSta(volunteerInfo.status);
+      // console.log("Volunteer Info:", volunteerInfo);
+    }
+  }, [volunteerInfo]); // 👈 run this whenever volunteerInfo updates
 
   useEffect(() => {
     fetch("/notifications.json")
@@ -20,6 +29,24 @@ const UserProfile = ({ userInfo }) => {
     );
     setActiveNotif(notif);
   };
+
+  const makeActiveInactive = async () => {
+    const newStatus = sta === "active" ? "inactive" : "active"; // calculate manually
+    setSta(newStatus); // update state
+
+    const volunteerUpdate = { ...volunteerInfo, status: newStatus }; // use newStatus here
+
+    try {
+      const res = await axios.put(
+        `http://localhost:5001/api/volunteers/${volunteerInfo._id}`,
+        volunteerUpdate
+      );
+      console.log("Updated Volunteer:", res.data);
+    } catch (error) {
+      console.log("Error updating volunteer", error);
+    }
+  };
+
   return (
     <div className="flex flex-col gap-12 bg-pink-50 min-h-screen px-16 py-20">
       <div className="bg-pink-50 flex items-center justify-center">
@@ -29,32 +56,35 @@ const UserProfile = ({ userInfo }) => {
             <div className=" flex justify-center ">
               <img className="w-24" src="../profile.png" alt="" />
             </div>
-            <h2 className="mt-4 text-lg font-bold">{userInfo.name}</h2>
-            <p className="text-sm text-gray-300">{userInfo.email}</p>
+            <h2 className="mt-4 text-lg font-bold">{volunteerInfo.name}</h2>
+            <p className="text-sm text-black">{volunteerInfo.email}</p>
             <button className="mt-4 bg-sky-400 hover:bg-sky-500 px-6 py-2 rounded-full font-semibold">
-              {userInfo.type}
+              {volunteerInfo.type}
             </button>
 
             <div className="mt-6 space-y-3">
               <button className="w-full flex items-center justify-center border border-gray-400 bg-white text-gray-700 rounded-lg py-2 hover:bg-gray-100">
                 ❌ Report
               </button>
-              <ShowInfoBtn userInfo={userInfo}></ShowInfoBtn>
+              {/* <ShowInfoBtn volunteerInfo={volunteerInfo}></ShowInfoBtn> */}
               <button className="w-full flex items-center justify-center border border-gray-400 bg-white text-gray-700 rounded-lg py-2 hover:bg-gray-100">
                 📞 Contacts
               </button>
-            </div>
-          </div>
-
-          {/* Emergency Actions */}
-          <div className="bg-white rounded-lg shadow-lg p-6 border-t-8 border-red-500">
-            <h2 className="text-lg font-bold text-red-500 mb-4">
-              Emergency Actions
-            </h2>
-            <div className="h-3/4 w-full flex items-center justify-center">
-              <button className="w-50 h-50 flex items-center justify-center border border-red-500 text-red-500 rounded-full py-2 hover:bg-red-50 mb-3">
-                ⚠ Send SOS
-              </button>
+              {sta == "active" ? (
+                <button
+                  onClick={makeActiveInactive}
+                  className="w-full flex items-center justify-center border border-gray-400 bg-green-200 text-gray-700 rounded-lg py-2 hover:bg-gray-100"
+                >
+                  📞 Active
+                </button>
+              ) : (
+                <button
+                  onClick={makeActiveInactive}
+                  className="w-full flex items-center justify-center border border-gray-400 bg-red-200 text-gray-700 rounded-lg py-2 hover:bg-gray-100"
+                >
+                  📞 Inactive
+                </button>
+              )}
             </div>
           </div>
 
@@ -113,4 +143,4 @@ const UserProfile = ({ userInfo }) => {
   );
 };
 
-export default UserProfile;
+export default VolunteerProfile;

@@ -3,18 +3,21 @@
     "id": 1,
     "title": "Suspicious Activity",
     "message": "Suspicious activity reported near Mohammodpur",
+    "seen": ["12", "sa"],
     "time": "10:30 AM"
   },
   {
     "id": 2,
     "title": "Flood Warning",
     "message": "System maintenance scheduled at 2:00 PM",
+    "seen": ["put your id of the user here"],
     "time": "9:00 AM"
   },
   {
     "id": 3,
     "title": "Fire Alert",
     "message": "Evacuate Bailey Road immediately due to fire hazard",
+    "seen": [],
     "time": "11:00 AM"
   }
 ]

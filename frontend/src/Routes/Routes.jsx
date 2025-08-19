@@ -14,6 +14,7 @@ import AdminLogin from "./../Pages/Admin/AdminLogin";
 import MainRoot from "../Roots/MainRoot";
 import DemoAdminPage from "./../Pages/Admin/DemoAdminPage";
 import EditProfile from "./../Pages/Users/EditProfile";
+import VolunteerRoot from "../Roots/VolunteerRoot";
 
 export const router = createBrowserRouter([
   {
@@ -44,6 +45,10 @@ export const router = createBrowserRouter([
       {
         path: "users/:id",
         element: <UserRoot />,
+      },
+      {
+        path: "volunteers/:id",
+        element: <VolunteerRoot />,
       },
       {
         path: "admin",
