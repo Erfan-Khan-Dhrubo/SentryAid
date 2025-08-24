@@ -1,8 +1,8 @@
 import emailjs from "@emailjs/browser";
 export const sendMail = (toMail, msg, title) => {
-  const serviceID = "";
-  const templateId = "";
-  const publicKey = "";
+  const serviceID = "service_l2q428w";
+  const templateId = "template_g5l3305";
+  const publicKey = "qJ4Tcvue6l9SD1xtf";
 
   const templateParam = {
     title: title,

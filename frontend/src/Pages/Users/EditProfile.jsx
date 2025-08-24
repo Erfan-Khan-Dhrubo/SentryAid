@@ -73,7 +73,7 @@ const EditProfile = () => {
       if (preMail !== presentMail) {
         sendMail(
           preMail,
-          "your account does belongs to this mail anymore",
+          "Your E=mail has been changed",
           "Mail change"
         );
       }
