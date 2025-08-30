@@ -1,100 +1,194 @@
 import Report from "../model/reportModel.js";
-import User from "../model/userModel.js";
 
+// Create a new report
 export async function createReport(req, res) {
   try {
-    const { title, message, userId } = req.body;
-
-    // Validate required fields
-    if (!title || !message || !userId) {
-      return res.status(400).json({ 
-        message: "Title, message, and userId are required" 
-      });
-    }
-
-    // Check if user exists
-    const user = await User.findById(userId);
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
+    const {
+      reporterId,
+      reporterName,
+      reporterEmail,
+      volunteerId,
+      volunteerName,
+      volunteerEmail,
+      title,
+      category,
+      message
+    } = req.body;
 
     // Create new report
     const newReport = new Report({
-      title: title.trim(),
-      message: message.trim(),
-      userId: userId,
-      userEmail: user.email,
-      userName: user.name
+      reporterId,
+      reporterName,
+      reporterEmail,
+      volunteerId,
+      volunteerName,
+      volunteerEmail,
+      title,
+      category,
+      message
     });
 
     const savedReport = await newReport.save();
 
     res.status(201).json({
+      success: true,
       message: "Report submitted successfully",
       report: savedReport
     });
 
   } catch (error) {
     console.error("Error in createReport controller", error);
-    res.status(500).json({ message: "Internal server error" });
+    res.status(500).json({
+      success: false,
+      message: "Internal server error"
+    });
   }
 }
 
-export async function getUserReports(req, res) {
-  try {
-    const { userId } = req.params;
-
-    const reports = await Report.find({ userId })
-      .sort({ createdAt: -1 })
-      .select('-__v'); // Exclude version key
-
-    res.status(200).json(reports);
-  } catch (error) {
-    console.error("Error in getUserReports controller", error);
-    res.status(500).json({ message: "Internal server error" });
-  }
-}
-
+// Get all reports
 export async function getAllReports(req, res) {
   try {
-    const reports = await Report.find()
-      .sort({ createdAt: -1 })
-      .populate('userId', 'name email') // Populate user info
-      .select('-__v');
-
-    res.status(200).json(reports);
+    const reports = await Report.find().sort({ createdAt: -1 });
+    
+    res.status(200).json({
+      success: true,
+      reports
+    });
   } catch (error) {
     console.error("Error in getAllReports controller", error);
-    res.status(500).json({ message: "Internal server error" });
+    res.status(500).json({
+      success: false,
+      message: "Internal server error"
+    });
   }
 }
 
+// Get reports by reporter ID
+export async function getReportsByReporter(req, res) {
+  try {
+    const { reporterId } = req.params;
+    
+    const reports = await Report.find({ reporterId }).sort({ createdAt: -1 });
+    
+    res.status(200).json({
+      success: true,
+      reports
+    });
+  } catch (error) {
+    console.error("Error in getReportsByReporter controller", error);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error"
+    });
+  }
+}
+
+// Get reports by volunteer ID
+export async function getReportsByVolunteer(req, res) {
+  try {
+    const { volunteerId } = req.params;
+    
+    const reports = await Report.find({ volunteerId }).sort({ createdAt: -1 });
+    
+    res.status(200).json({
+      success: true,
+      reports
+    });
+  } catch (error) {
+    console.error("Error in getReportsByVolunteer controller", error);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error"
+    });
+  }
+}
+
+// Get single report by ID
+export async function getReportById(req, res) {
+  try {
+    const { id } = req.params;
+    
+    const report = await Report.findById(id);
+    
+    if (!report) {
+      return res.status(404).json({
+        success: false,
+        message: "Report not found"
+      });
+    }
+    
+    res.status(200).json({
+      success: true,
+      report
+    });
+  } catch (error) {
+    console.error("Error in getReportById controller", error);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error"
+    });
+  }
+}
+
+// Update report status (for admin)
 export async function updateReportStatus(req, res) {
   try {
-    const { reportId } = req.params;
-    const { status } = req.body;
-
-    if (!['pending', 'in-progress', 'resolved', 'rejected'].includes(status)) {
-      return res.status(400).json({ message: "Invalid status value" });
-    }
-
+    const { id } = req.params;
+    const { status, adminNotes } = req.body;
+    
     const updatedReport = await Report.findByIdAndUpdate(
-      reportId,
-      { status },
+      id,
+      { 
+        status,
+        ...(adminNotes && { adminNotes }) // Only update adminNotes if provided
+      },
       { new: true, runValidators: true }
     );
-
+    
     if (!updatedReport) {
-      return res.status(404).json({ message: "Report not found" });
+      return res.status(404).json({
+        success: false,
+        message: "Report not found"
+      });
     }
-
+    
     res.status(200).json({
+      success: true,
       message: "Report status updated successfully",
       report: updatedReport
     });
-
   } catch (error) {
     console.error("Error in updateReportStatus controller", error);
-    res.status(500).json({ message: "Internal server error" });
+    res.status(500).json({
+      success: false,
+      message: "Internal server error"
+    });
+  }
+}
+
+// Delete report (for admin)
+export async function deleteReport(req, res) {
+  try {
+    const { id } = req.params;
+    
+    const deletedReport = await Report.findByIdAndDelete(id);
+    
+    if (!deletedReport) {
+      return res.status(404).json({
+        success: false,
+        message: "Report not found"
+      });
+    }
+    
+    res.status(200).json({
+      success: true,
+      message: "Report deleted successfully"
+    });
+  } catch (error) {
+    console.error("Error in deleteReport controller", error);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error"
+    });
   }
 }

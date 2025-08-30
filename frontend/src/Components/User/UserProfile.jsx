@@ -166,16 +166,13 @@ import ShowInfoBtn from "../Common Components/ShowInfoBtn";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { TImeFormate } from "./../../Utilities/timeFormater";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 
 const UserProfile = ({ userInfo }) => {
   const [notifications, setNotifications] = useState([]);
+  const [userReports, setUserReports] = useState([]); // ADD THIS STATE
+  const [loadingReports, setLoadingReports] = useState(false); // ADD THIS STATE
   const [singleTitle, setSingleTitle] = useState("");
   const [singleMsg, setSingleMsg] = useState("");
-  const [reportTitle, setReportTitle] = useState("");
-  const [reportMessage, setReportMessage] = useState("");
-  const [isSendingReport, setIsSendingReport] = useState(false);
 
   const fetchMsg = async () => {
     try {
@@ -186,16 +183,33 @@ const UserProfile = ({ userInfo }) => {
     }
   };
 
+  // ADD THIS FUNCTION: Fetch user's reports
+  const fetchUserReports = async () => {
+    try {
+      setLoadingReports(true);
+      const response = await axios.get(`http://localhost:5001/api/reports/reporter/${userInfo._id}`);
+      setUserReports(response.data.reports || []);
+    } catch (error) {
+      console.error("Error fetching user reports:", error);
+    } finally {
+      setLoadingReports(false);
+    }
+  };
+
   useEffect(() => {
     // Run immediately on mount
     fetchMsg();
+    fetchUserReports(); // ADD THIS: Fetch user reports
 
     // Run every 10 seconds
-    const interval = setInterval(fetchMsg, 10000);
+    const interval = setInterval(() => {
+      fetchMsg();
+      fetchUserReports(); // ADD THIS: Also refresh reports
+    }, 10000);
 
     // Cleanup interval on component unmount
     return () => clearInterval(interval);
-  }, []);
+  }, [userInfo._id]); // ADD userInfo._id dependency
 
   const handleNotificationClick = async (notificationObj, id) => {
     document.getElementById("my_modal_2").showModal();
@@ -222,60 +236,6 @@ const UserProfile = ({ userInfo }) => {
       prev.map((n) => (n._id === notificationObj._id ? updatedNotification : n))
     );
   };
-
- const handleSendReport = async () => {
-  // Validate fields
-  if (!reportTitle.trim() || !reportMessage.trim()) {
-    toast.error("All fields should be filled", {
-      position: "top-right",
-      autoClose: 3000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-    });
-    return;
-  }
-
-  setIsSendingReport(true);
-  
-  try {
-    // Send report to backend
-    const response = await axios.post("http://localhost:5001/api/reports", {
-      title: reportTitle,
-      message: reportMessage,
-      userId: userInfo._id
-    });
-    
-    toast.success("Report is sent successfully", {
-      position: "top-right",
-      autoClose: 3000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-    });
-    
-    // Clear form fields
-    setReportTitle("");
-    setReportMessage("");
-    
-    console.log("Report saved:", response.data);
-    
-  } catch (error) {
-    console.error("Error sending report:", error);
-    toast.error("Failed to send report", {
-      position: "top-right",
-      autoClose: 3000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-    });
-  } finally {
-    setIsSendingReport(false);
-  }
-};
 
   return (
     <div className="flex flex-col gap-12 bg-pink-50 min-h-screen px-16 py-20">
@@ -364,65 +324,173 @@ const UserProfile = ({ userInfo }) => {
         </div>
       </div>
 
-      {/* NEW REPORT CARD - Added below the existing 3 cards */}
-      <div className="bg-pink-50 flex items-center w-full">
-        <div className="w-full">
-          <div className="bg-white rounded-lg shadow-lg p-6 border-t-8 border-blue-500">
-            <h2 className="text-xl font-bold text-blue-500 mb-4">
-              Report
-            </h2>
-            <div className="space-y-4">
-              {/* Title Input */}
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-1">
-                  Title
-                </label>
-                <input
-                  type="text"
-                  placeholder="Enter report title"
-                  value={reportTitle}
-                  onChange={(e) => setReportTitle(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
-              </div>
-
-              {/* Message Input */}
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-1">
-                  Message
-                </label>
-                <textarea
-                  placeholder="Describe your report in detail"
-                  value={reportMessage}
-                  onChange={(e) => setReportMessage(e.target.value)}
-                  rows={4}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
-              </div>
-
-              {/* Send Button */}
-              <button
-                onClick={handleSendReport}
-                disabled={isSendingReport}
-                className="w-full bg-blue-500 hover:bg-blue-600 disabled:bg-blue-300 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-200 flex items-center justify-center gap-2"
-              >
-                {isSendingReport ? (
-                  <>
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                    Sending...
-                  </>
-                ) : (
-                  <>
-                  Send Report
-                  </>
-                )}
-              </button>
-            </div>
-          </div>
+      {/* ADD THIS SECTION: User Reports Section */}
+      <div className="bg-white rounded-lg shadow-lg p-6 border-t-8 border-purple-500">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-xl font-bold text-purple-600">
+            My Reports ({userReports.length})
+          </h2>
+          <button 
+            className="btn btn-sm btn-primary"
+            onClick={() => document.getElementById('reports_modal').showModal()}
+          >
+            View All Reports
+          </button>
         </div>
+
+        {loadingReports ? (
+          <div className="flex justify-center py-4">
+            <span className="loading loading-spinner loading-md"></span>
+          </div>
+        ) : userReports.length === 0 ? (
+          <p className="text-gray-500 text-center py-4">You haven't submitted any reports yet.</p>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {userReports.slice(0, 4).map((report) => (
+              <div key={report._id} className="bg-gray-50 p-4 rounded-lg border">
+                <h3 className="font-semibold text-sm mb-2">{report.title}</h3>
+                <p className="text-xs text-gray-600 mb-2">
+                  Against: {report.volunteerName}
+                </p>
+                <div className="flex justify-between items-center">
+                  <span className={`badge badge-sm ${
+                    report.status === 'resolved' ? 'badge-success' :
+                    report.status === 'under_review' ? 'badge-warning' :
+                    report.status === 'dismissed' ? 'badge-error' :
+                    'badge-info'
+                  }`}>
+                    {report.status.replace('_', ' ')}
+                  </span>
+                  <span className="text-xs text-gray-500">
+                    {TImeFormate(new Date(report.createdAt))}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
-      {/* Notification Message Modal */}
+      {/* ADD THIS: Reports Modal */}
+      <dialog id="reports_modal" className="modal">
+        <div className="modal-box max-w-4xl">
+          <h3 className="font-bold text-lg mb-4">All My Reports</h3>
+          
+          {userReports.length === 0 ? (
+            <p className="text-gray-500 text-center py-8">No reports found</p>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="table table-zebra">
+                <thead>
+                  <tr>
+                    <th>Title</th>
+                    <th>Volunteer</th>
+                    <th>Category</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {userReports.map((report) => (
+                    <tr key={report._id}>
+                      <td>{report.title}</td>
+                      <td>
+                        <div>
+                          <div className="font-medium">{report.volunteerName}</div>
+                          <div className="text-xs text-gray-500">{report.volunteerEmail}</div>
+                        </div>
+                      </td>
+                      <td>
+                        <span className="badge badge-ghost badge-sm capitalize">
+                          {report.category?.replace('-', ' ') || 'N/A'}
+                        </span>
+                      </td>
+                      <td>
+                        <span className={`badge badge-sm ${
+                          report.status === 'resolved' ? 'badge-success' :
+                          report.status === 'under_review' ? 'badge-warning' :
+                          report.status === 'dismissed' ? 'badge-error' :
+                          'badge-info'
+                        }`}>
+                          {report.status?.replace('_', ' ') || 'pending'}
+                        </span>
+                      </td>
+                      <td>{TImeFormate(new Date(report.createdAt))}</td>
+                      <td>
+                        <button 
+                          className="btn btn-xs btn-info"
+                          onClick={() => {
+                            document.getElementById(`report_detail_${report._id}`).showModal();
+                          }}
+                        >
+                          View
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+          
+          <div className="modal-action">
+            <form method="dialog">
+              <button className="btn">Close</button>
+            </form>
+          </div>
+        </div>
+      </dialog>
+
+      {/* ADD THIS: Report Detail Modals */}
+      {userReports.map((report) => (
+        <dialog key={report._id} id={`report_detail_${report._id}`} className="modal">
+          <div className="modal-box">
+            <h3 className="font-bold text-lg">Report Details</h3>
+            
+            <div className="space-y-3 mt-4">
+              <div>
+                <strong>Title:</strong> {report.title}
+              </div>
+              <div>
+                <strong>Volunteer Reported:</strong> {report.volunteerName} ({report.volunteerEmail})
+              </div>
+              <div>
+                <strong>Category:</strong> <span className="capitalize">{report.category?.replace('-', ' ') || 'N/A'}</span>
+              </div>
+              <div>
+                <strong>Status:</strong> <span className="capitalize">{report.status?.replace('_', ' ') || 'pending'}</span>
+              </div>
+              <div>
+                <strong>Submitted:</strong> {new Date(report.createdAt).toLocaleString()}
+              </div>
+              <div>
+                <strong>Message:</strong>
+                <div className="bg-gray-100 p-3 rounded-lg mt-2">
+                  <p className="whitespace-pre-wrap">{report.message}</p>
+                </div>
+              </div>
+              
+              {report.adminNotes && (
+                <div>
+                  <strong>Admin Notes:</strong>
+                  <div className="bg-yellow-50 p-3 rounded-lg border border-yellow-200 mt-2">
+                    <p className="whitespace-pre-wrap">{report.adminNotes}</p>
+                  </div>
+                </div>
+              )}
+            </div>
+            
+            <div className="modal-action">
+              <form method="dialog">
+                <button className="btn">Close</button>
+              </form>
+            </div>
+          </div>
+        </dialog>
+      ))}
+
+      {/* Existing Notification Message Modal */}
       <dialog id="my_modal_2" className="modal">
         <div className="modal-box">
           <h3 className="font-bold text-lg">{singleTitle}</h3>
@@ -434,9 +502,6 @@ const UserProfile = ({ userInfo }) => {
           </div>
         </div>
       </dialog>
-
-      {/* Toast Container for notifications */}
-      <ToastContainer />
     </div>
   );
 };

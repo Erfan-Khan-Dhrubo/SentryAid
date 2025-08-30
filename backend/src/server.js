@@ -10,6 +10,7 @@ import userRoutes from "./routes/userRoutes.js";
 import volunteerRoutes from "./routes/volunteerRoutes.js";
 import messageRoutes from "./routes/messageRoutes.js";
 import reportRoutes from "./routes/reportRoutes.js";
+import notificationRoutes from "./routes/notificationRoutes.js";
 
 // DB
 import { connectDB } from "./config/db.js";
@@ -30,6 +31,7 @@ app.use("/api/users", userRoutes);
 app.use("/api/volunteers", volunteerRoutes);
 app.use("/api/messages", messageRoutes);
 app.use("/api/reports", reportRoutes); 
+app.use("/api/notifications", notificationRoutes);
 
 // Optional: Health check endpoint
 app.get("/api/health", (req, res) => {

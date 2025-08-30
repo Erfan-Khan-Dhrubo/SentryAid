@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { TImeFormate } from "../../Utilities/timeFormater";
 
 const ReportsTable = () => {
@@ -10,9 +12,11 @@ const ReportsTable = () => {
   const fetchReports = async () => {
     try {
       const response = await axios.get("http://localhost:5001/api/reports");
-      setReports(response.data);
+      // Extract reports from the response data structure
+      setReports(response.data.reports || []);
     } catch (error) {
       console.error("Error fetching reports:", error);
+      toast.error("Failed to load reports");
     } finally {
       setLoading(false);
     }
@@ -27,6 +31,31 @@ const ReportsTable = () => {
     setReadReports(prev => new Set(prev).add(reportId));
   };
 
+  // Function to update report status
+  const updateReportStatus = async (reportId, newStatus, adminNotes = '') => {
+    try {
+      const response = await axios.put(`http://localhost:5001/api/reports/${reportId}`, {
+        status: newStatus,
+        adminNotes
+      });
+      
+      if (response.data.success) {
+        // Refresh the reports list
+        fetchReports();
+        toast.success(`Report marked as ${newStatus.replace('_', ' ')}`);
+      }
+    } catch (error) {
+      console.error("Error updating report status:", error);
+      toast.error("Failed to update report status");
+    }
+  };
+
+  // Safe function to format category
+  const formatCategory = (category) => {
+    if (!category) return 'Unknown';
+    return category.replace('-', ' ').replace('_', ' ');
+  };
+
   if (loading) {
     return (
       <div className="flex justify-center items-center h-64">
@@ -37,6 +66,7 @@ const ReportsTable = () => {
 
   return (
     <div className="bg-white rounded-lg p-6 shadow-md">
+      <ToastContainer />
       <h2 className="text-xl font-bold text-gray-800 mb-6">User Reports</h2>
       
       {reports.length === 0 ? (
@@ -48,39 +78,96 @@ const ReportsTable = () => {
           <table className="min-w-full bg-white">
             <thead>
               <tr className="bg-gray-100 border-b">
-                <th className="py-3 px-4 text-left text-sm font-semibold text-gray-700">User</th>
+                <th className="py-3 px-4 text-left text-sm font-semibold text-gray-700">Reporter</th>
+                <th className="py-3 px-4 text-left text-sm font-semibold text-gray-700">Volunteer Reported</th>
                 <th className="py-3 px-4 text-left text-sm font-semibold text-gray-700">Title</th>
-                <th className="py-3 px-4 text-left text-sm font-semibold text-gray-700">Message</th>
+                <th className="py-3 px-4 text-left text-sm font-semibold text-gray-700">Category</th>
+                <th className="py-3 px-4 text-left text-sm font-semibold text-gray-700">Status</th>
                 <th className="py-3 px-4 text-left text-sm font-semibold text-gray-700">Time</th>
+                <th className="py-3 px-4 text-left text-sm font-semibold text-gray-700">Actions</th>
               </tr>
             </thead>
             <tbody>
               {reports.map((report) => {
                 const isRead = readReports.has(report._id);
+                const statusColor = {
+                  pending: 'bg-yellow-100 text-yellow-800',
+                  under_review: 'bg-blue-100 text-blue-800',
+                  resolved: 'bg-green-100 text-green-800',
+                  dismissed: 'bg-red-100 text-red-800'
+                }[report.status] || 'bg-gray-100 text-gray-800';
+
                 return (
                   <tr 
                     key={report._id} 
-                    className={`border-b hover:bg-gray-50 cursor-pointer ${isRead ? '' : 'font-semibold'}`}
-                    onClick={() => handleReportClick(report._id)}
+                    className={`border-b hover:bg-gray-50 ${isRead ? '' : 'bg-gray-50'}`}
                   >
-                    <td className="py-3 px-4 text-sm text-gray-800">
+                    {/* Reporter Info */}
+                    <td className="py-3 px-4 text-sm">
                       <div>
-                        <p className={isRead ? '' : 'font-semibold'}>{report.userName}</p>
-                        <p className="text-gray-600 text-xs">{report.userEmail}</p>
+                        <p className={isRead ? 'text-gray-800' : 'font-semibold text-gray-900'}>{report.reporterName || 'Unknown'}</p>
+                        <p className="text-gray-600 text-xs">{report.reporterEmail || 'No email'}</p>
                       </div>
                     </td>
-                    <td className="py-3 px-4 text-sm text-gray-800">
-                      <span className={isRead ? '' : 'font-semibold'}>{report.title}</span>
-                    </td>
-                    <td className="py-3 px-4 text-sm text-gray-800 max-w-md">
-                      <div className={`line-clamp-2 ${isRead ? '' : 'font-semibold'}`}>
-                        {report.message}
+
+                    {/* Volunteer Reported */}
+                    <td className="py-3 px-4 text-sm">
+                      <div>
+                        <p className={isRead ? 'text-gray-800' : 'font-semibold text-gray-900'}>{report.volunteerName || 'Unknown'}</p>
+                        <p className="text-gray-600 text-xs">{report.volunteerEmail || 'No email'}</p>
+                        <p className="text-gray-500 text-xs">ID: {report.volunteerId || 'N/A'}</p>
                       </div>
                     </td>
+
+                    {/* Report Details */}
+                    <td className="py-3 px-4 text-sm">
+                      <span className={isRead ? 'text-gray-800' : 'font-semibold text-gray-900'}>{report.title || 'No title'}</span>
+                    </td>
+
+                    {/* Category */}
+                    <td className="py-3 px-4 text-sm">
+                      <span className="inline-block px-2 py-1 rounded-full bg-gray-100 text-gray-700 text-xs capitalize">
+                        {formatCategory(report.category)}
+                      </span>
+                    </td>
+
+                    {/* Status */}
+                    <td className="py-3 px-4 text-sm">
+                      <span className={`inline-block px-2 py-1 rounded-full text-xs capitalize ${statusColor}`}>
+                        {(report.status || 'pending').replace('_', ' ')}
+                      </span>
+                    </td>
+
+                    {/* Time */}
                     <td className="py-3 px-4 text-sm text-gray-600">
                       <span className={isRead ? '' : 'font-semibold'}>
-                        {TImeFormate(new Date(report.createdAt))}
+                        {report.createdAt ? TImeFormate(new Date(report.createdAt)) : 'Unknown time'}
                       </span>
+                    </td>
+
+                    {/* Actions */}
+                    <td className="py-3 px-4 text-sm">
+                      <div className="flex space-x-2">
+                        <button
+                          onClick={() => {
+                            // Show modal with full report details
+                            document.getElementById(`modal-${report._id}`).showModal();
+                            handleReportClick(report._id);
+                          }}
+                          className="px-3 py-1 bg-blue-500 text-white rounded text-xs hover:bg-blue-600"
+                        >
+                          View
+                        </button>
+                        
+                        {(report.status === 'pending' || !report.status) && (
+                          <button
+                            onClick={() => updateReportStatus(report._id, 'under_review')}
+                            className="px-3 py-1 bg-orange-500 text-white rounded text-xs hover:bg-orange-600"
+                          >
+                            Review
+                          </button>
+                        )}
+                      </div>
                     </td>
                   </tr>
                 );
@@ -89,6 +176,75 @@ const ReportsTable = () => {
           </table>
         </div>
       )}
+
+      {/* Modals for each report */}
+      {reports.map((report) => (
+        <dialog key={report._id} id={`modal-${report._id}`} className="modal">
+          <div className="modal-box max-w-4xl">
+            <h3 className="font-bold text-lg mb-4">Report Details</h3>
+            
+            <div className="grid grid-cols-2 gap-4 mb-6">
+              <div>
+                <h4 className="font-semibold text-gray-700">Reporter Information</h4>
+                <p><strong>Name:</strong> {report.reporterName || 'Unknown'}</p>
+                <p><strong>Email:</strong> {report.reporterEmail || 'No email'}</p>
+                <p><strong>ID:</strong> {report.reporterId || 'N/A'}</p>
+              </div>
+              
+              <div>
+                <h4 className="font-semibold text-gray-700">Volunteer Reported</h4>
+                <p><strong>Name:</strong> {report.volunteerName || 'Unknown'}</p>
+                <p><strong>Email:</strong> {report.volunteerEmail || 'No email'}</p>
+                <p><strong>ID:</strong> {report.volunteerId || 'N/A'}</p>
+              </div>
+            </div>
+
+            <div className="mb-6">
+              <h4 className="font-semibold text-gray-700">Report Details</h4>
+              <p><strong>Title:</strong> {report.title || 'No title'}</p>
+              <p><strong>Category:</strong> <span className="capitalize">{formatCategory(report.category)}</span></p>
+              <p><strong>Status:</strong> <span className="capitalize">{(report.status || 'pending').replace('_', ' ')}</span></p>
+              <p><strong>Submitted:</strong> {report.createdAt ? new Date(report.createdAt).toLocaleString() : 'Unknown time'}</p>
+            </div>
+
+            <div className="mb-6">
+              <h4 className="font-semibold text-gray-700">Message</h4>
+              <div className="bg-gray-100 p-4 rounded-lg">
+                <p className="whitespace-pre-wrap">{report.message || 'No message provided'}</p>
+              </div>
+            </div>
+
+            {report.adminNotes && (
+              <div className="mb-6">
+                <h4 className="font-semibold text-gray-700">Admin Notes</h4>
+                <div className="bg-yellow-50 p-4 rounded-lg border border-yellow-200">
+                  <p className="whitespace-pre-wrap">{report.adminNotes}</p>
+                </div>
+              </div>
+            )}
+
+            <div className="modal-action">
+              <form method="dialog">
+                <button className="btn btn-ghost">Close</button>
+              </form>
+              <div className="flex space-x-2">
+                <button
+                  onClick={() => updateReportStatus(report._id, 'resolved', 'Issue resolved')}
+                  className="btn btn-success"
+                >
+                  Mark Resolved
+                </button>
+                <button
+                  onClick={() => updateReportStatus(report._id, 'dismissed', 'Report dismissed')}
+                  className="btn btn-error"
+                >
+                  Dismiss
+                </button>
+              </div>
+            </div>
+          </div>
+        </dialog>
+      ))}
     </div>
   );
 };
