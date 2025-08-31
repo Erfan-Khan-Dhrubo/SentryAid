@@ -1,4 +1,6 @@
 import express from "express";
+import { getResolvedReportsCountByVolunteer } from "../controllers/reportController.js";
+
 import {
   createReport,
   getAllReports,
@@ -31,5 +33,8 @@ router.put("/:id", updateReportStatus);
 
 // Delete report (for admin)
 router.delete("/:id", deleteReport);
+
+// Get count of resolved reports for a volunteer
+router.get("/volunteer/:volunteerId/resolved", getResolvedReportsCountByVolunteer);
 
 export default router;

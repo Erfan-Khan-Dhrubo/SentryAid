@@ -192,3 +192,28 @@ export async function deleteReport(req, res) {
     });
   }
 }
+
+//for report count
+// Get RESOLVED reports count for a volunteer
+export async function getResolvedReportsCountByVolunteer(req, res) {
+  try {
+    const { volunteerId } = req.params;
+    
+    // Count ONLY resolved reports
+    const resolvedReportsCount = await Report.countDocuments({
+      volunteerId: volunteerId,
+      status: 'resolved' // ONLY count resolved reports
+    });
+    
+    res.status(200).json({
+      success: true,
+      count: resolvedReportsCount
+    });
+  } catch (error) {
+    console.error("Error in getResolvedReportsCountByVolunteer controller", error);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error"
+    });
+  }
+}

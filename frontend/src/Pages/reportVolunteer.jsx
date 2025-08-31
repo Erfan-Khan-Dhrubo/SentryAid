@@ -187,12 +187,11 @@ const ReportVolunteer = () => {
               <>
                 <p className="font-semibold text-indigo-600">{user.name}</p>
                 <p className="text-sm text-gray-600">{user.email}</p>
-                <p className="text-xs text-gray-500 mt-1">User ID: {userId}</p>
+                
               </>
             ) : (
               <>
                 <p className="text-sm text-gray-600">User not found in database</p>
-                <p className="text-xs text-gray-500">User ID: {userId}</p>
               </>
             )}
           </div>
