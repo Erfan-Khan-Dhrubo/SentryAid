@@ -14,6 +14,7 @@ import AdminLogin from "./../Pages/Admin/AdminLogin";
 import MainRoot from "../Roots/MainRoot";
 import EditProfile from "./../Pages/Users/EditProfile";
 import VolunteerRoot from "../Roots/VolunteerRoot";
+import HeatMap from "../Pages/HeatMap";
 
 export const router = createBrowserRouter([
   {
@@ -36,6 +37,10 @@ export const router = createBrowserRouter([
       {
         path: "adminLogin",
         element: <AdminLogin />,
+      },
+      {
+        path: "heatMap",
+        element: <HeatMap />,
       },
       {
         path: "editProfile/:id",
