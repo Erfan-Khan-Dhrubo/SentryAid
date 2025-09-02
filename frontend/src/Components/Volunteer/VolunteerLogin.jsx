@@ -1,13 +1,45 @@
 import React, { useState } from "react";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useNavigate } from "react-router";
+import axios from "axios";
 
 const VolunteerLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleLogin = (e) => {
+  const navigate = useNavigate();
+
+  const handleLogin = async (e) => {
     e.preventDefault();
-    // 👉 Later connect this with backend API
-    console.log("Login with:", { email, password });
+
+    console.log("📡 Attempting to login with:", { email, password }); // log before sending
+
+    try {
+      const res = await axios.post(
+        "http://localhost:5001/api/volunteers/login",
+        { email, password }
+      );
+
+      console.log("✅ Backend response:", res.data); // log the response
+
+      // Save to localStorage
+      localStorage.setItem("volunteer", JSON.stringify(res.data));
+
+      // Show success message
+      toast.success("Login successful! 🎉");
+
+      // Navigate to volunteer dashboard
+      navigate(`/volunteers/${res.data._id}`);
+    } catch (err) {
+      console.error("❌ Login error:", err); // log full error for debugging
+
+      if (err.response) {
+        toast.error(err.response.data.message); // server returned error
+      } else {
+        toast.error("Something went wrong. Please try again."); // network or CORS issue
+      }
+    }
   };
 
   return (

@@ -23,6 +23,7 @@ export const router = createBrowserRouter([
         index: true,
         element: <Home />,
       },
+      // User Routes
       {
         path: "usersLogin",
         element: <UserLogin />,
@@ -30,10 +31,6 @@ export const router = createBrowserRouter([
       {
         path: "usersRegister",
         element: <UserRegister />,
-      },
-      {
-        path: "adminLogin",
-        element: <AdminLogin />,
       },
       {
         path: "editProfile/:id",
@@ -52,6 +49,10 @@ export const router = createBrowserRouter([
       {
         path: "volunteers/:id",
         element: <VolunteerRoot />,
+      },
+      {
+        path: "adminLogin",
+        element: <AdminLogin />,
       },
       {
         path: "admin",

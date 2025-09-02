@@ -23,6 +23,30 @@ export async function getUserById(req, res) {
   }
 }
 
+export async function loginVolunteer(req, res) {
+  try {
+    const { email, password } = req.body;
+
+    // find user by email
+    const user = await Volunteer.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // check password (plain-text for now, bcrypt recommended)
+    if (user.password !== password) {
+      return res.status(400).json({ message: "Invalid password" });
+    }
+
+    // ✅ success
+    res.status(200).json(user);
+  } catch (error) {
+    console.error("Error in loginVolunteer controller", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+}
+
 export async function createUser(req, res) {
   try {
     const {

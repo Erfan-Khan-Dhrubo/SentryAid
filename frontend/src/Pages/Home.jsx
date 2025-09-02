@@ -7,6 +7,9 @@ const Home = () => {
       <NavLink to={"/volunteerLogin"} className={"btn"}>
         volunteer
       </NavLink>
+      <NavLink to={"/usersLogin"} className={"btn"}>
+        user
+      </NavLink>
     </div>
   );
 };

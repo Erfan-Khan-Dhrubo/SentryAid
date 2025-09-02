@@ -4,6 +4,7 @@ import {
   deleteUser,
   getAllUsers,
   getUserById,
+  loginVolunteer,
   updateUser,
 } from "../controllers/volunteerController.js";
 
@@ -14,5 +15,6 @@ router.get("/:id", getUserById);
 router.post("/", createUser);
 router.put("/:id", updateUser);
 router.delete("/:id", deleteUser);
+router.post("/login", loginVolunteer);
 
 export default router;
