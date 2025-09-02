@@ -3,7 +3,6 @@ import Volunteer from "./../model/volunteerModel.js";
 export async function getAllUsers(req, res) {
   try {
     const users = await Volunteer.find().sort({ createdAt: -1 });
-
     res.status(200).json(users);
   } catch (error) {
     console.error("error in getAllUsers controller", error);
@@ -29,6 +28,7 @@ export async function createUser(req, res) {
     const {
       name,
       email,
+      password, // new password field
       phone,
       address,
       bloodGroup,
@@ -37,11 +37,13 @@ export async function createUser(req, res) {
       type,
       request,
       status,
+      score,
     } = req.body;
 
     const user = new Volunteer({
       name,
       email,
+      password, // required
       phone,
       address,
       bloodGroup,
@@ -50,6 +52,7 @@ export async function createUser(req, res) {
       type,
       request,
       status,
+      score: score || 0,
     });
 
     const savedUser = await user.save();
@@ -66,6 +69,7 @@ export async function updateUser(req, res) {
     const {
       name,
       email,
+      password, // include password for update
       phone,
       address,
       bloodGroup,
@@ -74,6 +78,7 @@ export async function updateUser(req, res) {
       type,
       request,
       status,
+      score,
     } = req.body;
 
     const updatedUser = await Volunteer.findByIdAndUpdate(
@@ -81,6 +86,7 @@ export async function updateUser(req, res) {
       {
         name,
         email,
+        password, // update password if provided
         phone,
         address,
         bloodGroup,
@@ -89,6 +95,7 @@ export async function updateUser(req, res) {
         type,
         request,
         status,
+        score,
       },
       { new: true, runValidators: true }
     );
@@ -111,7 +118,7 @@ export async function deleteUser(req, res) {
     if (!deleteUser) return res.status(404).json({ message: "User not found" });
     res.status(200).json(deleteUser);
   } catch (error) {
-    console.error("error in deleteNotes controller", error);
+    console.error("error in deleteUser controller", error);
     res.status(500).json({ message: "internal server error" });
   }
 }

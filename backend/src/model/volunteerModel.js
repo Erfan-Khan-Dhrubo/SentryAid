@@ -4,47 +4,55 @@ const volunteerSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      required: true, // Required
+      required: true,
     },
     email: {
       type: String,
-      required: true, // Required
+      required: true,
+    },
+    password: {
+      type: String,
+      required: true, // added password field
     },
     phone: {
       type: String,
-      default: "", // Optional
+      default: "",
     },
     address: {
       type: String,
-      default: "", // Optional
+      default: "",
     },
     bloodGroup: {
       type: String,
-      default: "", // Optional
+      default: "",
     },
     allergies: {
       type: String,
-      default: "", // Optional
+      default: "",
     },
     medicalCondition: {
       type: String,
-      default: "", // Optional
+      default: "",
     },
     status: {
       type: String,
-      default: "inactive", // Optional
+      default: "inactive",
     },
     type: {
       type: String,
-      default: "volunteer", // Default role
+      default: "volunteer",
     },
     request: {
       type: String,
-      default: "pending", // Default request status
+      default: "pending",
+    },
+    score: {
+      type: Number,
+      default: 0,
     },
   },
   {
-    timestamps: true, // Adds createdAt & updatedAt
+    timestamps: true,
   }
 );
 
