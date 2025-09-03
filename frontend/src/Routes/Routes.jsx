@@ -50,6 +50,7 @@ export const router = createBrowserRouter([
         path: "volunteers/:id",
         element: <VolunteerRoot />,
       },
+      // Volunteer Routes
       {
         path: "adminLogin",
         element: <AdminLogin />,

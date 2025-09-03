@@ -10,6 +10,9 @@ const Home = () => {
       <NavLink to={"/usersLogin"} className={"btn"}>
         user
       </NavLink>
+      <NavLink to={"/adminLogin"} className={"btn"}>
+        admin
+      </NavLink>
     </div>
   );
 };
