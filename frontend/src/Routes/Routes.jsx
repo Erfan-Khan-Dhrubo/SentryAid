@@ -56,6 +56,14 @@ export const router = createBrowserRouter([
         element: <AdminLogin />,
       },
       {
+        path: "/volunteerRanking",
+        element: <VolunteerRanking />,
+      },
+      {
+        path: "/report-volunteer/:volunteerId/:userId", // Add userId parameter
+        element: <ReportVolunteer />,
+      },
+      {
         path: "admin",
         element: <AdminRoot />,
         errorElement: <ErrorPage />,
