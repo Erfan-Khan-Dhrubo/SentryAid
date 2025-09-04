@@ -52,12 +52,12 @@ export const router = createBrowserRouter([
         element: <VolunteerRoot />,
       },
       {
-        path: '/volunteerRanking',
-        element: <VolunteerRanking />
+        path: "/volunteerRanking",
+        element: <VolunteerRanking />,
       },
       {
-        path: '/report-volunteer/:volunteerId/:userId', // Add userId parameter
-        element: <ReportVolunteer />
+        path: "/report-volunteer/:volunteerId/:userId", // Add userId parameter
+        element: <ReportVolunteer />,
       },
       {
         path: "admin",

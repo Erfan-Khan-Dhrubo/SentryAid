@@ -1,4 +1,3 @@
-
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -30,20 +29,17 @@ app.use(express.json());
 app.use("/api/users", userRoutes);
 app.use("/api/volunteers", volunteerRoutes);
 app.use("/api/messages", messageRoutes);
-app.use("/api/reports", reportRoutes); 
+app.use("/api/reports", reportRoutes);
 app.use("/api/notifications", notificationRoutes);
 
-// Optional: Health check endpoint
-app.get("/api/health", (req, res) => {
-  res.status(200).json({ status: "OK", message: "Server is running" });
-});
-
 // Connect to DB and start server
-connectDB().then(() => {
-  app.listen(PORT, () => {
-    console.log("Server started on port:", PORT);
+connectDB()
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log("Server started on port:", PORT);
+    });
+  })
+  .catch((error) => {
+    console.error("Failed to connect to database:", error);
+    process.exit(1);
   });
-}).catch((error) => {
-  console.error("Failed to connect to database:", error);
-  process.exit(1);
-});

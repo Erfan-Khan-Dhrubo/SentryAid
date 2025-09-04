@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router";
+import axios from "axios";
 
 const VolunteerRanking = () => {
   const [volunteers, setVolunteers] = useState([]);
@@ -13,20 +13,57 @@ const VolunteerRanking = () => {
     const fetchVolunteers = async () => {
       try {
         const mockVolunteers = [
-          { _id: '1', name: 'Alice Johnson', email: 'alice.j@example.com', sosResponded: 12 },
-          { _id: '2', name: 'Bob Smith', email: 'bob.smith@example.com', sosResponded: 9 },
-          { _id: '3', name: 'Charlie Brown', email: 'charlie.b@example.com', sosResponded: 8 },
-          { _id: '4', name: 'Diana Prince', email: 'diana.prince@example.com', sosResponded: 5 },
-          { _id: '5', name: 'Edward Davis', email: 'ed.davis@example.com', sosResponded: 4 },
-          { _id: '6', name: 'Fiona Miller', email: 'fiona.m@example.com', sosResponded: 2 },
-          { _id: '7', name: 'George Wilson', email: 'george.w@example.com', sosResponded: 1 },
+          {
+            _id: "1",
+            name: "Alice Johnson",
+            email: "alice.j@example.com",
+            sosResponded: 12,
+          },
+          {
+            _id: "2",
+            name: "Bob Smith",
+            email: "bob.smith@example.com",
+            sosResponded: 9,
+          },
+          {
+            _id: "3",
+            name: "Charlie Brown",
+            email: "charlie.b@example.com",
+            sosResponded: 8,
+          },
+          {
+            _id: "4",
+            name: "Diana Prince",
+            email: "diana.prince@example.com",
+            sosResponded: 5,
+          },
+          {
+            _id: "5",
+            name: "Edward Davis",
+            email: "ed.davis@example.com",
+            sosResponded: 4,
+          },
+          {
+            _id: "6",
+            name: "Fiona Miller",
+            email: "fiona.m@example.com",
+            sosResponded: 2,
+          },
+          {
+            _id: "7",
+            name: "George Wilson",
+            email: "george.w@example.com",
+            sosResponded: 1,
+          },
         ];
 
-        const sortedVolunteers = mockVolunteers.sort((a, b) => b.sosResponded - a.sosResponded);
+        const sortedVolunteers = mockVolunteers.sort(
+          (a, b) => b.sosResponded - a.sosResponded
+        );
         setVolunteers(sortedVolunteers);
         await fetchAllReportCounts(sortedVolunteers);
       } catch (error) {
-        console.error('Failed to load volunteers:', error);
+        console.error("Failed to load volunteers:", error);
       } finally {
         setIsLoading(false);
       }
@@ -39,20 +76,25 @@ const VolunteerRanking = () => {
   const fetchAllReportCounts = async (volunteersList) => {
     try {
       const counts = {};
-      
+
       for (const volunteer of volunteersList) {
         try {
-          const response = await axios.get(`http://localhost:5001/api/reports/volunteer/${volunteer._id}/resolved`);
+          const response = await axios.get(
+            `http://localhost:5001/api/reports/volunteer/${volunteer._id}/resolved`
+          );
           counts[volunteer._id] = response.data.count;
         } catch (error) {
-          console.error(`Error fetching reports for volunteer ${volunteer._id}:`, error);
+          console.error(
+            `Error fetching reports for volunteer ${volunteer._id}:`,
+            error
+          );
           counts[volunteer._id] = 0;
         }
       }
-      
+
       setReportCounts(counts);
     } catch (error) {
-      console.error('Error fetching report counts:', error);
+      console.error("Error fetching report counts:", error);
     }
   };
 
@@ -74,15 +116,24 @@ const VolunteerRanking = () => {
 
   const getRankBadge = (index) => {
     switch (index) {
-      case 0: return '🥇';
-      case 1: return '🥈';
-      case 2: return '🥉';
-      default: return `#${index + 1}`;
+      case 0:
+        return "🥇";
+      case 1:
+        return "🥈";
+      case 2:
+        return "🥉";
+      default:
+        return `#${index + 1}`;
     }
   };
 
   const getAvatarPlaceholder = (name) => {
-    const initials = name.split(' ').map(word => word[0]).join('').toUpperCase().slice(0, 2);
+    const initials = name
+      .split(" ")
+      .map((word) => word[0])
+      .join("")
+      .toUpperCase()
+      .slice(0, 2);
     return (
       <div className="flex-shrink-0 w-12 h-12 flex items-center justify-center rounded-full bg-indigo-600 text-white font-bold text-lg">
         {initials}
@@ -93,7 +144,9 @@ const VolunteerRanking = () => {
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-xl font-semibold text-gray-700">Loading leaderboard...</div>
+        <div className="text-xl font-semibold text-gray-700">
+          Loading leaderboard...
+        </div>
       </div>
     );
   }
@@ -102,19 +155,23 @@ const VolunteerRanking = () => {
     <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-extrabold text-gray-900">Volunteer Leaderboard</h1>
-          <p className="mt-4 text-xl text-gray-600">Top volunteers based on SOS responses</p>
+          <h1 className="text-4xl font-extrabold text-gray-900">
+            Volunteer Leaderboard
+          </h1>
+          <p className="mt-4 text-xl text-gray-600">
+            Top volunteers based on SOS responses
+          </p>
         </div>
 
         <div className="bg-white shadow-xl rounded-xl overflow-hidden">
           <div className="bg-indigo-700 px-6 py-4">
             <h2 className="text-xl font-bold text-white">Top Responders</h2>
           </div>
-          
+
           <ul className="divide-y divide-gray-200">
             {volunteers.map((volunteer, index) => {
               const resolvedReports = reportCounts[volunteer._id] || 0;
-              
+
               return (
                 <li key={volunteer._id} className="p-6 hover:bg-gray-50">
                   <div className="flex items-center justify-between">
@@ -127,13 +184,18 @@ const VolunteerRanking = () => {
                       {getAvatarPlaceholder(volunteer.name)}
 
                       <div className="min-w-0 flex-1">
-                        <p className="text-lg font-medium text-gray-900">{volunteer.name}</p>
-                        <p className="text-sm text-gray-500">{volunteer.email}</p>
-                        
+                        <p className="text-lg font-medium text-gray-900">
+                          {volunteer.name}
+                        </p>
+                        <p className="text-sm text-gray-500">
+                          {volunteer.email}
+                        </p>
+
                         {/* SHOW ONLY RESOLVED REPORTS */}
                         {resolvedReports > 0 && (
                           <p className="text-xs text-red-600 font-semibold mt-1">
-                            ⚠️ {resolvedReports} report{resolvedReports !== 1 ? 's' : ''} found
+                            ⚠️ {resolvedReports} report
+                            {resolvedReports !== 1 ? "s" : ""} found
                           </p>
                         )}
                       </div>
@@ -142,11 +204,16 @@ const VolunteerRanking = () => {
                     {/* Right side */}
                     <div className="flex items-center space-x-4">
                       <div className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800 border border-green-200">
-                        SOS: <span className="font-bold ml-1">{volunteer.sosResponded}</span>
+                        SOS:{" "}
+                        <span className="font-bold ml-1">
+                          {volunteer.sosResponded}
+                        </span>
                       </div>
 
                       <button
-                        onClick={() => handleReport(volunteer._id, volunteer.name)}
+                        onClick={() =>
+                          handleReport(volunteer._id, volunteer.name)
+                        }
                         className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-red-600 hover:bg-red-700"
                       >
                         Report

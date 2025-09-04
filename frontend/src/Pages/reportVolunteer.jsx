@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { ToastContainer, toast } from 'react-toastify';
-import axios from 'axios';
-import 'react-toastify/dist/ReactToastify.css';
+import { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router";
+import { ToastContainer, toast } from "react-toastify";
+import axios from "axios";
+import "react-toastify/dist/ReactToastify.css";
 
 const ReportVolunteer = () => {
   const { volunteerId, userId } = useParams();
@@ -13,9 +13,9 @@ const ReportVolunteer = () => {
   const [isUserLoading, setIsUserLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
-    title: '',
-    category: '',
-    message: ''
+    title: "",
+    category: "",
+    message: "",
   });
 
   // Fetch volunteer data
@@ -23,20 +23,22 @@ const ReportVolunteer = () => {
     const fetchVolunteerData = () => {
       try {
         const mockVolunteers = [
-          { _id: '1', name: 'Alice Johnson', email: 'alice.j@example.com' },
-          { _id: '2', name: 'Bob Smith', email: 'bob.smith@example.com' },
-          { _id: '3', name: 'Charlie Brown', email: 'charlie.b@example.com' },
-          { _id: '4', name: 'Diana Prince', email: 'diana.prince@example.com' },
-          { _id: '5', name: 'Edward Davis', email: 'ed.davis@example.com' },
-          { _id: '6', name: 'Fiona Miller', email: 'fiona.m@example.com' },
-          { _id: '7', name: 'George Wilson', email: 'george.w@example.com' },
+          { _id: "1", name: "Alice Johnson", email: "alice.j@example.com" },
+          { _id: "2", name: "Bob Smith", email: "bob.smith@example.com" },
+          { _id: "3", name: "Charlie Brown", email: "charlie.b@example.com" },
+          { _id: "4", name: "Diana Prince", email: "diana.prince@example.com" },
+          { _id: "5", name: "Edward Davis", email: "ed.davis@example.com" },
+          { _id: "6", name: "Fiona Miller", email: "fiona.m@example.com" },
+          { _id: "7", name: "George Wilson", email: "george.w@example.com" },
         ];
 
-        const foundVolunteer = mockVolunteers.find(v => v._id === volunteerId);
+        const foundVolunteer = mockVolunteers.find(
+          (v) => v._id === volunteerId
+        );
         setVolunteer(foundVolunteer);
       } catch (error) {
-        console.error('Failed to fetch volunteer data:', error);
-        toast.error('Failed to load volunteer information');
+        console.error("Failed to fetch volunteer data:", error);
+        toast.error("Failed to load volunteer information");
       } finally {
         setIsLoading(false);
       }
@@ -50,14 +52,16 @@ const ReportVolunteer = () => {
     const fetchUserData = async () => {
       try {
         setIsUserLoading(true);
-        const response = await axios.get(`http://localhost:5001/api/users/${userId}`);
+        const response = await axios.get(
+          `http://localhost:5001/api/users/${userId}`
+        );
         setUser(response.data);
       } catch (error) {
-        console.error('Failed to fetch user data:', error);
+        console.error("Failed to fetch user data:", error);
         if (error.response?.status === 404) {
-          toast.error('User not found in database');
+          toast.error("User not found in database");
         } else {
-          toast.error('Failed to load user information');
+          toast.error("Failed to load user information");
         }
       } finally {
         setIsUserLoading(false);
@@ -71,18 +75,22 @@ const ReportVolunteer = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     // Validate form
-    if (!formData.title.trim() || !formData.category || !formData.message.trim()) {
-      toast.error('All fields should be filled!', {
+    if (
+      !formData.title.trim() ||
+      !formData.category ||
+      !formData.message.trim()
+    ) {
+      toast.error("All fields should be filled!", {
         position: "top-right",
         autoClose: 3000,
         hideProgressBar: false,
@@ -99,21 +107,24 @@ const ReportVolunteer = () => {
       // Submit report to backend
       const reportData = {
         reporterId: userId,
-        reporterName: user?.name || 'Unknown User',
-        reporterEmail: user?.email || 'No email',
+        reporterName: user?.name || "Unknown User",
+        reporterEmail: user?.email || "No email",
         volunteerId: volunteerId,
         volunteerName: volunteer.name,
         volunteerEmail: volunteer.email,
         title: formData.title,
         category: formData.category,
-        message: formData.message
+        message: formData.message,
       };
 
-      const response = await axios.post('http://localhost:5001/api/reports', reportData);
-      
+      const response = await axios.post(
+        "http://localhost:5001/api/reports",
+        reportData
+      );
+
       if (response.data.success) {
         // Show success toast
-        toast.success('Report submitted successfully!', {
+        toast.success("Report submitted successfully!", {
           position: "top-right",
           autoClose: 3000,
           hideProgressBar: false,
@@ -123,18 +134,18 @@ const ReportVolunteer = () => {
         });
 
         // Reset form
-        setFormData({ title: '', category: '', message: '' });
-        
+        setFormData({ title: "", category: "", message: "" });
+
         // Navigate back to ranking page after 2 seconds
         setTimeout(() => {
-          navigate('/volunteerRanking');
+          navigate("/volunteerRanking");
         }, 2000);
       } else {
         throw new Error(response.data.message);
       }
     } catch (error) {
-      console.error('Failed to submit report:', error);
-      toast.error('Failed to submit report. Please try again.', {
+      console.error("Failed to submit report:", error);
+      toast.error("Failed to submit report. Please try again.", {
         position: "top-right",
         autoClose: 3000,
         hideProgressBar: false,
@@ -148,13 +159,15 @@ const ReportVolunteer = () => {
   };
 
   const handleCancel = () => {
-    navigate('/volunteerRanking');
+    navigate("/volunteerRanking");
   };
 
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-xl font-semibold text-gray-700">Loading information...</div>
+        <div className="text-xl font-semibold text-gray-700">
+          Loading information...
+        </div>
       </div>
     );
   }
@@ -162,7 +175,9 @@ const ReportVolunteer = () => {
   if (!volunteer) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-xl font-semibold text-gray-700">Volunteer not found</div>
+        <div className="text-xl font-semibold text-gray-700">
+          Volunteer not found
+        </div>
       </div>
     );
   }
@@ -170,15 +185,17 @@ const ReportVolunteer = () => {
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <ToastContainer />
-      
+
       <div className="max-w-2xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-gray-900">Report Volunteer</h1>
-          
+
           {/* User Information */}
           <div className="mt-4 bg-white p-4 rounded-lg shadow-sm">
-            <h3 className="text-sm font-semibold text-gray-600 mb-2">Reporting User:</h3>
+            <h3 className="text-sm font-semibold text-gray-600 mb-2">
+              Reporting User:
+            </h3>
             {isUserLoading ? (
               <div className="flex justify-center">
                 <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-indigo-600"></div>
@@ -187,11 +204,12 @@ const ReportVolunteer = () => {
               <>
                 <p className="font-semibold text-indigo-600">{user.name}</p>
                 <p className="text-sm text-gray-600">{user.email}</p>
-                
               </>
             ) : (
               <>
-                <p className="text-sm text-gray-600">User not found in database</p>
+                <p className="text-sm text-gray-600">
+                  User not found in database
+                </p>
               </>
             )}
           </div>
@@ -199,12 +217,16 @@ const ReportVolunteer = () => {
 
         {/* Volunteer Being Reported */}
         <div className="bg-white p-4 rounded-lg shadow-sm mb-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">Volunteer Being Reported:</h3>
+          <h3 className="text-lg font-semibold text-gray-900 mb-2">
+            Volunteer Being Reported:
+          </h3>
           <div className="flex items-center justify-between">
             <div>
               <p className="font-medium">{volunteer.name}</p>
               <p className="text-sm text-gray-600">{volunteer.email}</p>
-              <p className="text-xs text-gray-500">Volunteer ID: {volunteerId}</p>
+              <p className="text-xs text-gray-500">
+                Volunteer ID: {volunteerId}
+              </p>
             </div>
           </div>
         </div>
@@ -214,7 +236,10 @@ const ReportVolunteer = () => {
           <form onSubmit={handleSubmit} className="p-6 space-y-6">
             {/* Report Title */}
             <div>
-              <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="title"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 Report Title *
               </label>
               <input
@@ -231,7 +256,10 @@ const ReportVolunteer = () => {
 
             {/* Report Category */}
             <div>
-              <label htmlFor="category" className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="category"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 Category *
               </label>
               <select
@@ -253,7 +281,10 @@ const ReportVolunteer = () => {
 
             {/* Message Box */}
             <div>
-              <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="message"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 Detailed Message *
               </label>
               <textarea
@@ -289,7 +320,7 @@ const ReportVolunteer = () => {
                     Submitting...
                   </div>
                 ) : (
-                  'Submit Report'
+                  "Submit Report"
                 )}
               </button>
             </div>
@@ -298,11 +329,15 @@ const ReportVolunteer = () => {
 
         {/* Additional Information */}
         <div className="mt-6 p-4 bg-yellow-50 rounded-lg border border-yellow-200">
-          <h3 className="text-sm font-semibold text-yellow-800 mb-2">Important Information</h3>
+          <h3 className="text-sm font-semibold text-yellow-800 mb-2">
+            Important Information
+          </h3>
           <ul className="text-sm text-yellow-700 space-y-1">
             <li>• Please provide accurate and truthful information</li>
             <li>• False reports may result in account suspension</li>
-            <li>• All reports are reviewed by our admin team within 24 hours</li>
+            <li>
+              • All reports are reviewed by our admin team within 24 hours
+            </li>
             <li>• You may be contacted for additional information</li>
             <li>• Reports are stored in our database for record keeping</li>
           </ul>
