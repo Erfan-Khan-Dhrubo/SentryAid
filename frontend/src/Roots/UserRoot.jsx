@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { fetchSpecific } from "../Utilities/Helper";
-import { useParams } from "react-router";
+import { Outlet, useParams } from "react-router";
 import UserProfile from "../Components/User/UserProfile";
 import UserNavbar from "../Components/User/UserNavbar";
 
@@ -24,7 +24,8 @@ const UserRoot = () => {
           <UserNavbar userInfo={userInfo}></UserNavbar>
         </div>
         <div className="flex-1">
-          <UserProfile userInfo={userInfo}></UserProfile>
+          {/* <UserProfile userInfo={userInfo}></UserProfile> */}
+          <Outlet></Outlet>
         </div>
       </div>
     </div>

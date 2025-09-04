@@ -25,10 +25,10 @@ export async function getUserById(req, res) {
 
 export async function loginVolunteer(req, res) {
   try {
-    const { email, password } = req.body;
+    const { name, password } = req.body;
 
     // find user by email
-    const user = await Volunteer.findOne({ email });
+    const user = await Volunteer.findOne({ name });
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });

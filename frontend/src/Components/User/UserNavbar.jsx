@@ -1,5 +1,7 @@
 import { FaUser, FaTachometerAlt, FaUserShield } from "react-icons/fa";
 import { FaMessage } from "react-icons/fa6";
+import { FaRankingStar } from "react-icons/fa6";
+import { AiFillEdit } from "react-icons/ai";
 import { NavLink } from "react-router";
 
 const UserNavbar = ({ userInfo }) => {
@@ -10,23 +12,24 @@ const UserNavbar = ({ userInfo }) => {
         <nav className="mt-6 space-y-2 middle">
           <NavLink
             to={`/users/${userInfo._id}`}
+            end
             className="flex items-center px-4 py-2 text-gray-600 hover:bg-pink-50 rounded-lg"
           >
             <FaTachometerAlt className="mr-3" /> Dashboard
           </NavLink>
-          {/* <NavLink
-            to={"demo"}
+          <NavLink
+            to={`/users/${userInfo._id}/volunteerRanking`}
             className="flex items-center px-4 py-2 text-gray-600 hover:bg-pink-50 rounded-lg"
           >
-            <FaUser className="mr-3" /> User
+            <FaRankingStar className="mr-3" /> Ranking
           </NavLink>
           <NavLink
-            to={"/admin"}
+            to={`/users/${userInfo._id}/editProfile`}
             className="flex items-center px-4 py-2 text-gray-600 hover:bg-pink-50 rounded-lg"
           >
-            <FaUserShield className="mr-3" /> Admin Panel
+            <AiFillEdit className="mr-3" /> Edit Profile
           </NavLink>
-          <NavLink
+          {/*<NavLink
             to={"alertMessage"}
             className="flex items-center px-4 py-2 text-gray-600 hover:bg-pink-50 rounded-lg"
           >

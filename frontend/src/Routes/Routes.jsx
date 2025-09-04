@@ -14,6 +14,7 @@ import VolunteerRoot from "../Roots/VolunteerRoot";
 import Volunteer from "../Pages/Volunteer/Volunteer";
 import VolunteerRanking from "../Pages/volunteerRanking";
 import ReportVolunteer from "../Pages/reportVolunteer";
+import UserProfile from "../Components/User/UserProfile";
 
 export const router = createBrowserRouter([
   {
@@ -27,6 +28,25 @@ export const router = createBrowserRouter([
       },
       // User Routes
       {
+        path: "users/:id",
+        element: <UserRoot />,
+        errorElement: <ErrorPage />,
+        children: [
+          {
+            index: true,
+            element: <UserProfile />,
+          },
+          {
+            path: "volunteerRanking",
+            element: <VolunteerRanking />,
+          },
+          {
+            path: "editProfile",
+            element: <EditProfile />,
+          },
+        ],
+      },
+      {
         path: "usersLogin",
         element: <UserLogin />,
       },
@@ -34,14 +54,10 @@ export const router = createBrowserRouter([
         path: "usersRegister",
         element: <UserRegister />,
       },
-      {
-        path: "editProfile/:id",
-        element: <EditProfile />,
-      },
-      {
-        path: "users/:id",
-        element: <UserRoot />,
-      },
+      // {
+      //   path: "editProfile/:id",
+      //   element: <EditProfile />,
+      // },
       // Volunteer Routes
       {
         path: "volunteerLogin",
@@ -52,18 +68,14 @@ export const router = createBrowserRouter([
         path: "volunteers/:id",
         element: <VolunteerRoot />,
       },
-      // Volunteer Routes
+      {
+        path: "/reportVolunteer/:volunteerId", // Add userId parameter
+        element: <ReportVolunteer />,
+      },
+      // Admin Routes
       {
         path: "adminLogin",
         element: <AdminLogin />,
-      },
-      {
-        path: "/volunteerRanking",
-        element: <VolunteerRanking />,
-      },
-      {
-        path: "/report-volunteer/:volunteerId/:userId", // Add userId parameter
-        element: <ReportVolunteer />,
       },
       {
         path: "admin",

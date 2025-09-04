@@ -5,7 +5,8 @@ import axios from "axios";
 import "react-toastify/dist/ReactToastify.css";
 
 const ReportVolunteer = () => {
-  const { volunteerId, userId } = useParams();
+  const { volunteerId } = useParams();
+  const [userId, setUserId] = useState("");
   const navigate = useNavigate();
   const [volunteer, setVolunteer] = useState(null);
   const [user, setUser] = useState(null);
@@ -18,24 +19,20 @@ const ReportVolunteer = () => {
     message: "",
   });
 
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    setUserId(user?._id);
+  }, []);
+
   // Fetch volunteer data
   useEffect(() => {
-    const fetchVolunteerData = () => {
+    const fetchVolunteerData = async () => {
       try {
-        const mockVolunteers = [
-          { _id: "1", name: "Alice Johnson", email: "alice.j@example.com" },
-          { _id: "2", name: "Bob Smith", email: "bob.smith@example.com" },
-          { _id: "3", name: "Charlie Brown", email: "charlie.b@example.com" },
-          { _id: "4", name: "Diana Prince", email: "diana.prince@example.com" },
-          { _id: "5", name: "Edward Davis", email: "ed.davis@example.com" },
-          { _id: "6", name: "Fiona Miller", email: "fiona.m@example.com" },
-          { _id: "7", name: "George Wilson", email: "george.w@example.com" },
-        ];
-
-        const foundVolunteer = mockVolunteers.find(
-          (v) => v._id === volunteerId
+        const mockVolunteers = await axios.get(
+          `http://localhost:5001/api/volunteers/${volunteerId}`
         );
-        setVolunteer(foundVolunteer);
+
+        setVolunteer(mockVolunteers.data);
       } catch (error) {
         console.error("Failed to fetch volunteer data:", error);
         toast.error("Failed to load volunteer information");

@@ -11,6 +11,10 @@ const userSchema = new mongoose.Schema(
       required: true, // Email is required
       unique: true, // Prevent duplicate emails
     },
+    password: {
+      type: String,
+      required: true, // Password is required
+    },
     phone: {
       type: String,
       default: "", // Optional

@@ -12,52 +12,11 @@ const VolunteerRanking = () => {
   useEffect(() => {
     const fetchVolunteers = async () => {
       try {
-        const mockVolunteers = [
-          {
-            _id: "1",
-            name: "Alice Johnson",
-            email: "alice.j@example.com",
-            sosResponded: 12,
-          },
-          {
-            _id: "2",
-            name: "Bob Smith",
-            email: "bob.smith@example.com",
-            sosResponded: 9,
-          },
-          {
-            _id: "3",
-            name: "Charlie Brown",
-            email: "charlie.b@example.com",
-            sosResponded: 8,
-          },
-          {
-            _id: "4",
-            name: "Diana Prince",
-            email: "diana.prince@example.com",
-            sosResponded: 5,
-          },
-          {
-            _id: "5",
-            name: "Edward Davis",
-            email: "ed.davis@example.com",
-            sosResponded: 4,
-          },
-          {
-            _id: "6",
-            name: "Fiona Miller",
-            email: "fiona.m@example.com",
-            sosResponded: 2,
-          },
-          {
-            _id: "7",
-            name: "George Wilson",
-            email: "george.w@example.com",
-            sosResponded: 1,
-          },
-        ];
+        const mockVolunteers = await axios.get(
+          "http://localhost:5001/api/volunteers"
+        );
 
-        const sortedVolunteers = mockVolunteers.sort(
+        const sortedVolunteers = mockVolunteers.data.sort(
           (a, b) => b.sosResponded - a.sosResponded
         );
         setVolunteers(sortedVolunteers);
@@ -109,9 +68,8 @@ const VolunteerRanking = () => {
     return () => clearInterval(interval);
   }, [volunteers]); // Re-run when volunteers change
 
-  const handleReport = (volunteerId, volunteerName) => {
-    navigate(`/report-volunteer/${volunteerId}/your-user-id-here`);
-    alert('Replace "your-user-id-here" with your actual user ID');
+  const handleReport = (volunteerId) => {
+    navigate(`/reportVolunteer/${volunteerId}`);
   };
 
   const getRankBadge = (index) => {
@@ -206,14 +164,12 @@ const VolunteerRanking = () => {
                       <div className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800 border border-green-200">
                         SOS:{" "}
                         <span className="font-bold ml-1">
-                          {volunteer.sosResponded}
+                          {volunteer.score}
                         </span>
                       </div>
 
                       <button
-                        onClick={() =>
-                          handleReport(volunteer._id, volunteer.name)
-                        }
+                        onClick={() => handleReport(volunteer._id)}
                         className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-red-600 hover:bg-red-700"
                       >
                         Report

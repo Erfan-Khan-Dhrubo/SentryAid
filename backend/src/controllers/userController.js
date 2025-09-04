@@ -3,7 +3,6 @@ import User from "../model/userModel.js";
 export async function getAllUsers(req, res) {
   try {
     const users = await User.find().sort({ createdAt: -1 });
-
     res.status(200).json(users);
   } catch (error) {
     console.error("error in getAllUsers controller", error);
@@ -29,19 +28,21 @@ export async function createUser(req, res) {
     const {
       name,
       email,
+      password, // new required field
       phone,
       address,
       bloodGroup,
       allergies,
       medicalCondition,
-      type, // Optional, will default to "user"
-      request, // Optional, will default to "rejected"
+      type,
+      request,
     } = req.body;
 
-    // Create a new user based on the schema
+    // Create a new user
     const user = new User({
       name,
       email,
+      password, // store password (⚠️ should be hashed in real apps)
       phone,
       address,
       bloodGroup,
@@ -65,13 +66,14 @@ export async function updateUser(req, res) {
     const {
       name,
       email,
+      password, // allow password update
       phone,
       address,
       bloodGroup,
       allergies,
       medicalCondition,
-      type, // Optional, defaults handled in schema
-      request, // Optional, defaults handled in schema
+      type,
+      request,
     } = req.body;
 
     const updatedUser = await User.findByIdAndUpdate(
@@ -79,6 +81,7 @@ export async function updateUser(req, res) {
       {
         name,
         email,
+        password,
         phone,
         address,
         bloodGroup,
@@ -109,9 +112,32 @@ export async function deleteUser(req, res) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    res.status(200).json(deleteUser);
+    res.status(200).json(deletedUser);
   } catch (error) {
     console.error("Error in deleteUser controller", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+}
+
+export async function loginUser(req, res) {
+  try {
+    const { name, password } = req.body;
+
+    // find user by email
+    const user = await User.findOne({ name });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    if (user.password !== password) {
+      return res.status(400).json({ message: "Invalid password" });
+    }
+
+    // ✅ success
+    res.status(200).json(user);
+  } catch (error) {
+    console.error("Error in loginUser controller", error);
     res.status(500).json({ message: "Internal server error" });
   }
 }

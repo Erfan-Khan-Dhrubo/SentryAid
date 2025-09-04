@@ -5,7 +5,7 @@ import { useNavigate } from "react-router";
 import axios from "axios";
 
 const VolunteerLogin = () => {
-  const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
   const [password, setPassword] = useState("");
 
   const navigate = useNavigate();
@@ -13,12 +13,12 @@ const VolunteerLogin = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
 
-    console.log("📡 Attempting to login with:", { email, password }); // log before sending
+    console.log("📡 Attempting to login with:", { name, password }); // log before sending
 
     try {
       const res = await axios.post(
         "http://localhost:5001/api/volunteers/login",
-        { email, password }
+        { name, password }
       );
 
       console.log("✅ Backend response:", res.data); // log the response
@@ -49,16 +49,16 @@ const VolunteerLogin = () => {
       </h2>
 
       <form onSubmit={handleLogin} className="space-y-4">
-        {/* Email */}
+        {/* Name */}
         <div>
           <label className="block text-sm font-medium text-gray-700">
-            Email
+            Name
           </label>
           <input
-            type="email"
-            placeholder="Enter your email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            type="text"
+            placeholder="Enter your name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
             className="mt-1 w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-300"
             required
           />
