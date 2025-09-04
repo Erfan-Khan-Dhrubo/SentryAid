@@ -21,7 +21,9 @@ const EditProfile = () => {
           setUser(res.data);
           setPreMail(res.data.email);
         } else {
-          const res = await axios.get(`http://localhost:5001/api/users/${id}`);
+          const res = await axios.get(
+            `http://localhost:5001/api/volunteers/${id}`
+          );
           setUser(res.data);
           setPreMail(res.data.email);
         }
@@ -57,7 +59,7 @@ const EditProfile = () => {
         );
       } else {
         const res = await axios.put(
-          `http://localhost:5001/api/users/${id}`,
+          `http://localhost:5001/api/volunteers/${id}`,
           user
         );
         setUser(res.data);

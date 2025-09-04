@@ -75,7 +75,7 @@ const ShowInfoBtn = ({ userInfo }) => {
               <div className="mt-12 flex justify-between items-center">
                 <div>
                   <NavLink
-                    to={`/users/${_id}/editProfile`}
+                    to={`/${type}s/${_id}/editProfile`}
                     className="btn bg-pink-400 text-white"
                   >
                     Edit Profile

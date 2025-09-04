@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { fetchSpecific } from "../Utilities/Helper";
-import { useParams } from "react-router";
+import { Outlet, useParams } from "react-router";
 import VolunteerNavbar from "../Components/Volunteer/VolunteerNavbar";
 import VolunteerProfile from "../Components/Volunteer/VolunteerProfile";
 
@@ -26,7 +26,7 @@ const VolunteerRoot = () => {
           <VolunteerNavbar volunteerInfo={volunteerInfo}></VolunteerNavbar>
         </div>
         <div className="flex-1">
-          <VolunteerProfile volunteerInfo={volunteerInfo}></VolunteerProfile>
+          <Outlet></Outlet>
         </div>
       </div>
     </div>

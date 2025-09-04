@@ -2,11 +2,17 @@ import ShowInfoBtn from "../Common Components/ShowInfoBtn";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-const VolunteerProfile = ({ volunteerInfo }) => {
+const VolunteerProfile = () => {
   const [notifications, setNotifications] = useState([]);
   const [activeNotif, setActiveNotif] = useState(null);
   const [sta, setSta] = useState("");
   const [readMessages, setReadMessages] = useState(new Set());
+  const [volunteerInfo, setVolunteerInfo] = useState([]);
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("volunteer"));
+    setVolunteerInfo(user);
+  }, []);
 
   useEffect(() => {
     if (volunteerInfo) {

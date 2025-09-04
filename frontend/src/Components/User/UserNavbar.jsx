@@ -8,7 +8,6 @@ const UserNavbar = ({ userInfo }) => {
   return (
     <aside className="w-64 bg-white shadow-lg flex flex-col justify-between h-full">
       <div>
-        <div className="p-4 font-bold text-2xl text-pink-600">SentryAid</div>
         <nav className="mt-6 space-y-2 middle">
           <NavLink
             to={`/users/${userInfo._id}`}

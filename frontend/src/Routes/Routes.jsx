@@ -15,6 +15,7 @@ import Volunteer from "../Pages/Volunteer/Volunteer";
 import VolunteerRanking from "../Pages/volunteerRanking";
 import ReportVolunteer from "../Pages/reportVolunteer";
 import UserProfile from "../Components/User/UserProfile";
+import VolunteerProfile from "../Components/Volunteer/VolunteerProfile";
 
 export const router = createBrowserRouter([
   {
@@ -54,10 +55,6 @@ export const router = createBrowserRouter([
         path: "usersRegister",
         element: <UserRegister />,
       },
-      // {
-      //   path: "editProfile/:id",
-      //   element: <EditProfile />,
-      // },
       // Volunteer Routes
       {
         path: "volunteerLogin",
@@ -67,6 +64,21 @@ export const router = createBrowserRouter([
       {
         path: "volunteers/:id",
         element: <VolunteerRoot />,
+        errorElement: <ErrorPage />,
+        children: [
+          {
+            index: true,
+            element: <VolunteerProfile />,
+          },
+          {
+            path: "volunteerRanking",
+            element: <VolunteerRanking />,
+          },
+          {
+            path: "editProfile",
+            element: <EditProfile />,
+          },
+        ],
       },
       {
         path: "/reportVolunteer/:volunteerId", // Add userId parameter

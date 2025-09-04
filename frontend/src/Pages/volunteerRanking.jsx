@@ -8,6 +8,18 @@ const VolunteerRanking = () => {
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
 
+  const [volunteerInfo, setVolunteerInfo] = useState([]);
+  const [volunteerView, setVolunteerView] = useState(false);
+
+  useEffect(() => {
+    const volunteer = localStorage.getItem("volunteer");
+    if (volunteer) {
+      setVolunteerView(true);
+      const user = JSON.parse(localStorage.getItem("volunteer"));
+      setVolunteerInfo(user);
+    }
+  }, []);
+
   // Fetch volunteer data
   useEffect(() => {
     const fetchVolunteers = async () => {
@@ -129,9 +141,15 @@ const VolunteerRanking = () => {
           <ul className="divide-y divide-gray-200">
             {volunteers.map((volunteer, index) => {
               const resolvedReports = reportCounts[volunteer._id] || 0;
+              console.log(volunteer.volunteerInfo);
 
               return (
-                <li key={volunteer._id} className="p-6 hover:bg-gray-50">
+                <li
+                  key={volunteer._id}
+                  className={`p-6 hover:bg-gray-50 ${
+                    volunteer._id === volunteerInfo._id ? "bg-pink-100" : ""
+                  }`}
+                >
                   <div className="flex items-center justify-between">
                     {/* Left side */}
                     <div className="flex items-center space-x-4 flex-1 min-w-0">
@@ -167,13 +185,14 @@ const VolunteerRanking = () => {
                           {volunteer.score}
                         </span>
                       </div>
-
-                      <button
-                        onClick={() => handleReport(volunteer._id)}
-                        className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-red-600 hover:bg-red-700"
-                      >
-                        Report
-                      </button>
+                      {!volunteerView && (
+                        <button
+                          onClick={() => handleReport(volunteer._id)}
+                          className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-red-600 hover:bg-red-700"
+                        >
+                          Report
+                        </button>
+                      )}
                     </div>
                   </div>
                 </li>

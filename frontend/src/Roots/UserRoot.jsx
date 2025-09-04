@@ -24,7 +24,6 @@ const UserRoot = () => {
           <UserNavbar userInfo={userInfo}></UserNavbar>
         </div>
         <div className="flex-1">
-          {/* <UserProfile userInfo={userInfo}></UserProfile> */}
           <Outlet></Outlet>
         </div>
       </div>
