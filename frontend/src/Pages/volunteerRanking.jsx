@@ -141,7 +141,6 @@ const VolunteerRanking = () => {
           <ul className="divide-y divide-gray-200">
             {volunteers.map((volunteer, index) => {
               const resolvedReports = reportCounts[volunteer._id] || 0;
-              console.log(volunteer.volunteerInfo);
 
               return (
                 <li

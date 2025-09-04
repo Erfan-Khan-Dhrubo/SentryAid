@@ -12,6 +12,11 @@ import MainRoot from "../Roots/MainRoot";
 import EditProfile from "./../Pages/Users/EditProfile";
 import VolunteerRoot from "../Roots/VolunteerRoot";
 import HeatMap from "../Pages/HeatMap";
+import UserProfile from "../Components/User/UserProfile";
+import VolunteerRanking from "../Pages/volunteerRanking";
+import VolunteerProfile from "../Components/Volunteer/VolunteerProfile";
+import ReportVolunteer from "./../Pages/reportVolunteer";
+import Volunteer from "./../Pages/Volunteer/Volunteer";
 
 export const router = createBrowserRouter([
   {
@@ -41,6 +46,10 @@ export const router = createBrowserRouter([
             path: "editProfile",
             element: <EditProfile />,
           },
+          {
+            path: "heatMap",
+            element: <HeatMap />,
+          },
         ],
       },
       {
@@ -50,10 +59,6 @@ export const router = createBrowserRouter([
       {
         path: "usersRegister",
         element: <UserRegister />,
-      },
-      {
-        path: "heatMap",
-        element: <HeatMap />,
       },
       // Volunteer Routes
       {
@@ -73,7 +78,15 @@ export const router = createBrowserRouter([
             path: "editProfile",
             element: <EditProfile />,
           },
+          {
+            path: "heatMap",
+            element: <HeatMap />,
+          },
         ],
+      },
+      {
+        path: "/volunteerLogin", // Add userId parameter
+        element: <Volunteer />,
       },
       {
         path: "/reportVolunteer/:volunteerId", // Add userId parameter

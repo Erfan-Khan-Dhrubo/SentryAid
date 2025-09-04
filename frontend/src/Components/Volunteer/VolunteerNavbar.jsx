@@ -3,6 +3,7 @@ import { FaMessage } from "react-icons/fa6";
 import { FaRankingStar } from "react-icons/fa6";
 import { AiFillEdit } from "react-icons/ai";
 import { NavLink } from "react-router";
+import { RiSkull2Fill } from "react-icons/ri";
 
 const VolunteerNavbar = ({ volunteerInfo }) => {
   return (
@@ -28,24 +29,12 @@ const VolunteerNavbar = ({ volunteerInfo }) => {
           >
             <AiFillEdit className="mr-3" /> Edit Profile
           </NavLink>
-          {/* <NavLink
-            to={"demo"}
-            className="flex items-center px-4 py-2 text-gray-600 hover:bg-pink-50 rounded-lg"
-          >
-            <FaUser className="mr-3" /> User
-          </NavLink>
           <NavLink
-            to={"/admin"}
+            to={`/volunteers/${volunteerInfo._id}/heatMap`}
             className="flex items-center px-4 py-2 text-gray-600 hover:bg-pink-50 rounded-lg"
           >
-            <FaUserShield className="mr-3" /> Admin Panel
+            <RiSkull2Fill className="mr-3" /> Risk Zones
           </NavLink>
-          <NavLink
-            to={"alertMessage"}
-            className="flex items-center px-4 py-2 text-gray-600 hover:bg-pink-50 rounded-lg"
-          >
-            <FaMessage className="mr-3" /> Message
-          </NavLink> */}
         </nav>
       </div>
 
