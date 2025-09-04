@@ -11,11 +11,7 @@ import AdminLogin from "./../Pages/Admin/AdminLogin";
 import MainRoot from "../Roots/MainRoot";
 import EditProfile from "./../Pages/Users/EditProfile";
 import VolunteerRoot from "../Roots/VolunteerRoot";
-import Volunteer from "../Pages/Volunteer/Volunteer";
-import VolunteerRanking from "../Pages/volunteerRanking";
-import ReportVolunteer from "../Pages/reportVolunteer";
-import UserProfile from "../Components/User/UserProfile";
-import VolunteerProfile from "../Components/Volunteer/VolunteerProfile";
+import HeatMap from "../Pages/HeatMap";
 
 export const router = createBrowserRouter([
   {
@@ -55,12 +51,11 @@ export const router = createBrowserRouter([
         path: "usersRegister",
         element: <UserRegister />,
       },
-      // Volunteer Routes
       {
-        path: "volunteerLogin",
-        element: <Volunteer />,
+        path: "heatMap",
+        element: <HeatMap />,
       },
-
+      // Volunteer Routes
       {
         path: "volunteers/:id",
         element: <VolunteerRoot />,
