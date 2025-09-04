@@ -12,6 +12,8 @@ import MainRoot from "../Roots/MainRoot";
 import EditProfile from "./../Pages/Users/EditProfile";
 import VolunteerRoot from "../Roots/VolunteerRoot";
 import Volunteer from "../Pages/Volunteer/Volunteer";
+import VolunteerRanking from "../Pages/volunteerRanking";
+import ReportVolunteer from "../Pages/reportVolunteer";
 
 export const router = createBrowserRouter([
   {
@@ -54,6 +56,14 @@ export const router = createBrowserRouter([
       {
         path: "adminLogin",
         element: <AdminLogin />,
+      },
+      {
+        path: "/volunteerRanking",
+        element: <VolunteerRanking />,
+      },
+      {
+        path: "/report-volunteer/:volunteerId/:userId", // Add userId parameter
+        element: <ReportVolunteer />,
       },
       {
         path: "admin",

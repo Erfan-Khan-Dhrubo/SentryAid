@@ -1,5 +1,83 @@
+// import React, { useEffect, useState } from "react";
+// import NewVolunteerReq from "../../Components/Admin/NewVolunteerReq";
+// import axios from "axios";
+
+// const Admin = () => {
+//   const [activeTab, setActiveTab] = useState("users");
+//   const [volunteers, setVolunteers] = useState([]);
+//   const [users, setUsers] = useState([]);
+
+//   useEffect(() => {
+//     const fetchUsers = async () => {
+//       try {
+//         const res = await axios.get("http://localhost:5001/api/users");
+//         setUsers(res.data);
+//         const res2 = await axios.get("http://localhost:5001/api/volunteers");
+//         setVolunteers(res2.data);
+//       } catch (error) {
+//         console.log("error fetching notes");
+//       }
+//     };
+
+//     fetchUsers();
+//   }, []);
+
+//   return (
+//     <div className="flex min-h-screen bg-pink-50">
+//       {/* Main Content */}
+//       <main className="flex-1 p-6">
+//         {/* Header */}
+//         <div>
+//           <h1 className="text-2xl font-bold text-gray-800">Admin Panel</h1>
+//           <p className="text-gray-500">
+//             Manage volunteers and emergency broadcasts
+//           </p>
+//         </div>
+
+//         <div className="mt-6">
+//           {/* Toggle Buttons */}
+//           <div className="flex justify-center mb-4 rounded-xl overflow-hidden">
+//             <button
+//               onClick={() => setActiveTab("users")}
+//               className={`px-4 py-2  flex-1 ${
+//                 activeTab === "users"
+//                   ? "bg-pink-400 text-white"
+//                   : "bg-white text-gray-800"
+//               }`}
+//             >
+//               Approve New Volunteers
+//             </button>
+//             <button
+//               onClick={() => setActiveTab("volunteers")}
+//               className={`px-4 py-2  flex-1 ${
+//                 activeTab === "volunteers"
+//                   ? "bg-pink-400 text-white"
+//                   : "bg-white text-gray-800"
+//               }`}
+//             >
+//               Approve User Volunteer Requests
+//             </button>
+//           </div>
+
+//           {/* Content */}
+//           {activeTab === "users" && (
+//             <NewVolunteerReq users={users} setUsers={setUsers} />
+//           )}
+//           {activeTab === "volunteers" && (
+//             <NewVolunteerReq users={volunteers} setUsers={setVolunteers} />
+//           )}
+//         </div>
+//       </main>
+//     </div>
+//   );
+// };
+
+// export default Admin;
+
+
 import React, { useEffect, useState } from "react";
 import NewVolunteerReq from "../../Components/Admin/NewVolunteerReq";
+import ReportsTable from "../../Components/Admin/ReportsTable"; // ADD THIS IMPORT
 import axios from "axios";
 
 const Admin = () => {
@@ -39,7 +117,7 @@ const Admin = () => {
           <div className="flex justify-center mb-4 rounded-xl overflow-hidden">
             <button
               onClick={() => setActiveTab("users")}
-              className={`px-4 py-2  flex-1 ${
+              className={`px-4 py-2 flex-1 ${
                 activeTab === "users"
                   ? "bg-pink-400 text-white"
                   : "bg-white text-gray-800"
@@ -49,13 +127,23 @@ const Admin = () => {
             </button>
             <button
               onClick={() => setActiveTab("volunteers")}
-              className={`px-4 py-2  flex-1 ${
+              className={`px-4 py-2 flex-1 ${
                 activeTab === "volunteers"
                   ? "bg-pink-400 text-white"
                   : "bg-white text-gray-800"
               }`}
             >
               Approve User Volunteer Requests
+            </button>
+            <button
+              onClick={() => setActiveTab("reports")}
+              className={`px-4 py-2 flex-1 ${
+                activeTab === "reports"
+                  ? "bg-pink-400 text-white"
+                  : "bg-white text-gray-800"
+              }`}
+            >
+              Reports
             </button>
           </div>
 
@@ -65,6 +153,9 @@ const Admin = () => {
           )}
           {activeTab === "volunteers" && (
             <NewVolunteerReq users={volunteers} setUsers={setVolunteers} />
+          )}
+          {activeTab === "reports" && (
+            <ReportsTable /> // REPLACED WITH REPORTS TABLE COMPONENT
           )}
         </div>
       </main>

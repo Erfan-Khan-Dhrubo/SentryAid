@@ -1,3 +1,167 @@
+// import ShowInfoBtn from "../Common Components/ShowInfoBtn";
+// import { useEffect, useState } from "react";
+// import axios from "axios";
+// import { TImeFormate } from "./../../Utilities/timeFormater";
+
+// const UserProfile = ({ userInfo }) => {
+//   const [notifications, setNotifications] = useState([]);
+//   const [singleTitle, setSingleTitle] = useState("");
+//   const [singleMsg, setSingleMsg] = useState("");
+
+//   const fetchMsg = async () => {
+//     try {
+//       const res = await axios.get("http://localhost:5001/api/messages");
+//       setNotifications(res.data);
+//     } catch (error) {
+//       console.log("error fetching notes");
+//     }
+//   };
+
+//   useEffect(() => {
+//     // Run immediately on mount
+//     fetchMsg();
+
+//     // Run every 10 seconds
+//     const interval = setInterval(fetchMsg, 10000);
+
+//     // Cleanup interval on component unmount
+//     return () => clearInterval(interval);
+//   }, []);
+
+//   const handleNotificationClick = async (notificationObj, id) => {
+//     document.getElementById("my_modal_2").showModal();
+//     console.log(id);
+//     setSingleMsg(notificationObj.message);
+//     setSingleTitle(notificationObj.title);
+//     const updatedNotification = {
+//       ...notificationObj,
+//       seen: [...notificationObj.seen, id], // push "123"
+//     };
+
+//     try {
+//       const res = await axios.put(
+//         `http://localhost:5001/api/messages/${notificationObj._id}`,
+//         updatedNotification
+//       );
+//       console.log("Updated Volunteer:", res.data);
+//     } catch (error) {
+//       console.log("Error updating volunteer", error);
+//     }
+
+//     // If you have a state of notifications, update it here
+//     setNotifications((prev) =>
+//       prev.map((n) => (n._id === notificationObj._id ? updatedNotification : n))
+//     );
+//   };
+
+//   return (
+//     <div className="flex flex-col gap-12 bg-pink-50 min-h-screen px-16 py-20">
+//       <div className="bg-pink-50 flex items-center justify-center">
+//         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
+//           {/* Profile Card */}
+//           <div className="bg-blue-200 rounded-lg p-6 text-center text-black shadow-lg py-12">
+//             <div className="flex justify-center">
+//               <img className="w-24" src="../profile.png" alt="" />
+//             </div>
+//             <h2 className="mt-4 text-lg font-bold">{userInfo.name}</h2>
+//             <p className="text-sm text-gray-300">{userInfo.email}</p>
+//             <button className="mt-4 bg-sky-400 hover:bg-sky-500 px-6 py-2 rounded-full font-semibold">
+//               {userInfo.type}
+//             </button>
+
+//             <div className="mt-6 space-y-3">
+//               <button className="w-full flex items-center justify-center border border-gray-400 bg-white text-gray-700 rounded-lg py-2 hover:bg-gray-100">
+//                 ❌ Report
+//               </button>
+//               <ShowInfoBtn userInfo={userInfo}></ShowInfoBtn>
+//               <button className="w-full flex items-center justify-center border border-gray-400 bg-white text-gray-700 rounded-lg py-2 hover:bg-gray-100">
+//                 📞 Contacts
+//               </button>
+//             </div>
+//           </div>
+
+//           {/* Emergency Actions */}
+//           <div className="bg-white rounded-lg shadow-lg p-6 border-t-8 border-red-500">
+//             <h2 className="text-lg font-bold text-red-500 mb-4">
+//               Emergency Actions
+//             </h2>
+
+//             <button className="w-full flex items-center justify-center border border-red-500 text-red-500 rounded-2xl py-2 hover:bg-red-50 mt-6">
+//               ⚠ Send SOS
+//             </button>
+//           </div>
+
+//           {/* Alert Messages */}
+//           <div className="bg-white rounded-lg shadow-lg p-6 border-t-8 border-pink-400">
+//             <h2 className="text-xl font-bold text-pink-500 mb-4 flex items-center gap-2">
+//               Alert Messages
+//               {notifications.filter(
+//                 (notification) => !notification.seen.includes(userInfo._id)
+//               ).length > 0 && (
+//                 <span className="bg-gray-500 text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center">
+//                   {
+//                     notifications.filter(
+//                       (notification) =>
+//                         !notification.seen.includes(userInfo._id)
+//                     ).length
+//                   }
+//                 </span>
+//               )}
+//             </h2>
+//             <ul className="space-y-3">
+//               {notifications.length === 0 ? (
+//                 <li className="text-gray-400">No notifications available.</li>
+//               ) : (
+//                 notifications.map((notificationMsg, idx) => {
+//                   const isSeen = notificationMsg.seen.includes(userInfo._id);
+//                   return (
+//                     <li key={idx}>
+//                       <button
+//                         className={`border flex items-center justify-between px-4 w-full py-3 rounded-lg border-pink-400 ${
+//                           isSeen ? "font-normal" : "font-bold"
+//                         } hover:bg-pink-100 hover:text-pink-600 transition-all duration-200`}
+//                         onClick={() =>
+//                           handleNotificationClick(notificationMsg, userInfo._id)
+//                         }
+//                       >
+//                         <div className="flex gap-2">
+//                           <span>Title:</span>
+//                           <span>{notificationMsg.title}</span>
+//                         </div>
+//                         <div className="text-sm">
+//                           {TImeFormate(new Date(notificationMsg.createdAt))}
+//                         </div>
+//                       </button>
+//                     </li>
+//                   );
+//                 })
+//               )}
+//             </ul>
+//           </div>
+//         </div>
+//       </div>
+
+//       {/* Notification Message */}
+//       <dialog id="my_modal_2" className="modal">
+//         <div className="modal-box">
+//           <h3 className="font-bold text-lg">{singleTitle}</h3>
+//           <p className="py-4">{singleMsg}</p>
+//           <div className="modal-action">
+//             <form method="dialog">
+//               {/* if there is a button in form, it will close the modal */}
+//               <button className="btn">Close</button>
+//             </form>
+//           </div>
+//         </div>
+//       </dialog>
+//     </div>
+//   );
+// };
+
+// export default UserProfile;
+
+
+
 import ShowInfoBtn from "../Common Components/ShowInfoBtn";
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -5,6 +169,8 @@ import { TImeFormate } from "./../../Utilities/timeFormater";
 
 const UserProfile = ({ userInfo }) => {
   const [notifications, setNotifications] = useState([]);
+  const [userReports, setUserReports] = useState([]); // ADD THIS STATE
+  const [loadingReports, setLoadingReports] = useState(false); // ADD THIS STATE
   const [singleTitle, setSingleTitle] = useState("");
   const [singleMsg, setSingleMsg] = useState("");
 
@@ -17,16 +183,33 @@ const UserProfile = ({ userInfo }) => {
     }
   };
 
+  // ADD THIS FUNCTION: Fetch user's reports
+  const fetchUserReports = async () => {
+    try {
+      setLoadingReports(true);
+      const response = await axios.get(`http://localhost:5001/api/reports/reporter/${userInfo._id}`);
+      setUserReports(response.data.reports || []);
+    } catch (error) {
+      console.error("Error fetching user reports:", error);
+    } finally {
+      setLoadingReports(false);
+    }
+  };
+
   useEffect(() => {
     // Run immediately on mount
     fetchMsg();
+    fetchUserReports(); // ADD THIS: Fetch user reports
 
     // Run every 10 seconds
-    const interval = setInterval(fetchMsg, 10000);
+    const interval = setInterval(() => {
+      fetchMsg();
+      fetchUserReports(); // ADD THIS: Also refresh reports
+    }, 10000);
 
     // Cleanup interval on component unmount
     return () => clearInterval(interval);
-  }, []);
+  }, [userInfo._id]); // ADD userInfo._id dependency
 
   const handleNotificationClick = async (notificationObj, id) => {
     document.getElementById("my_modal_2").showModal();
@@ -141,14 +324,179 @@ const UserProfile = ({ userInfo }) => {
         </div>
       </div>
 
-      {/* Notification Message */}
+      {/* ADD THIS SECTION: User Reports Section */}
+      <div className="bg-white rounded-lg shadow-lg p-6 border-t-8 border-purple-500">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-xl font-bold text-purple-600">
+            My Reports ({userReports.length})
+          </h2>
+          <button 
+            className="btn btn-sm btn-primary"
+            onClick={() => document.getElementById('reports_modal').showModal()}
+          >
+            View All Reports
+          </button>
+        </div>
+
+        {loadingReports ? (
+          <div className="flex justify-center py-4">
+            <span className="loading loading-spinner loading-md"></span>
+          </div>
+        ) : userReports.length === 0 ? (
+          <p className="text-gray-500 text-center py-4">You haven't submitted any reports yet.</p>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {userReports.slice(0, 4).map((report) => (
+              <div key={report._id} className="bg-gray-50 p-4 rounded-lg border">
+                <h3 className="font-semibold text-sm mb-2">{report.title}</h3>
+                <p className="text-xs text-gray-600 mb-2">
+                  Against: {report.volunteerName}
+                </p>
+                <div className="flex justify-between items-center">
+                  <span className={`badge badge-sm ${
+                    report.status === 'resolved' ? 'badge-success' :
+                    report.status === 'under_review' ? 'badge-warning' :
+                    report.status === 'dismissed' ? 'badge-error' :
+                    'badge-info'
+                  }`}>
+                    {report.status.replace('_', ' ')}
+                  </span>
+                  <span className="text-xs text-gray-500">
+                    {TImeFormate(new Date(report.createdAt))}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* ADD THIS: Reports Modal */}
+      <dialog id="reports_modal" className="modal">
+        <div className="modal-box max-w-4xl">
+          <h3 className="font-bold text-lg mb-4">All My Reports</h3>
+          
+          {userReports.length === 0 ? (
+            <p className="text-gray-500 text-center py-8">No reports found</p>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="table table-zebra">
+                <thead>
+                  <tr>
+                    <th>Title</th>
+                    <th>Volunteer</th>
+                    <th>Category</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {userReports.map((report) => (
+                    <tr key={report._id}>
+                      <td>{report.title}</td>
+                      <td>
+                        <div>
+                          <div className="font-medium">{report.volunteerName}</div>
+                          <div className="text-xs text-gray-500">{report.volunteerEmail}</div>
+                        </div>
+                      </td>
+                      <td>
+                        <span className="badge badge-ghost badge-sm capitalize">
+                          {report.category?.replace('-', ' ') || 'N/A'}
+                        </span>
+                      </td>
+                      <td>
+                        <span className={`badge badge-sm ${
+                          report.status === 'resolved' ? 'badge-success' :
+                          report.status === 'under_review' ? 'badge-warning' :
+                          report.status === 'dismissed' ? 'badge-error' :
+                          'badge-info'
+                        }`}>
+                          {report.status?.replace('_', ' ') || 'pending'}
+                        </span>
+                      </td>
+                      <td>{TImeFormate(new Date(report.createdAt))}</td>
+                      <td>
+                        <button 
+                          className="btn btn-xs btn-info"
+                          onClick={() => {
+                            document.getElementById(`report_detail_${report._id}`).showModal();
+                          }}
+                        >
+                          View
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+          
+          <div className="modal-action">
+            <form method="dialog">
+              <button className="btn">Close</button>
+            </form>
+          </div>
+        </div>
+      </dialog>
+
+      {/* ADD THIS: Report Detail Modals */}
+      {userReports.map((report) => (
+        <dialog key={report._id} id={`report_detail_${report._id}`} className="modal">
+          <div className="modal-box">
+            <h3 className="font-bold text-lg">Report Details</h3>
+            
+            <div className="space-y-3 mt-4">
+              <div>
+                <strong>Title:</strong> {report.title}
+              </div>
+              <div>
+                <strong>Volunteer Reported:</strong> {report.volunteerName} ({report.volunteerEmail})
+              </div>
+              <div>
+                <strong>Category:</strong> <span className="capitalize">{report.category?.replace('-', ' ') || 'N/A'}</span>
+              </div>
+              <div>
+                <strong>Status:</strong> <span className="capitalize">{report.status?.replace('_', ' ') || 'pending'}</span>
+              </div>
+              <div>
+                <strong>Submitted:</strong> {new Date(report.createdAt).toLocaleString()}
+              </div>
+              <div>
+                <strong>Message:</strong>
+                <div className="bg-gray-100 p-3 rounded-lg mt-2">
+                  <p className="whitespace-pre-wrap">{report.message}</p>
+                </div>
+              </div>
+              
+              {report.adminNotes && (
+                <div>
+                  <strong>Admin Notes:</strong>
+                  <div className="bg-yellow-50 p-3 rounded-lg border border-yellow-200 mt-2">
+                    <p className="whitespace-pre-wrap">{report.adminNotes}</p>
+                  </div>
+                </div>
+              )}
+            </div>
+            
+            <div className="modal-action">
+              <form method="dialog">
+                <button className="btn">Close</button>
+              </form>
+            </div>
+          </div>
+        </dialog>
+      ))}
+
+      {/* Existing Notification Message Modal */}
       <dialog id="my_modal_2" className="modal">
         <div className="modal-box">
           <h3 className="font-bold text-lg">{singleTitle}</h3>
           <p className="py-4">{singleMsg}</p>
           <div className="modal-action">
             <form method="dialog">
-              {/* if there is a button in form, it will close the modal */}
               <button className="btn">Close</button>
             </form>
           </div>
