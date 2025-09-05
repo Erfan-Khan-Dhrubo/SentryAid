@@ -2,6 +2,7 @@ import ShowInfoBtn from "../Common Components/ShowInfoBtn";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { TImeFormate } from "./../../Utilities/timeFormater";
+import { useNavigate } from "react-router";
 
 const UserProfile = () => {
   const [notifications, setNotifications] = useState([]);
@@ -10,6 +11,8 @@ const UserProfile = () => {
   const [singleTitle, setSingleTitle] = useState("");
   const [singleMsg, setSingleMsg] = useState("");
   const [userInfo, setUserInfo] = useState([]);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
@@ -113,7 +116,10 @@ const UserProfile = () => {
               Emergency Actions
             </h2>
 
-            <button className="w-full flex items-center justify-center border border-red-500 text-red-500 rounded-2xl py-2 hover:bg-red-50 mt-6">
+            <button
+              onClick={() => navigate(`/users/${userInfo._id}/sos`)}
+              className="w-full flex items-center justify-center border border-red-500 text-red-500 rounded-2xl py-2 hover:bg-red-50 mt-6"
+            >
               ⚠ Send SOS
             </button>
           </div>

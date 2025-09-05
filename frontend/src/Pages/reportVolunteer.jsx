@@ -118,6 +118,16 @@ const ReportVolunteer = () => {
         "http://localhost:5001/api/reports",
         reportData
       );
+      // score deduct
+      const res = await axios.get(
+        `http://localhost:5001/api/volunteers/${volunteerId}`
+      );
+      const fetchedUser = res.data;
+      const user = { ...fetchedUser, score: fetchedUser.score - 5 };
+      await axios.put(
+        `http://localhost:5001/api/volunteers/${volunteerId}`,
+        user
+      );
 
       if (response.data.success) {
         // Show success toast

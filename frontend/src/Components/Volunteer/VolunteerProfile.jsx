@@ -1,6 +1,7 @@
 import ShowInfoBtn from "../Common Components/ShowInfoBtn";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router";
 
 const VolunteerProfile = () => {
   const [notifications, setNotifications] = useState([]);
@@ -8,6 +9,8 @@ const VolunteerProfile = () => {
   const [sta, setSta] = useState("");
   const [readMessages, setReadMessages] = useState(new Set());
   const [volunteerInfo, setVolunteerInfo] = useState([]);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("volunteer"));
@@ -44,6 +47,8 @@ const VolunteerProfile = () => {
     setSta(newStatus);
 
     const volunteerUpdate = { ...volunteerInfo, status: newStatus };
+
+    localStorage.setItem("volunteer", JSON.stringify(volunteerUpdate));
 
     try {
       const res = await axios.put(
@@ -136,6 +141,14 @@ const VolunteerProfile = () => {
           {/* NEW SOS Alert Card - SIMPLIFIED */}
           <div className="bg-white rounded-lg shadow-lg p-6 border-t-8 border-red-500">
             <h2 className="text-xl font-bold text-red-500 mb-4">SOS Alert</h2>
+            <button
+              onClick={() =>
+                navigate(`/volunteers/${volunteerInfo._id}/sosAlert`)
+              }
+              className="w-full flex items-center justify-center border border-red-500 text-red-500 rounded-2xl py-2 hover:bg-red-50 mt-6"
+            >
+              ⚠ Get SOS Alert
+            </button>
           </div>
         </div>
       </div>

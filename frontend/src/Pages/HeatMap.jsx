@@ -59,7 +59,7 @@ const HeatMap = () => {
   ];
 
   return (
-    <div className="w-full p-12">
+    <div className="w-full p-12 bg-pink-50">
       <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
         <h2 className="text-xl font-bold text-gray-800 mb-8">
           🚨 Accident Heatmap

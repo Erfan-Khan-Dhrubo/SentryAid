@@ -4,6 +4,7 @@ import { FaRankingStar } from "react-icons/fa6";
 import { AiFillEdit } from "react-icons/ai";
 import { NavLink } from "react-router";
 import { RiSkull2Fill } from "react-icons/ri";
+import { FaHandsHelping } from "react-icons/fa";
 
 const UserNavbar = ({ userInfo }) => {
   return (
@@ -34,6 +35,12 @@ const UserNavbar = ({ userInfo }) => {
             className="flex items-center px-4 py-2 text-gray-600 hover:bg-pink-50 rounded-lg"
           >
             <RiSkull2Fill className="mr-3" /> Risk Zones
+          </NavLink>
+          <NavLink
+            to={`/users/${userInfo._id}/sos`}
+            className="flex items-center px-4 py-2 text-gray-600 hover:bg-pink-50 rounded-lg"
+          >
+            <FaHandsHelping className="mr-3" /> Send SOS
           </NavLink>
         </nav>
       </div>
