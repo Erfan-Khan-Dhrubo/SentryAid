@@ -12,7 +12,6 @@ const ReportsTable = () => {
   const fetchReports = async () => {
     try {
       const response = await axios.get("http://localhost:5001/api/reports");
-      // Extract reports from the response data structure
       setReports(response.data.reports || []);
     } catch (error) {
       console.error("Error fetching reports:", error);
@@ -27,20 +26,17 @@ const ReportsTable = () => {
   }, []);
 
   const handleReportClick = (reportId) => {
-    // Mark report as read locally
-    setReadReports(prev => new Set(prev).add(reportId));
+    setReadReports(prev => new Set([...prev, reportId]));
   };
 
-  // Function to update report status
   const updateReportStatus = async (reportId, newStatus, adminNotes = '') => {
     try {
       const response = await axios.put(`http://localhost:5001/api/reports/${reportId}`, {
         status: newStatus,
         adminNotes
       });
-      
+
       if (response.data.success) {
-        // Refresh the reports list
         fetchReports();
         toast.success(`Report marked as ${newStatus.replace('_', ' ')}`);
       }
@@ -50,7 +46,6 @@ const ReportsTable = () => {
     }
   };
 
-  // Safe function to format category
   const formatCategory = (category) => {
     if (!category) return 'Unknown';
     return category.replace('-', ' ').replace('_', ' ');
@@ -68,7 +63,7 @@ const ReportsTable = () => {
     <div className="bg-white rounded-lg p-6 shadow-md">
       <ToastContainer />
       <h2 className="text-xl font-bold text-gray-800 mb-6">User Reports</h2>
-      
+
       {reports.length === 0 ? (
         <div className="text-center text-gray-500 py-8">
           <p>No reports found</p>
@@ -78,12 +73,12 @@ const ReportsTable = () => {
           <table className="min-w-full bg-white">
             <thead>
               <tr className="bg-gray-100 border-b">
-                <th className="py-3 px-4 text-left text-sm font-semibold text-gray-700">Reporter</th>
-                <th className="py-3 px-4 text-left text-sm font-semibold text-gray-700">Volunteer Reported</th>
+                <th className="py-3 px-4 text-left text-sm font-semibold text-gray-700 hidden md:table-cell">Reporter</th>
+                <th className="py-3 px-4 text-left text-sm font-semibold text-gray-700 hidden md:table-cell">Volunteer Reported</th>
                 <th className="py-3 px-4 text-left text-sm font-semibold text-gray-700">Title</th>
-                <th className="py-3 px-4 text-left text-sm font-semibold text-gray-700">Category</th>
-                <th className="py-3 px-4 text-left text-sm font-semibold text-gray-700">Status</th>
-                <th className="py-3 px-4 text-left text-sm font-semibold text-gray-700">Time</th>
+                <th className="py-3 px-4 text-left text-sm font-semibold text-gray-700 hidden md:table-cell">Category</th>
+                <th className="py-3 px-4 text-left text-sm font-semibold text-gray-700 hidden md:table-cell">Status</th>
+                <th className="py-3 px-4 text-left text-sm font-semibold text-gray-700 hidden md:table-cell">Time</th>
                 <th className="py-3 px-4 text-left text-sm font-semibold text-gray-700">Actions</th>
               </tr>
             </thead>
@@ -103,7 +98,7 @@ const ReportsTable = () => {
                     className={`border-b hover:bg-gray-50 ${isRead ? '' : 'bg-gray-50'}`}
                   >
                     {/* Reporter Info */}
-                    <td className="py-3 px-4 text-sm">
+                    <td className="py-4 px-4 text-sm hidden md:table-cell">
                       <div>
                         <p className={isRead ? 'text-gray-800' : 'font-semibold text-gray-900'}>{report.reporterName || 'Unknown'}</p>
                         <p className="text-gray-600 text-xs">{report.reporterEmail || 'No email'}</p>
@@ -111,7 +106,7 @@ const ReportsTable = () => {
                     </td>
 
                     {/* Volunteer Reported */}
-                    <td className="py-3 px-4 text-sm">
+                    <td className="py-4 px-4 text-sm hidden md:table-cell">
                       <div>
                         <p className={isRead ? 'text-gray-800' : 'font-semibold text-gray-900'}>{report.volunteerName || 'Unknown'}</p>
                         <p className="text-gray-600 text-xs">{report.volunteerEmail || 'No email'}</p>
@@ -125,21 +120,21 @@ const ReportsTable = () => {
                     </td>
 
                     {/* Category */}
-                    <td className="py-3 px-4 text-sm">
+                    <td className="py-3 px-4 text-sm hidden md:table-cell">
                       <span className="inline-block px-2 py-1 rounded-full bg-gray-100 text-gray-700 text-xs capitalize">
                         {formatCategory(report.category)}
                       </span>
                     </td>
 
                     {/* Status */}
-                    <td className="py-3 px-4 text-sm">
+                    <td className="py-3 px-4 text-sm hidden md:table-cell">
                       <span className={`inline-block px-2 py-1 rounded-full text-xs capitalize ${statusColor}`}>
                         {(report.status || 'pending').replace('_', ' ')}
                       </span>
                     </td>
 
                     {/* Time */}
-                    <td className="py-3 px-4 text-sm text-gray-600">
+                    <td className="py-3 px-4 text-sm text-gray-600 hidden md:table-cell">
                       <span className={isRead ? '' : 'font-semibold'}>
                         {report.createdAt ? TImeFormate(new Date(report.createdAt)) : 'Unknown time'}
                       </span>
@@ -147,10 +142,9 @@ const ReportsTable = () => {
 
                     {/* Actions */}
                     <td className="py-3 px-4 text-sm">
-                      <div className="flex space-x-2">
+                      <div className="flex space-x-2 justify-end">
                         <button
                           onClick={() => {
-                            // Show modal with full report details
                             document.getElementById(`modal-${report._id}`).showModal();
                             handleReportClick(report._id);
                           }}
@@ -162,7 +156,7 @@ const ReportsTable = () => {
                         {(report.status === 'pending' || !report.status) && (
                           <button
                             onClick={() => updateReportStatus(report._id, 'under_review')}
-                            className="px-3 py-1 bg-orange-500 text-white rounded text-xs hover:bg-orange-600"
+                            className="px-3 py-1 bg-orange-500 text-white rounded text-xs hover:bg-orange-600 hidden md:inline-block"
                           >
                             Review
                           </button>
@@ -180,10 +174,10 @@ const ReportsTable = () => {
       {/* Modals for each report */}
       {reports.map((report) => (
         <dialog key={report._id} id={`modal-${report._id}`} className="modal">
-          <div className="modal-box max-w-4xl">
-            <h3 className="font-bold text-lg mb-4">Report Details</h3>
+          <div className="modal-box max-w-4xl text-black">
+            <h3 className="font-bold text-lg mb-4 text-black">Report Details</h3>
             
-            <div className="grid grid-cols-2 gap-4 mb-6">
+            <div className="grid grid-cols-2 gap-11 mb-6">
               <div>
                 <h4 className="font-semibold text-gray-700">Reporter Information</h4>
                 <p><strong>Name:</strong> {report.reporterName || 'Unknown'}</p>
@@ -225,7 +219,7 @@ const ReportsTable = () => {
 
             <div className="modal-action">
               <form method="dialog">
-                <button className="btn btn-ghost">Close</button>
+                <button className=" bg-pink-300 btn btn-ghost">Close</button>
               </form>
               <div className="flex space-x-2">
                 <button
