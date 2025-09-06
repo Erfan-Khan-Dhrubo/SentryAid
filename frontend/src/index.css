@@ -8,6 +8,10 @@
   border-radius: 0.5rem;
 }
 
+body {
+  color: black;
+}
+
 /* Home page */
 
 @custom-variant dark (&:is(.dark *));
