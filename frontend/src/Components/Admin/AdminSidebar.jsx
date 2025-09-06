@@ -1,6 +1,7 @@
 import { FaUser, FaTachometerAlt, FaUserShield } from "react-icons/fa";
 import { FaMessage } from "react-icons/fa6";
 import { NavLink } from "react-router";
+import { RiSkull2Fill } from "react-icons/ri";
 
 const AdminSidebar = () => {
   return (
@@ -8,18 +9,6 @@ const AdminSidebar = () => {
       <div>
         <div className="p-4 font-bold text-2xl text-pink-600">SentryAid</div>
         <nav className="mt-6 space-y-2 middle">
-          {/* <NavLink
-            to={""}
-            className="flex items-center px-4 py-2 text-gray-600 hover:bg-pink-50 rounded-lg"
-          >
-            <FaTachometerAlt className="mr-3" /> Dashboard
-          </NavLink>
-          <NavLink
-            to={"demo"}
-            className="flex items-center px-4 py-2 text-gray-600 hover:bg-pink-50 rounded-lg"
-          >
-            <FaUser className="mr-3" /> User
-          </NavLink> */}
           <NavLink
             to={"/admin"}
             end
@@ -32,6 +21,12 @@ const AdminSidebar = () => {
             className="flex items-center px-4 py-2 text-gray-600 hover:bg-pink-50 rounded-lg"
           >
             <FaMessage className="mr-3" /> Message
+          </NavLink>
+          <NavLink
+            to={`/admin/heatMap`}
+            className="flex items-center px-4 py-2 text-gray-600 hover:bg-pink-50 rounded-lg"
+          >
+            <RiSkull2Fill className="mr-3" /> Risk Zones
           </NavLink>
         </nav>
       </div>

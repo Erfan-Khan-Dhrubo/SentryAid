@@ -29,8 +29,9 @@ const VolunteerRanking = () => {
         );
 
         const sortedVolunteers = mockVolunteers.data.sort(
-          (a, b) => b.sosResponded - a.sosResponded
+          (a, b) => b.score - a.score
         );
+
         setVolunteers(sortedVolunteers);
         await fetchAllReportCounts(sortedVolunteers);
       } catch (error) {
@@ -122,7 +123,7 @@ const VolunteerRanking = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-pink-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-12">
           <h1 className="text-4xl font-extrabold text-gray-900">
@@ -145,14 +146,14 @@ const VolunteerRanking = () => {
               return (
                 <li
                   key={volunteer._id}
-                  className={`p-6 hover:bg-gray-50 ${
-                    volunteer._id === volunteerInfo._id ? "bg-pink-100" : ""
+                  className={`p-6 ${
+                    volunteer._id === volunteerInfo._id ? "bg-blue-100" : ""
                   }`}
                 >
                   <div className="flex items-center justify-between">
                     {/* Left side */}
                     <div className="flex items-center space-x-4 flex-1 min-w-0">
-                      <div className="flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-full bg-indigo-100 text-indigo-800 font-bold text-lg">
+                      <div className="flex-shrink-0 w-10 h-10 flex items-center justify-center border border-indigo-800 rounded-full bg-indigo-100 text-indigo-800 font-bold text-lg">
                         {getRankBadge(index)}
                       </div>
 

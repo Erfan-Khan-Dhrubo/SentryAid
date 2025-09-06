@@ -17,6 +17,8 @@ import VolunteerRanking from "../Pages/volunteerRanking";
 import VolunteerProfile from "../Components/Volunteer/VolunteerProfile";
 import ReportVolunteer from "./../Pages/reportVolunteer";
 import Volunteer from "./../Pages/Volunteer/Volunteer";
+import Sos from "../Components/User/SOS/Sos";
+import SosAlert from "../Components/Volunteer/SOS Alert/SosAlert";
 
 export const router = createBrowserRouter([
   {
@@ -50,6 +52,10 @@ export const router = createBrowserRouter([
             path: "heatMap",
             element: <HeatMap />,
           },
+          {
+            path: "sos",
+            element: <Sos />,
+          },
         ],
       },
       {
@@ -82,6 +88,10 @@ export const router = createBrowserRouter([
             path: "heatMap",
             element: <HeatMap />,
           },
+          {
+            path: "sosAlert",
+            element: <SosAlert />,
+          },
         ],
       },
       {
@@ -109,6 +119,10 @@ export const router = createBrowserRouter([
           {
             path: "alertMessage",
             element: <AlertMessage />,
+          },
+          {
+            path: "heatMap",
+            element: <HeatMap />,
           },
         ],
       },

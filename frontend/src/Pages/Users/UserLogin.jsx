@@ -8,11 +8,14 @@ const UserLogin = () => {
   const [password, setPassword] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const navigate = useNavigate();
+  const [user, setUser] = useState([]);
 
   useEffect(() => {
-    const user = localStorage.getItem("user");
-    if (user) {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      const parsedUser = JSON.parse(storedUser); // convert string → object
       setIsLoggedIn(true);
+      setUser(parsedUser);
     }
   }, []);
 
@@ -46,7 +49,7 @@ const UserLogin = () => {
             ✅ User already logged in
           </h2>
           <button
-            onClick={() => navigate("/admin")}
+            onClick={() => navigate(`/users/${user._id}`)}
             className="mt-8 bg-pink-400 text-white px-4 py-2 rounded-lg hover:bg-pink-600 transition"
           >
             Go to User Dashboard

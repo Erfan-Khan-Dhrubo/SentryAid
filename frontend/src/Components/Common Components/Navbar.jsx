@@ -25,8 +25,8 @@ const Navbar = () => {
   };
 
   return (
-    <div className="bg-pink-100 px-6 py-4 flex justify-between items-center">
-      <div className="text-xl font-bold text-pink-600">My App</div>
+    <div className="sticky top-0 bg-pink-100 p-6 flex justify-between items-center border-b-2 border-pink-400 z-50">
+      <div className="text-xl font-bold text-pink-600">SentryAid</div>
 
       <div className="flex gap-4">
         {volunteerData && (

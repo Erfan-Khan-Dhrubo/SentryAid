@@ -8,19 +8,32 @@ const EditProfile = () => {
   const [preMail, setPreMail] = useState("");
   const [presentMail, setPresentMail] = useState("");
   const [saving, setSaving] = useState(false);
+  const [userType, setUserType] = useState("");
 
   const { id } = useParams();
 
   const navigate = useNavigate();
 
   useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+
+    if (storedUser) {
+      const user = JSON.parse(storedUser);
+      setUserType(user.type);
+    } else {
+      setUserType("volunteer");
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!userType) return; // only run if we actually have a name
     const fetchNote = async () => {
       try {
-        if (user.type === "user") {
+        if (userType === "user") {
           const res = await axios.get(`http://localhost:5001/api/users/${id}`);
           setUser(res.data);
           setPreMail(res.data.email);
-        } else {
+        } else if (userType === "volunteer") {
           const res = await axios.get(
             `http://localhost:5001/api/volunteers/${id}`
           );
@@ -33,7 +46,7 @@ const EditProfile = () => {
     };
 
     fetchNote();
-  }, []);
+  }, [userType]);
 
   const handleAccept = async (e, id) => {
     //navigate("/admin");
@@ -45,7 +58,7 @@ const EditProfile = () => {
 
     try {
       // const updateNote = { ...user, request: "accepted" };
-      if (user.type === "user") {
+      if (userType === "user") {
         const res = await axios.put(
           `http://localhost:5001/api/users/${id}`,
           user
@@ -57,7 +70,7 @@ const EditProfile = () => {
           "Your Profile has been updated",
           "Profile Update"
         );
-      } else {
+      } else if (userType === "volunteer") {
         const res = await axios.put(
           `http://localhost:5001/api/volunteers/${id}`,
           user
@@ -73,11 +86,7 @@ const EditProfile = () => {
       }
 
       if (preMail !== presentMail) {
-        sendMail(
-          preMail,
-          "Your E=mail has been changed",
-          "Mail change"
-        );
+        sendMail(preMail, "Your E=mail has been changed", "Mail change");
       }
     } catch (error) {
       console.log("Error saving the note:", error);
