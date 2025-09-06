@@ -54,7 +54,14 @@ const VolunteerNavbar = ({ volunteerInfo }) => {
             <NavLink
               key={link.label}
               to={link.to}
-              className="flex items-center px-2 py-2 text-gray-600 hover:bg-pink-50 rounded-lg"
+              end
+              className={({ isActive }) =>
+                `flex items-center px-2 py-2 rounded-lg ${
+                  isActive
+                    ? "bg-pink-100 text-pink-600 font-semibold"
+                    : "text-gray-600 hover:bg-pink-50"
+                }`
+              }
             >
               {link.icon} {link.label}
             </NavLink>
@@ -69,10 +76,18 @@ const VolunteerNavbar = ({ volunteerInfo }) => {
             <NavLink
               key={link.label}
               to={link.to}
-              className="flex items-center px-4 py-2 text-gray-600 hover:bg-pink-50 rounded-lg"
-            >
-              {link.icon} {link.label}
-            </NavLink>
+              end
+              className={({ isActive }) =>
+                `flex items-center px-4 py-2 rounded-lg ${
+                isActive
+                  ? "bg-pink-100 text-pink-600 font-semibold" // active style
+                  : "text-gray-600 hover:bg-pink-50"
+              }`
+         }
+          >
+  {link.icon} {link.label}
+</NavLink>
+
           ))}
         </div>
       </aside>

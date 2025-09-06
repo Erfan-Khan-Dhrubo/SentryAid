@@ -23,7 +23,7 @@ const VolunteerRoot = () => {
       <VolunteerNavbar volunteerInfo={volunteerInfo} />
 
       {/* Main content */}
-      <div className="p-4 lg:ml-64">
+      <div className="lg:ml-64">
         {/* lg:ml-64 adds left margin on large screens to prevent overlap */}
         <Outlet />
       </div>
