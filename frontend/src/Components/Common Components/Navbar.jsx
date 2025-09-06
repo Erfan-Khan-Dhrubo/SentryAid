@@ -1,5 +1,5 @@
 import React from "react";
-import { useNavigate } from "react-router";
+import { NavLink, useNavigate } from "react-router";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -26,7 +26,9 @@ const Navbar = () => {
 
   return (
     <div className="sticky top-0 bg-pink-100 p-6 flex justify-between items-center border-b-2 border-pink-400 z-50">
-      <div className="text-xl font-bold text-pink-600">SentryAid</div>
+      <NavLink to={"/"}>
+        <div className="text-xl font-bold text-pink-600">SentryAid</div>
+      </NavLink>
 
       <div className="flex gap-4">
         {volunteerData && (

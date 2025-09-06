@@ -23,10 +23,15 @@ const VolunteerSignup = () => {
       });
 
       // Save the returned volunteer info in localStorage
-      localStorage.setItem("volunteer", JSON.stringify(res.data));
+      //localStorage.setItem("volunteer", JSON.stringify(res.data));
 
       // Navigate to dashboard or home page
-      navigate(`/volunteers/${res.data._id}`); // or "/" if you prefer
+      //navigate(`/volunteers/${res.data._id}`); // or "/" if you prefer
+      alert(
+        "Your signup request has been sent for review. We will notify you by email."
+      );
+
+      navigate("/");
     } catch (error) {
       console.error("Error creating volunteer", error);
     } finally {
