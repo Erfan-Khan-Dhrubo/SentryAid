@@ -7,6 +7,7 @@ import {
   MapPin,
   Star,
 } from "lucide-react";
+import { HelpingHand } from "lucide-react";
 import { Link } from "react-router";
 
 export default function Home() {
@@ -437,8 +438,8 @@ export default function Home() {
               className="flex items-center mb-6 md:mb-0"
               whileHover={{ scale: 1.05 }}
             >
-              <motion.div className="w-10 h-10 bg-gradient-to-br from-red-500 to-purple-600 rounded-lg flex items-center justify-center mr-3 heartbeat">
-                <Heart className="w-6 h-6 text-white" />
+              <motion.div className="w-8 h-8 bg-gradient-to-br from-pink-400 to-pink-500 rounded-lg flex items-center justify-center mr-3 heartbeat">
+                <HelpingHand className="w-6 h-6 text-white" />
               </motion.div>
               <span className="text-2xl font-bold text-gray-900">
                 SentryAid

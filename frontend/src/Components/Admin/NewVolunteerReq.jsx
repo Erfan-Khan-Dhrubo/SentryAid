@@ -11,10 +11,10 @@ const NewVolunteerReq = ({ users, setUsers }) => {
               <th className="py-4 px-4 text-sm font-semibold text-gray-600 text-center">
                 Name
               </th>
-              <th className="py-4 px-4 text-sm font-semibold text-gray-600 text-center">
+              <th className="hidden lg:table-cell py-4 px-4 text-sm font-semibold text-gray-600 text-center">
                 Email
               </th>
-              <th className="py-4 px-4 text-sm font-semibold text-gray-600 text-center">
+              <th className="hidden lg:table-cell py-4 px-4 text-sm font-semibold text-gray-600 text-center">
                 Location
               </th>
               <th className="py-4 px-4 text-sm font-semibold text-gray-600 text-center">

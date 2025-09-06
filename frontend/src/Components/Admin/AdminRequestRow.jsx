@@ -1,16 +1,13 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { NavLink, useNavigate, useParams } from "react-router";
+import { useNavigate } from "react-router";
 import { sendMail } from "../../Utilities/SendMail";
 
 const AdminRequestRow = ({ user, setUsers }) => {
   const navigate = useNavigate();
   const [msg, setMsg] = useState("");
 
-  // console.log(user);
   const handleReject = async (e, id) => {
-    //e.preventDefault();
-
     if (!window.confirm("Are you sure you want to reject this person?")) return;
 
     if (!msg.trim()) {
@@ -26,7 +23,6 @@ const AdminRequestRow = ({ user, setUsers }) => {
           updateNote
         );
         sendMail(res1.data.email, msg, "Volunteers’ Requests Rejected");
-        //  console.log(res1);
         const res = await axios.get("http://localhost:5001/api/users");
         setUsers(res.data);
       } else {
@@ -35,8 +31,6 @@ const AdminRequestRow = ({ user, setUsers }) => {
         );
         sendMail(res.data.email, msg, "Volunteers’ Requests Rejected");
         setUsers((prev) => prev.filter((user) => user._id !== id));
-        // This line removes the deleted note from the UI immediately, without needing to re-fetch all notes from the server.
-        // console.log(res.data.email);
       }
     } catch (error) {
       console.log("error in handleDelete", error);
@@ -44,7 +38,6 @@ const AdminRequestRow = ({ user, setUsers }) => {
   };
 
   const handleAccept = async (e, id) => {
-    //navigate("/admin");
     e.preventDefault();
 
     if (!window.confirm("Are you sure you want to accept this person?")) return;
@@ -61,7 +54,6 @@ const AdminRequestRow = ({ user, setUsers }) => {
           "Your volunteers’ requests have been accepted",
           "Volunteers’ Requests Accepted"
         );
-        //  console.log(res1);
         const res = await axios.get("http://localhost:5001/api/users");
         setUsers(res.data);
       } else {
@@ -74,7 +66,6 @@ const AdminRequestRow = ({ user, setUsers }) => {
           "Your volunteers’ requests have been accepted",
           "Volunteers’ Requests Accepted"
         );
-        //console.log(res1);
         const res2 = await axios.get("http://localhost:5001/api/volunteers");
         setUsers(res2.data);
       }
@@ -85,11 +76,20 @@ const AdminRequestRow = ({ user, setUsers }) => {
 
   return (
     <tr className="border-b text-center align-middle">
+      {/* Name */}
       <td className="py-4 px-4 text-sm text-gray-700">{user.name}</td>
-      <td className="py-4 px-4 text-sm text-gray-700">{user.email ?? "--"}</td>
-      <td className="py-4 px-4 text-sm text-gray-700">
+
+      {/* Email - hidden on small/medium */}
+      <td className="py-4 px-4 text-sm text-gray-700 hidden md:table-cell">
+        {user.email ?? "--"}
+      </td>
+
+      {/* Location - hidden on small/medium */}
+      <td className="py-4 px-4 text-sm text-gray-700 hidden md:table-cell">
         {user.location ?? "--"}
       </td>
+
+      {/* Actions - always visible */}
       <td className="py-4 px-4 text-sm flex justify-center gap-4">
         <button
           className="btn rounded-lg bg-green-400 text-white w-24"
@@ -97,7 +97,8 @@ const AdminRequestRow = ({ user, setUsers }) => {
         >
           Approve
         </button>
-        {/* Open the modal using document.getElementById('ID').showModal() method */}
+
+        {/* Reject with modal */}
         <div>
           <button
             className="btn rounded-lg bg-red-400 text-white w-24"
@@ -129,7 +130,6 @@ const AdminRequestRow = ({ user, setUsers }) => {
                 </div>
                 <div className="modal-action">
                   <form method="dialog">
-                    {/* if there is a button in form, it will close the modal */}
                     <button className="btn bg-pink-400 text-white rounded-lg">
                       Close
                     </button>
@@ -145,3 +145,4 @@ const AdminRequestRow = ({ user, setUsers }) => {
 };
 
 export default AdminRequestRow;
+

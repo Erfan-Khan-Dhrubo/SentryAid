@@ -14,6 +14,10 @@ const messageSchema = new mongoose.Schema(
       type: [String], // Array of user IDs / emails / names who saw it
       default: [],
     },
+    seenByVolunteers: {
+      type: [String], // Array of volunteer IDs who saw it
+      default: [],
+    },
   },
   {
     timestamps: true, // createdAt & updatedAt

@@ -1,30 +1,48 @@
-import { FaUser, FaTachometerAlt, FaUserShield } from "react-icons/fa";
+import { FaUserShield } from "react-icons/fa";
 import { FaMessage } from "react-icons/fa6";
 import { NavLink } from "react-router";
 import { RiSkull2Fill } from "react-icons/ri";
 
 const AdminSidebar = () => {
   return (
-    <aside className="w-64 bg-white shadow-lg flex flex-col justify-between min-h-screen">
+    <aside className="hidden lg:flex lg:w-64 lg:bg-white lg:shadow-lg lg:flex-col lg:justify-between lg:min-h-screen">
       <div>
         <div className="p-4 font-bold text-2xl text-pink-600">SentryAid</div>
         <nav className="mt-6 space-y-2 middle">
           <NavLink
             to={"/admin"}
             end
-            className="flex items-center px-4 py-2 text-gray-600 hover:bg-pink-50 rounded-lg"
+            className={({ isActive }) =>
+              `flex items-center px-4 py-2 rounded-lg ${
+                isActive
+                  ? "bg-pink-100 text-pink-600 font-semibold"
+                  : "text-gray-600 hover:bg-pink-50"
+              }`
+            }
           >
             <FaUserShield className="mr-3" /> Admin Panel
           </NavLink>
           <NavLink
             to={"alertMessage"}
-            className="flex items-center px-4 py-2 text-gray-600 hover:bg-pink-50 rounded-lg"
+            className={({ isActive }) =>
+              `flex items-center px-4 py-2 rounded-lg ${
+                isActive
+                  ? "bg-pink-100 text-pink-600 font-semibold"
+                  : "text-gray-600 hover:bg-pink-50"
+              }`
+            }
           >
             <FaMessage className="mr-3" /> Message
           </NavLink>
           <NavLink
             to={`/admin/heatMap`}
-            className="flex items-center px-4 py-2 text-gray-600 hover:bg-pink-50 rounded-lg"
+            className={({ isActive }) =>
+              `flex items-center px-4 py-2 rounded-lg ${
+                isActive
+                  ? "bg-pink-100 text-pink-600 font-semibold"
+                  : "text-gray-600 hover:bg-pink-50"
+              }`
+            }
           >
             <RiSkull2Fill className="mr-3" /> Risk Zones
           </NavLink>
@@ -50,3 +68,4 @@ const AdminSidebar = () => {
 };
 
 export default AdminSidebar;
+

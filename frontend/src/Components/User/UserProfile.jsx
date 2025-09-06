@@ -6,8 +6,8 @@ import { useNavigate } from "react-router";
 
 const UserProfile = () => {
   const [notifications, setNotifications] = useState([]);
-  const [userReports, setUserReports] = useState([]); // ADD THIS STATE
-  const [loadingReports, setLoadingReports] = useState(false); // ADD THIS STATE
+  const [userReports, setUserReports] = useState([]);
+  const [loadingReports, setLoadingReports] = useState(false);
   const [singleTitle, setSingleTitle] = useState("");
   const [singleMsg, setSingleMsg] = useState("");
   const [userInfo, setUserInfo] = useState([]);
@@ -28,7 +28,6 @@ const UserProfile = () => {
     }
   };
 
-  // ADD THIS FUNCTION: Fetch user's reports
   const fetchUserReports = async () => {
     try {
       setLoadingReports(true);
@@ -44,50 +43,44 @@ const UserProfile = () => {
   };
 
   useEffect(() => {
-    // Run immediately on mount
     fetchMsg();
-    fetchUserReports(); // ADD THIS: Fetch user reports
+    fetchUserReports();
 
-    // Run every 10 seconds
     const interval = setInterval(() => {
       fetchMsg();
-      fetchUserReports(); // ADD THIS: Also refresh reports
+      fetchUserReports();
     }, 10000);
 
-    // Cleanup interval on component unmount
     return () => clearInterval(interval);
-  }, [userInfo._id]); // ADD userInfo._id dependency
+  }, [userInfo._id]);
 
   const handleNotificationClick = async (notificationObj, id) => {
     document.getElementById("my_modal_2").showModal();
-    console.log(id);
     setSingleMsg(notificationObj.message);
     setSingleTitle(notificationObj.title);
     const updatedNotification = {
       ...notificationObj,
-      seen: [...notificationObj.seen, id], // push "123"
+      seen: [...notificationObj.seen, id],
     };
 
     try {
-      const res = await axios.put(
+      await axios.put(
         `http://localhost:5001/api/messages/${notificationObj._id}`,
         updatedNotification
       );
-      console.log("Updated Volunteer:", res.data);
     } catch (error) {
       console.log("Error updating volunteer", error);
     }
 
-    // If you have a state of notifications, update it here
     setNotifications((prev) =>
       prev.map((n) => (n._id === notificationObj._id ? updatedNotification : n))
     );
   };
 
   return (
-    <div className="flex flex-col gap-12 bg-pink-50 min-h-screen px-16 py-20">
-      <div className="bg-pink-50 flex items-center justify-center">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
+    <div className="flex flex-col gap-12 bg-pink-50 min-h-screen px-4 sm:px-8 md:px-12 lg:px-16 py-20">
+      <div className="bg-pink-50 flex items-center justify-center w-full">
+        <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-3 gap-6 w-full">
           {/* Profile Card */}
           <div className="bg-blue-200 rounded-lg p-6 text-center text-black shadow-lg py-12">
             <div className="flex justify-center">
@@ -173,7 +166,7 @@ const UserProfile = () => {
         </div>
       </div>
 
-      {/* ADD THIS SECTION: User Reports Section */}
+      {/* User Reports Section */}
       <div className="bg-white rounded-lg shadow-lg p-6 border-t-8 border-purple-500">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-bold text-purple-600">
@@ -196,7 +189,7 @@ const UserProfile = () => {
             You haven't submitted any reports yet.
           </p>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-4">
             {userReports.slice(0, 4).map((report) => (
               <div
                 key={report._id}
@@ -230,7 +223,7 @@ const UserProfile = () => {
         )}
       </div>
 
-      {/* ADD THIS: Reports Modal */}
+      {/* Reports Modal */}
       <dialog id="reports_modal" className="modal">
         <div className="modal-box max-w-4xl">
           <h3 className="font-bold text-lg mb-4">All My Reports</h3>
@@ -312,7 +305,7 @@ const UserProfile = () => {
         </div>
       </dialog>
 
-      {/* ADD THIS: Report Detail Modals */}
+      {/* Report Detail Modals */}
       {userReports.map((report) => (
         <dialog
           key={report._id}

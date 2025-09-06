@@ -7,7 +7,6 @@ const VolunteerProfile = () => {
   const [notifications, setNotifications] = useState([]);
   const [activeNotif, setActiveNotif] = useState(null);
   const [sta, setSta] = useState("");
-  const [readMessages, setReadMessages] = useState(new Set());
   const [volunteerInfo, setVolunteerInfo] = useState([]);
 
   const navigate = useNavigate();
@@ -23,7 +22,7 @@ const VolunteerProfile = () => {
     }
   }, [volunteerInfo]);
 
-  // Fetch real alert messages from backend
+  // Fetch messages and check read status
   useEffect(() => {
     const fetchAlerts = async () => {
       try {
@@ -37,9 +36,27 @@ const VolunteerProfile = () => {
     fetchAlerts();
   }, []);
 
-  const handleNotifClick = (notif) => {
-    setReadMessages((prev) => new Set(prev).add(notif._id));
+  const handleNotifClick = async (notif) => {
+    if (volunteerInfo && volunteerInfo._id) {
+      try {
+        // Mark message as read by this volunteer
+        await axios.patch(
+          `http://localhost:5001/api/messages/${notif._id}/read-by-volunteer/${volunteerInfo._id}`
+        );
+        
+        // Update local state to reflect read status
+        setNotifications(prev => prev.map(msg => 
+          msg._id === notif._id 
+            ? {...msg, seenByVolunteers: [...msg.seenByVolunteers, volunteerInfo._id]}
+            : msg
+        ));
+      } catch (error) {
+        console.error("Failed to mark message as read:", error);
+      }
+    }
+    
     setActiveNotif(notif);
+    document.getElementById('notification_modal').showModal();
   };
 
   const makeActiveInactive = async () => {
@@ -61,15 +78,23 @@ const VolunteerProfile = () => {
     }
   };
 
+  // Check if current volunteer has read a message
+  const hasVolunteerReadMessage = (message) => {
+    return volunteerInfo && volunteerInfo._id && message.seenByVolunteers 
+      ? message.seenByVolunteers.includes(volunteerInfo._id)
+      : false;
+  };
+
+  // Count unread messages for this volunteer
   const unreadCount = notifications.filter(
-    (notif) => !readMessages.has(notif._id)
+    (notif) => !hasVolunteerReadMessage(notif)
   ).length;
 
   return (
     <div className="flex flex-col gap-12 bg-pink-50 min-h-screen px-16 py-20">
       <div className="bg-pink-50 flex items-center justify-center">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
-          {/* Profile Card - UNCHANGED */}
+          {/* Profile Card */}
           <div className="bg-blue-200 rounded-lg p-6 text-center text-black shadow-lg py-12">
             <div className="flex justify-center">
               <img className="w-24" src="../profile.png" alt="" />
@@ -118,17 +143,18 @@ const VolunteerProfile = () => {
                 <li className="text-gray-400">No notifications available.</li>
               ) : (
                 notifications.map((notif) => {
-                  const isRead = readMessages.has(notif._id);
+                  const isRead = hasVolunteerReadMessage(notif);
                   return (
                     <li key={notif._id}>
                       <button
                         className={`border flex items-center px-4 w-full py-3 rounded-lg border-pink-400 ${
                           isRead ? "font-normal" : "font-bold"
-                        } hover:bg-pink-100 hover:text-pink-600 transition-all duration-200`}
+                        } hover:bg-pink-100 hover:text-pink-600 transition-all duration-200 text-pink-400`}
                         onClick={() => handleNotifClick(notif)}
                       >
                         <div className="text-left">
                           <span>Title: {notif.title}</span>
+                         
                         </div>
                       </button>
                     </li>
@@ -138,7 +164,7 @@ const VolunteerProfile = () => {
             </ul>
           </div>
 
-          {/* NEW SOS Alert Card - SIMPLIFIED */}
+          {/* SOS Alert Card */}
           <div className="bg-white rounded-lg shadow-lg p-6 border-t-8 border-red-500">
             <h2 className="text-xl font-bold text-red-500 mb-4">SOS Alert</h2>
             <button
@@ -153,20 +179,25 @@ const VolunteerProfile = () => {
         </div>
       </div>
 
-      {/* Notification Message */}
-      {activeNotif && (
-        <dialog open className="modal" onClose={() => setActiveNotif(null)}>
-          <div className="modal-box">
-            <h3 className="text-lg font-bold">{activeNotif.title}</h3>
-            <p className="py-4">{activeNotif.message}</p>
-            <div className="modal-action">
-              <button className="btn" onClick={() => setActiveNotif(null)}>
-                Close
-              </button>
-            </div>
+      {/* Notification Message Modal */}
+      <dialog id="notification_modal" className="modal">
+        <div className="modal-box">
+          <form method="dialog">
+            <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+          </form>
+          <h3 className="font-bold text-lg text-pink-600">{activeNotif?.title}</h3>
+          <p className="py-4 text-pink-400">{activeNotif?.message}</p>
+          <div className="modal-action">
+            <form method="dialog">
+              <button className="btn">Close</button>
+            </form>
           </div>
-        </dialog>
-      )}
+        </div>
+        
+        <form method="dialog" className="modal-backdrop">
+          <button>close</button>
+        </form>
+      </dialog>
     </div>
   );
 };

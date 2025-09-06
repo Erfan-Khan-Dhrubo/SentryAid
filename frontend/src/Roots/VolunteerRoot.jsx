@@ -2,11 +2,9 @@ import { useEffect, useState } from "react";
 import { fetchSpecific } from "../Utilities/Helper";
 import { Outlet, useParams } from "react-router";
 import VolunteerNavbar from "../Components/Volunteer/VolunteerNavbar";
-import VolunteerProfile from "../Components/Volunteer/VolunteerProfile";
 
 const VolunteerRoot = () => {
-  const [volunteerInfo, setVolunteerInfo] = useState([]);
-  const [type, setType] = useState("");
+  const [volunteerInfo, setVolunteerInfo] = useState({});
   const { id } = useParams();
 
   useEffect(() => {
@@ -16,21 +14,22 @@ const VolunteerRoot = () => {
       );
       setVolunteerInfo(data);
     };
-
     getUser();
-  }, []);
+  }, [id]);
+
   return (
-    <div>
-      <div className="flex">
-        <div>
-          <VolunteerNavbar volunteerInfo={volunteerInfo}></VolunteerNavbar>
-        </div>
-        <div className="flex-1">
-          <Outlet></Outlet>
-        </div>
+    <div className="min-h-screen w-full bg-white">
+      {/* Navbar / Sidebar */}
+      <VolunteerNavbar volunteerInfo={volunteerInfo} />
+
+      {/* Main content */}
+      <div className="lg:ml-64">
+        {/* lg:ml-64 adds left margin on large screens to prevent overlap */}
+        <Outlet />
       </div>
     </div>
   );
 };
 
 export default VolunteerRoot;
+

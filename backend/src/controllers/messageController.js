@@ -55,6 +55,28 @@ export async function updateMessage(req, res) {
     res.status(500).json({ message: "Internal server error" });
   }
 }
+export async function markAsReadByVolunteer(req, res) {
+  try {
+    const { messageId, volunteerId } = req.params;
+
+    const message = await Message.findById(messageId);
+    
+    if (!message) {
+      return res.status(404).json({ message: "Message not found" });
+    }
+
+    // Check if volunteer already marked this as read
+    if (!message.seenByVolunteers.includes(volunteerId)) {
+      message.seenByVolunteers.push(volunteerId);
+      await message.save();
+    }
+
+    res.status(200).json(message);
+  } catch (error) {
+    console.error("Error in markAsReadByVolunteer controller", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+}
 
 export async function deleteMessage(req, res) {
   try {
