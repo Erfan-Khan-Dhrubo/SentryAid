@@ -50,7 +50,7 @@ const VolunteerLogin = () => {
 
       <form onSubmit={handleLogin} className="space-y-4">
         {/* Name */}
-        <div>
+        <div className="text-black">
           <label className="block text-sm font-medium text-gray-700">
             Name
           </label>
@@ -65,7 +65,7 @@ const VolunteerLogin = () => {
         </div>
 
         {/* Password */}
-        <div>
+        <div className="text-black">
           <label className="block text-sm font-medium text-gray-700">
             Password
           </label>

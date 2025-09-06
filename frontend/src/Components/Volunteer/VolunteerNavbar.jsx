@@ -1,65 +1,82 @@
-import { FaUser, FaTachometerAlt, FaUserShield } from "react-icons/fa";
-import { FaMessage } from "react-icons/fa6";
+import { useState } from "react";
+import { FaTachometerAlt } from "react-icons/fa";
 import { FaRankingStar } from "react-icons/fa6";
 import { AiFillEdit } from "react-icons/ai";
-import { NavLink } from "react-router";
 import { RiSkull2Fill } from "react-icons/ri";
 import { FaHandsHelping } from "react-icons/fa";
+import { NavLink } from "react-router";
+import { GiHamburgerMenu } from "react-icons/gi";
 
 const VolunteerNavbar = ({ volunteerInfo }) => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const menuLinks = [
+    {
+      to: `/volunteers/${volunteerInfo._id}`,
+      label: "Dashboard",
+      icon: <FaTachometerAlt className="mr-3" />,
+    },
+    {
+      to: `/volunteers/${volunteerInfo._id}/volunteerRanking`,
+      label: "Ranking",
+      icon: <FaRankingStar className="mr-3" />,
+    },
+    {
+      to: `/volunteers/${volunteerInfo._id}/editProfile`,
+      label: "Edit Profile",
+      icon: <AiFillEdit className="mr-3" />,
+    },
+    {
+      to: `/volunteers/${volunteerInfo._id}/heatMap`,
+      label: "Risk Zones",
+      icon: <RiSkull2Fill className="mr-3" />,
+    },
+    {
+      to: `/volunteers/${volunteerInfo._id}/sosAlert`,
+      label: "Get SOS Alert",
+      icon: <FaHandsHelping className="mr-3" />,
+    },
+  ];
+
   return (
-    <aside className="w-64 bg-white shadow-lg flex flex-col justify-between h-full">
-      <div>
-        <nav className="mt-6 space-y-2 middle">
-          <NavLink
-            to={`/volunteers/${volunteerInfo._id}`}
-            end
-            className="flex items-center px-4 py-2 text-gray-600 hover:bg-pink-50 rounded-lg"
-          >
-            <FaTachometerAlt className="mr-3" /> Dashboard
-          </NavLink>
-          <NavLink
-            to={`/volunteers/${volunteerInfo._id}/volunteerRanking`}
-            className="flex items-center px-4 py-2 text-gray-600 hover:bg-pink-50 rounded-lg"
-          >
-            <FaRankingStar className="mr-3" /> Ranking
-          </NavLink>
-          <NavLink
-            to={`/volunteers/${volunteerInfo._id}/editProfile`}
-            className="flex items-center px-4 py-2 text-gray-600 hover:bg-pink-50 rounded-lg"
-          >
-            <AiFillEdit className="mr-3" /> Edit Profile
-          </NavLink>
-          <NavLink
-            to={`/volunteers/${volunteerInfo._id}/heatMap`}
-            className="flex items-center px-4 py-2 text-gray-600 hover:bg-pink-50 rounded-lg"
-          >
-            <RiSkull2Fill className="mr-3" /> Risk Zones
-          </NavLink>
-          <NavLink
-            to={`/volunteers/${volunteerInfo._id}/sosAlert`}
-            className="flex items-center px-4 py-2 text-gray-600 hover:bg-pink-50 rounded-lg"
-          >
-            <FaHandsHelping className="mr-3" /> Get SOS Alert
-          </NavLink>
-        </nav>
+    <>
+      {/* Hamburger for small/medium */}
+      <div className="lg:hidden bg-white px-4 py-3 flex justify-between items-center border-b border-gray-200">
+        <p className="font-bold text-gray-700">Menu</p>
+        <button onClick={() => setIsOpen(!isOpen)}>
+          <GiHamburgerMenu className="text-2xl text-gray-700" />
+        </button>
       </div>
 
-      {/* User Profile */}
-      <div className="p-4 border-t">
-        <div className="flex items-center space-x-3">
-          <img
-            src="https://www.creativefabrica.com/wp-content/uploads/2021/09/09/User-avatar-profile-icon-Graphics-17068385-1.jpg"
-            alt="Profile"
-            className="w-14 h-10 rounded-full"
-          />
-          <div>
-            <p className="text-sm font-semibold">{volunteerInfo.name}</p>
-            <p className="text-xs text-gray-500">{volunteerInfo.type}</p>
-          </div>
+      {isOpen && (
+        <div className="lg:hidden bg-white space-y-2 px-4 py-3 border-b border-gray-200">
+          {menuLinks.map((link) => (
+            <NavLink
+              key={link.label}
+              to={link.to}
+              className="flex items-center px-2 py-2 text-gray-600 hover:bg-pink-50 rounded-lg"
+            >
+              {link.icon} {link.label}
+            </NavLink>
+          ))}
         </div>
-      </div>
-    </aside>
+      )}
+
+      {/* Sidebar for large screens */}
+      <aside className="hidden lg:flex lg:w-64 lg:flex-col lg:bg-white lg:shadow-lg lg:h-screen lg:fixed">
+        <div className="mt-6 space-y-2">
+          {menuLinks.map((link) => (
+            <NavLink
+              key={link.label}
+              to={link.to}
+              className="flex items-center px-4 py-2 text-gray-600 hover:bg-pink-50 rounded-lg"
+            >
+              {link.icon} {link.label}
+            </NavLink>
+          ))}
+        </div>
+      </aside>
+    </>
   );
 };
 
