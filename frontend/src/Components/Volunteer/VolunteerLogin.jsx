@@ -23,6 +23,11 @@ const VolunteerLogin = () => {
 
       console.log("✅ Backend response:", res.data); // log the response
 
+      if (res.data.request === "pending") {
+        alert("Your signup request is under review.");
+        return;
+      }
+
       // Save to localStorage
       localStorage.setItem("volunteer", JSON.stringify(res.data));
 
