@@ -41,8 +41,13 @@ const VolunteerNavbar = ({ volunteerInfo }) => {
   return (
     <>
       {/* Hamburger for small/medium */}
-      <div className="lg:hidden bg-white px-4 py-3 flex justify-between items-center border-b border-gray-200">
-        <p className="font-bold text-gray-700">Menu</p>
+      <div
+        className={`
+    lg:hidden 
+    px-4 py-3 flex justify-between items-center border-gray-200
+    ${isOpen ? "bg-white" : "bg-pink-50"}
+  `}
+      >
         <button onClick={() => setIsOpen(!isOpen)}>
           <GiHamburgerMenu className="text-2xl text-gray-700" />
         </button>
@@ -78,16 +83,15 @@ const VolunteerNavbar = ({ volunteerInfo }) => {
               to={link.to}
               end
               className={({ isActive }) =>
-                `flex items-center px-4 py-2 rounded-lg ${
-                isActive
-                  ? "bg-pink-100 text-pink-600 font-semibold" // active style
-                  : "text-gray-600 hover:bg-pink-50"
-              }`
-         }
-          >
-  {link.icon} {link.label}
-</NavLink>
-
+                `flex items-center px-4 py-2  ${
+                  isActive
+                    ? "bg-pink-100 text-pink-600 font-semibold" // active style
+                    : "text-gray-600 hover:bg-pink-50"
+                }`
+              }
+            >
+              {link.icon} {link.label}
+            </NavLink>
           ))}
         </div>
       </aside>
