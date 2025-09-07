@@ -13,6 +13,7 @@ const ReportVolunteer = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isUserLoading, setIsUserLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isDataReady, setIsDataReady] = useState(false);
   const [formData, setFormData] = useState({
     title: "",
     category: "",
@@ -62,6 +63,7 @@ const ReportVolunteer = () => {
         }
       } finally {
         setIsUserLoading(false);
+        setIsDataReady(true);
       }
     };
 
@@ -81,6 +83,15 @@ const ReportVolunteer = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Validate that user data is available
+    if (!user) {
+      toast.error("User information not loaded. Please try again.", {
+        position: "top-right",
+        autoClose: 3000,
+      });
+      return;
+    }
+
     // Validate form
     if (
       !formData.title.trim() ||
@@ -90,10 +101,6 @@ const ReportVolunteer = () => {
       toast.error("All fields should be filled!", {
         position: "top-right",
         autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
       });
       return;
     }
@@ -104,8 +111,8 @@ const ReportVolunteer = () => {
       // Submit report to backend
       const reportData = {
         reporterId: userId,
-        reporterName: user?.name || "Unknown User",
-        reporterEmail: user?.email || "No email",
+        reporterName: user.name,
+        reporterEmail: user.email,
         volunteerId: volunteerId,
         volunteerName: volunteer.name,
         volunteerEmail: volunteer.email,
@@ -114,22 +121,32 @@ const ReportVolunteer = () => {
         message: formData.message,
       };
 
+      console.log("Submitting report:", reportData);
+
       const response = await axios.post(
         "http://localhost:5001/api/reports",
         reportData
       );
-      // score deduct
-      const res = await axios.get(
-        `http://localhost:5001/api/volunteers/${volunteerId}`
-      );
-      const fetchedUser = res.data;
-      const user = { ...fetchedUser, score: fetchedUser.score - 5 };
-      await axios.put(
-        `http://localhost:5001/api/volunteers/${volunteerId}`,
-        user
-      );
 
+      console.log("Report response:", response.data);
+
+      // Check if the report was successfully created
       if (response.data.success) {
+        // Score deduction - make sure volunteer has score property
+        try {
+          const scoreUpdateData = { 
+            score: (volunteer.score || 0) - 5 
+          };
+          await axios.patch(
+            `http://localhost:5001/api/volunteers/${volunteerId}/score`,
+            scoreUpdateData
+          );
+          console.log("Score updated successfully");
+        } catch (scoreError) {
+          console.error("Score update failed:", scoreError);
+          // Don't fail the whole report if score update fails
+        }
+
         // Show success toast
         toast.success("Report submitted successfully!", {
           position: "top-right",
@@ -145,14 +162,21 @@ const ReportVolunteer = () => {
 
         // Navigate back to ranking page after 2 seconds
         setTimeout(() => {
-          navigate("/volunteerRanking");
+          navigate(`/users/${userId}/volunteerRanking`);
         }, 2000);
       } else {
         throw new Error(response.data.message);
       }
     } catch (error) {
       console.error("Failed to submit report:", error);
-      toast.error("Failed to submit report. Please try again.", {
+      console.error("Server response:", error.response?.data);
+      
+      let errorMessage = "Failed to submit report. Please try again.";
+      if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      }
+      
+      toast.error(errorMessage, {
         position: "top-right",
         autoClose: 3000,
         hideProgressBar: false,
@@ -166,7 +190,11 @@ const ReportVolunteer = () => {
   };
 
   const handleCancel = () => {
-    navigate("/volunteerRanking");
+    if(userId) {
+      navigate(`/users/${userId}/volunteerRanking`);
+    } else {
+      navigate(`/`);
+    }
   };
 
   if (isLoading) {
@@ -319,7 +347,7 @@ const ReportVolunteer = () => {
               <button
                 type="submit"
                 className="px-6 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition duration-150 disabled:opacity-50 disabled:cursor-not-allowed"
-                disabled={isSubmitting}
+                disabled={isSubmitting || !isDataReady || !user}
               >
                 {isSubmitting ? (
                   <div className="flex items-center">
