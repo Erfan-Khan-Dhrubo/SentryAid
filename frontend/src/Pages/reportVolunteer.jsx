@@ -13,7 +13,6 @@ const ReportVolunteer = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isUserLoading, setIsUserLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isDataReady, setIsDataReady] = useState(false);
   const [formData, setFormData] = useState({
     title: "",
     category: "",
@@ -21,19 +20,18 @@ const ReportVolunteer = () => {
   });
 
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("user"));
-    setUserId(user?._id);
+    const storedUser = JSON.parse(localStorage.getItem("user"));
+    setUserId(storedUser?._id);
   }, []);
 
   // Fetch volunteer data
   useEffect(() => {
     const fetchVolunteerData = async () => {
       try {
-        const mockVolunteers = await axios.get(
+        const res = await axios.get(
           `http://localhost:5001/api/volunteers/${volunteerId}`
         );
-
-        setVolunteer(mockVolunteers.data);
+        setVolunteer(res.data);
       } catch (error) {
         console.error("Failed to fetch volunteer data:", error);
         toast.error("Failed to load volunteer information");
@@ -45,15 +43,15 @@ const ReportVolunteer = () => {
     fetchVolunteerData();
   }, [volunteerId]);
 
-  // Fetch user data from your backend API
+  // Fetch user data
   useEffect(() => {
     const fetchUserData = async () => {
       try {
         setIsUserLoading(true);
-        const response = await axios.get(
+        const res = await axios.get(
           `http://localhost:5001/api/users/${userId}`
         );
-        setUser(response.data);
+        setUser(res.data);
       } catch (error) {
         console.error("Failed to fetch user data:", error);
         if (error.response?.status === 404) {
@@ -63,7 +61,6 @@ const ReportVolunteer = () => {
         }
       } finally {
         setIsUserLoading(false);
-        setIsDataReady(true);
       }
     };
 
@@ -83,36 +80,24 @@ const ReportVolunteer = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validate that user data is available
-    if (!user) {
-      toast.error("User information not loaded. Please try again.", {
-        position: "top-right",
-        autoClose: 3000,
-      });
-      return;
-    }
-
     // Validate form
     if (
       !formData.title.trim() ||
       !formData.category ||
       !formData.message.trim()
     ) {
-      toast.error("All fields should be filled!", {
-        position: "top-right",
-        autoClose: 3000,
-      });
+      toast.error("All fields should be filled!", { position: "top-right" });
       return;
     }
 
     setIsSubmitting(true);
 
     try {
-      // Submit report to backend
+      // Report data
       const reportData = {
         reporterId: userId,
-        reporterName: user.name,
-        reporterEmail: user.email,
+        reporterName: user?.name || "Unknown User",
+        reporterEmail: user?.email || "No email",
         volunteerId: volunteerId,
         volunteerName: volunteer.name,
         volunteerEmail: volunteer.email,
@@ -121,46 +106,33 @@ const ReportVolunteer = () => {
         message: formData.message,
       };
 
-      console.log("Submitting report:", reportData);
-
       const response = await axios.post(
         "http://localhost:5001/api/reports",
         reportData
       );
 
-      console.log("Report response:", response.data);
+      // Deduct score from volunteer
+      const res = await axios.get(
+        `http://localhost:5001/api/volunteers/${volunteerId}`
+      );
+      const fetchedVolunteer = res.data;
+      const updatedVolunteer = {
+        ...fetchedVolunteer,
+        score: fetchedVolunteer.score - 5,
+      };
+      await axios.put(
+        `http://localhost:5001/api/volunteers/${volunteerId}`,
+        updatedVolunteer
+      );
 
-      // Check if the report was successfully created
       if (response.data.success) {
-        // Score deduction - make sure volunteer has score property
-        try {
-          const scoreUpdateData = { 
-            score: (volunteer.score || 0) - 5 
-          };
-          await axios.patch(
-            `http://localhost:5001/api/volunteers/${volunteerId}/score`,
-            scoreUpdateData
-          );
-          console.log("Score updated successfully");
-        } catch (scoreError) {
-          console.error("Score update failed:", scoreError);
-          // Don't fail the whole report if score update fails
-        }
-
-        // Show success toast
         toast.success("Report submitted successfully!", {
           position: "top-right",
           autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
         });
 
-        // Reset form
         setFormData({ title: "", category: "", message: "" });
 
-        // Navigate back to ranking page after 2 seconds
         setTimeout(() => {
           navigate(`/users/${userId}/volunteerRanking`);
         }, 2000);
@@ -169,20 +141,9 @@ const ReportVolunteer = () => {
       }
     } catch (error) {
       console.error("Failed to submit report:", error);
-      console.error("Server response:", error.response?.data);
-      
-      let errorMessage = "Failed to submit report. Please try again.";
-      if (error.response?.data?.message) {
-        errorMessage = error.response.data.message;
-      }
-      
-      toast.error(errorMessage, {
+      toast.error("Failed to submit report. Please try again.", {
         position: "top-right",
         autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
       });
     } finally {
       setIsSubmitting(false);
@@ -190,11 +151,7 @@ const ReportVolunteer = () => {
   };
 
   const handleCancel = () => {
-    if(userId) {
-      navigate(`/users/${userId}/volunteerRanking`);
-    } else {
-      navigate(`/`);
-    }
+    navigate(`/users/${userId}/volunteerRanking`);
   };
 
   if (isLoading) {
@@ -241,11 +198,9 @@ const ReportVolunteer = () => {
                 <p className="text-sm text-gray-600">{user.email}</p>
               </>
             ) : (
-              <>
-                <p className="text-sm text-gray-600">
-                  User not found in database
-                </p>
-              </>
+              <p className="text-sm text-gray-600">
+                User not found in database
+              </p>
             )}
           </div>
         </div>
@@ -255,21 +210,16 @@ const ReportVolunteer = () => {
           <h3 className="text-lg font-semibold text-gray-900 mb-2">
             Volunteer Being Reported:
           </h3>
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="font-medium">{volunteer.name}</p>
-              <p className="text-sm text-gray-600">{volunteer.email}</p>
-              <p className="text-xs text-gray-500">
-                Volunteer ID: {volunteerId}
-              </p>
-            </div>
+          <div>
+            <p className="font-medium">{volunteer.name}</p>
+            <p className="text-sm text-gray-600">{volunteer.email}</p>
+            <p className="text-xs text-gray-500">Volunteer ID: {volunteerId}</p>
           </div>
         </div>
 
         {/* Report Form */}
         <div className="bg-white shadow-lg rounded-lg overflow-hidden">
           <form onSubmit={handleSubmit} className="p-6 space-y-6">
-            {/* Report Title */}
             <div>
               <label
                 htmlFor="title"
@@ -283,13 +233,11 @@ const ReportVolunteer = () => {
                 name="title"
                 value={formData.title}
                 onChange={handleInputChange}
-                placeholder="Enter a clear title for your report"
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-150"
+                className="w-full px-4 py-2 border border-gray-300 rounded-md"
                 disabled={isSubmitting}
               />
             </div>
 
-            {/* Report Category */}
             <div>
               <label
                 htmlFor="category"
@@ -302,7 +250,7 @@ const ReportVolunteer = () => {
                 name="category"
                 value={formData.category}
                 onChange={handleInputChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-150"
+                className="w-full px-4 py-2 border border-gray-300 rounded-md"
                 disabled={isSubmitting}
               >
                 <option value="">Select a category</option>
@@ -314,7 +262,6 @@ const ReportVolunteer = () => {
               </select>
             </div>
 
-            {/* Message Box */}
             <div>
               <label
                 htmlFor="message"
@@ -328,40 +275,30 @@ const ReportVolunteer = () => {
                 rows={6}
                 value={formData.message}
                 onChange={handleInputChange}
-                placeholder="Please provide detailed information about the incident. Include date, time, location, and any other relevant details."
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-150 resize-none"
+                className="w-full px-4 py-2 border border-gray-300 rounded-md resize-none"
                 disabled={isSubmitting}
               />
             </div>
 
-            {/* Form Actions */}
             <div className="flex justify-end space-x-4 pt-4">
               <button
                 type="button"
                 onClick={handleCancel}
-                className="px-6 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition duration-150 disabled:opacity-50"
+                className="px-6 py-2 border border-gray-300 text-gray-700 rounded-md"
                 disabled={isSubmitting}
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                className="px-6 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition duration-150 disabled:opacity-50 disabled:cursor-not-allowed"
-                disabled={isSubmitting || !isDataReady || !user}
+                className="px-6 py-2 bg-indigo-600 text-white rounded-md"
+                disabled={isSubmitting}
               >
-                {isSubmitting ? (
-                  <div className="flex items-center">
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                    Submitting...
-                  </div>
-                ) : (
-                  "Submit Report"
-                )}
+                {isSubmitting ? "Submitting..." : "Submit Report"}
               </button>
             </div>
           </form>
         </div>
-
         {/* Additional Information */}
         <div className="mt-6 p-4 bg-yellow-50 rounded-lg border border-yellow-200">
           <h3 className="text-sm font-semibold text-yellow-800 mb-2">
