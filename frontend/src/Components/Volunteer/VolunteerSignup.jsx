@@ -33,7 +33,7 @@ const VolunteerSignup = () => {
 
       navigate("/");
     } catch (error) {
-      console.error("Error creating volunteer", error);
+      console.error("Error creating User", error);
     } finally {
       setLoading(false);
     }

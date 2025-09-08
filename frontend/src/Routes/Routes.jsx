@@ -19,6 +19,9 @@ import ReportVolunteer from "./../Pages/reportVolunteer";
 import Volunteer from "./../Pages/Volunteer/Volunteer";
 import Sos from "../Components/User/SOS/Sos";
 import SosAlert from "../Components/Volunteer/SOS Alert/SosAlert";
+import User from "../Pages/Users/User";
+import CreateBulletinMsg from "../Pages/CreateBulletinMsg";
+import BulletinBoard from "../Pages/BulletinBoard";
 
 export const router = createBrowserRouter([
   {
@@ -56,16 +59,21 @@ export const router = createBrowserRouter([
             path: "sos",
             element: <Sos />,
           },
+          {
+            path: "bulletinBoard",
+            element: <BulletinBoard />,
+          },
         ],
       },
       {
         path: "usersLogin",
-        element: <UserLogin />,
+        element: <User />,
       },
       {
         path: "usersRegister",
         element: <UserRegister />,
       },
+
       // Volunteer Routes
       {
         path: "volunteers/:id",

@@ -1,59 +1,46 @@
 import React, { useState } from "react";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { useNavigate } from "react-router";
 import axios from "axios";
+import { useNavigate } from "react-router";
 
-const UserLogin = () => {
+const UserSignup = () => {
   const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
+  const handleSignup = async (e) => {
     e.preventDefault();
-
-    console.log("📡 Attempting to login with:", { name, password }); // log before sending
+    setLoading(true);
 
     try {
-      const res = await axios.post("http://localhost:5001/api/users/login", {
+      // Send signup request
+      const res = await axios.post("http://localhost:5001/api/users", {
         name,
+        email,
         password,
       });
-
-      console.log("✅ Backend response:", res.data); // log the response
-
-      if (res.data.request === "pending") {
-        alert("Your signup request is under review.");
-        return;
-      }
-
-      // Save to localStorage
-      localStorage.setItem("user", JSON.stringify(res.data));
-
-      // Show success message
-      toast.success("Login successful! 🎉");
-
-      // Navigate to volunteer dashboard
-      navigate(`/users/${res.data._id}`);
-    } catch (err) {
-      console.error("❌ Login error:", err); // log full error for debugging
-
-      if (err.response) {
-        toast.error(err.response.data.message); // server returned error
-      } else {
-        toast.error("Something went wrong. Please try again."); // network or CORS issue
-      }
+      alert(
+        "Your signup request has been sent for review. We will notify you by email."
+      );
+      navigate("/");
+    } catch (error) {
+      console.error("Error creating volunteer", error);
+    } finally {
+      setLoading(false);
     }
+
+    console.log("Signup with:", { name, email, password });
   };
 
   return (
     <div>
       <h2 className="text-2xl font-bold text-center text-gray-800 mb-6 pt-6">
-        User Login
+        User Signup
       </h2>
 
-      <form onSubmit={handleLogin} className="space-y-4">
+      <form onSubmit={handleSignup} className="space-y-4">
         {/* Name */}
         <div className="text-black">
           <label className="block text-sm font-medium text-gray-700">
@@ -64,6 +51,21 @@ const UserLogin = () => {
             placeholder="Enter your name"
             value={name}
             onChange={(e) => setName(e.target.value)}
+            className="mt-1 w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-300"
+            required
+          />
+        </div>
+
+        {/* Email */}
+        <div className="text-black">
+          <label className="block text-sm font-medium text-gray-700">
+            Email
+          </label>
+          <input
+            type="email"
+            placeholder="Enter your email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             className="mt-1 w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-300"
             required
           />
@@ -88,12 +90,13 @@ const UserLogin = () => {
         <button
           type="submit"
           className="w-full bg-pink-400 text-white py-2 rounded-lg hover:bg-pink-600 transition duration-300"
+          disabled={loading}
         >
-          Login
+          Signup
         </button>
       </form>
     </div>
   );
 };
 
-export default UserLogin;
+export default UserSignup;

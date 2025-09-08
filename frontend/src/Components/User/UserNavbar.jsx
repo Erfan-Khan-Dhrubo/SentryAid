@@ -1,5 +1,5 @@
 import { FaUser, FaTachometerAlt, FaUserShield } from "react-icons/fa";
-import { FaMessage } from "react-icons/fa6";
+import { FaChalkboard } from "react-icons/fa";
 import { FaRankingStar } from "react-icons/fa6";
 import { AiFillEdit } from "react-icons/ai";
 import { NavLink } from "react-router";
@@ -41,6 +41,12 @@ const UserNavbar = ({ userInfo }) => {
             className="flex items-center px-4 py-2 text-gray-600 hover:bg-pink-50 rounded-lg"
           >
             <FaHandsHelping className="mr-3" /> Send SOS
+          </NavLink>
+          <NavLink
+            to={`/users/${userInfo._id}/bulletinBoard`}
+            className="flex items-center px-4 py-2 text-gray-600 hover:bg-pink-50 rounded-lg"
+          >
+            <FaChalkboard className="mr-3" /> Bulletin Board
           </NavLink>
         </nav>
       </div>

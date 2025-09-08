@@ -9,7 +9,6 @@ const userSchema = new mongoose.Schema(
     email: {
       type: String,
       required: true, // Email is required
-      unique: true, // Prevent duplicate emails
     },
     password: {
       type: String,
@@ -41,7 +40,7 @@ const userSchema = new mongoose.Schema(
     },
     request: {
       type: String,
-      default: "rejected", // Default request status
+      default: "pending", // Default request status
     },
   },
   {
