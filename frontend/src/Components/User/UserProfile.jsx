@@ -78,7 +78,7 @@ const UserProfile = () => {
   };
 
   return (
-    <div className="flex flex-col gap-12 bg-pink-50 min-h-screen px-4 sm:px-8 md:px-12 lg:px-16 py-20">
+    <div className="flex flex-col gap-12 bg-pink-50 min-h-screen px-4 sm:px-8 md:px-12 lg:px-16 py-4">
       <div className="bg-pink-50 flex items-center justify-center w-full">
         <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-3 gap-6 w-full">
           {/* Profile Card */}

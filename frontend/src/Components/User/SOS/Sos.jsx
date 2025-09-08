@@ -274,6 +274,13 @@ const Sos = () => {
     }
   };
 
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage();
+    }
+  };
+
   return (
     <div className="w-full bg-pink-50">
       <div className="w-9/10 mx-auto py-12 min-h-screen flex flex-col md:flex-row gap-8">
@@ -331,6 +338,7 @@ const Sos = () => {
                 setNewMessage={setNewMessage}
                 connectedReceivers={connectedReceivers}
                 sendMessage={sendMessage}
+                handleKeyPress={handleKeyPress}
               ></SenderMsgInput>
             </div>
           )}

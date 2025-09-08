@@ -52,7 +52,7 @@ const UserNavbar = ({ userInfo }) => {
       </div>
 
       {/* User Profile */}
-      <div className="p-4 border-t">
+      <div className="p-4 border-t hidden lg:flex">
         <div className="flex items-center space-x-3">
           <img
             src="https://www.creativefabrica.com/wp-content/uploads/2021/09/09/User-avatar-profile-icon-Graphics-17068385-1.jpg"

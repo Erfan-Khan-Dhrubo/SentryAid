@@ -5,8 +5,6 @@ import UserRoot from "../Roots/UserRoot";
 import AdminRoot from "../Roots/AdminRoot";
 import Admin from "../Pages/Admin/Admin";
 import AlertMessage from "./../Pages/Admin/AlertMessage";
-import UserLogin from "./../Pages/Users/UserLogin";
-import UserRegister from "./../Pages/Users/UserRegister";
 import AdminLogin from "./../Pages/Admin/AdminLogin";
 import MainRoot from "../Roots/MainRoot";
 import EditProfile from "./../Pages/Users/EditProfile";
@@ -70,8 +68,8 @@ export const router = createBrowserRouter([
         element: <User />,
       },
       {
-        path: "usersRegister",
-        element: <UserRegister />,
+        path: "createBulletinMsg",
+        element: <CreateBulletinMsg />,
       },
 
       // Volunteer Routes
@@ -99,6 +97,10 @@ export const router = createBrowserRouter([
           {
             path: "sosAlert",
             element: <SosAlert />,
+          },
+          {
+            path: "bulletinBoard",
+            element: <BulletinBoard />,
           },
         ],
       },

@@ -6,6 +6,7 @@ import { RiSkull2Fill } from "react-icons/ri";
 import { FaHandsHelping } from "react-icons/fa";
 import { NavLink } from "react-router";
 import { GiHamburgerMenu } from "react-icons/gi";
+import { FaChalkboard } from "react-icons/fa";
 
 const VolunteerNavbar = ({ volunteerInfo }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -35,6 +36,11 @@ const VolunteerNavbar = ({ volunteerInfo }) => {
       to: `/volunteers/${volunteerInfo._id}/sosAlert`,
       label: "Get SOS Alert",
       icon: <FaHandsHelping className="mr-3" />,
+    },
+    {
+      to: `/volunteers/${volunteerInfo._id}/bulletinBoard`,
+      label: "Bulletin Board",
+      icon: <FaChalkboard className="mr-3" />,
     },
   ];
 

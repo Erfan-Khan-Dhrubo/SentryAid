@@ -5,20 +5,44 @@ import VolunteerSignup from "../../Components/Volunteer/VolunteerSignup";
 
 const Volunteer = () => {
   const [isLogin, setIsLogin] = useState(true);
-  const [volunteerId, setVolunteerID] = useState("");
+  const [role, setRole] = useState(null);
   const navigate = useNavigate();
 
-  // Get volunteer from localStorage once on mount
+  // Get volunteer, user, or admin from localStorage once on mount
   useEffect(() => {
-    const volunteerData = localStorage.getItem("volunteer");
-    if (volunteerData) {
-      const volunteer = JSON.parse(volunteerData);
-      setVolunteerID(volunteer._id); // set volunteer ID
+    const volunteerStr = localStorage.getItem("volunteer");
+    const userStr = localStorage.getItem("user");
+    const adminStr = localStorage.getItem("admin");
+
+    if (volunteerStr) {
+      setRole(JSON.parse(volunteerStr));
+    } else if (userStr) {
+      setRole(JSON.parse(userStr));
+    } else if (adminStr) {
+      setRole(JSON.parse(adminStr));
     }
   }, []);
 
-  // Check if a volunteer is logged in
-  const isLoggedIn = !!volunteerId;
+  // Check if someone is logged in
+  const isLoggedIn = !!role;
+
+  const handleDashboardNavigate = () => {
+    if (!role) return;
+
+    switch (role.type) {
+      case "volunteer":
+        navigate(`/volunteers/${role._id}`);
+        break;
+      case "user":
+        navigate(`/users/${role._id}`);
+        break;
+      case "admin":
+        navigate("/admin");
+        break;
+      default:
+        break;
+    }
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-pink-50">
@@ -49,16 +73,16 @@ const Volunteer = () => {
               </button>
             </div>
 
-            {/* Show Component */}
+            {/* Show Login or Signup Component */}
             {isLogin ? <VolunteerLogin /> : <VolunteerSignup />}
           </>
         ) : (
           <div className="text-center">
             <div className="text-pink-400 font-semibold text-xl mb-4">
-              You are already logged in.
+              You are already logged in as {role.name} ({role.type})
             </div>
             <button
-              onClick={() => navigate(`/volunteers/${volunteerId}`)}
+              onClick={handleDashboardNavigate}
               className="bg-pink-400 text-white mt-6 px-6 py-2 rounded-lg hover:bg-pink-500 transition duration-300"
             >
               Go to Dashboard

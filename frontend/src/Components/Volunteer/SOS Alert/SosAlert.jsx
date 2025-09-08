@@ -421,6 +421,13 @@ const SosAlert = () => {
     }
   };
 
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage();
+    }
+  };
+
   const renderLeafletMap = () => {
     if (senderLocations.size === 0) return null; // If there are no senderLocations, it immediately returns null
 
@@ -617,6 +624,7 @@ const SosAlert = () => {
                 setNewMessage={setNewMessage}
                 connectedSenders={connectedSenders}
                 sendMessage={sendMessage}
+                handleKeyPress={handleKeyPress}
               ></ReceiverMsgInput>
             </div>
           )}
