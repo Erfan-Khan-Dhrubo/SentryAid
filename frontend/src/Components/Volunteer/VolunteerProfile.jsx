@@ -43,20 +43,28 @@ const VolunteerProfile = () => {
         await axios.patch(
           `http://localhost:5001/api/messages/${notif._id}/read-by-volunteer/${volunteerInfo._id}`
         );
-        
+
         // Update local state to reflect read status
-        setNotifications(prev => prev.map(msg => 
-          msg._id === notif._id 
-            ? {...msg, seenByVolunteers: [...msg.seenByVolunteers, volunteerInfo._id]}
-            : msg
-        ));
+        setNotifications((prev) =>
+          prev.map((msg) =>
+            msg._id === notif._id
+              ? {
+                  ...msg,
+                  seenByVolunteers: [
+                    ...msg.seenByVolunteers,
+                    volunteerInfo._id,
+                  ],
+                }
+              : msg
+          )
+        );
       } catch (error) {
         console.error("Failed to mark message as read:", error);
       }
     }
-    
+
     setActiveNotif(notif);
-    document.getElementById('notification_modal').showModal();
+    document.getElementById("notification_modal").showModal();
   };
 
   const makeActiveInactive = async () => {
@@ -80,7 +88,7 @@ const VolunteerProfile = () => {
 
   // Check if current volunteer has read a message
   const hasVolunteerReadMessage = (message) => {
-    return volunteerInfo && volunteerInfo._id && message.seenByVolunteers 
+    return volunteerInfo && volunteerInfo._id && message.seenByVolunteers
       ? message.seenByVolunteers.includes(volunteerInfo._id)
       : false;
   };
@@ -91,7 +99,7 @@ const VolunteerProfile = () => {
   ).length;
 
   return (
-    <div className="flex flex-col gap-12 bg-pink-50 min-h-screen px-16 py-20">
+    <div className="flex flex-col gap-12 bg-pink-50 min-h-screen sm:p-16 p-8 ">
       <div className="bg-pink-50 flex items-center justify-center">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
           {/* Profile Card */}
@@ -107,8 +115,13 @@ const VolunteerProfile = () => {
 
             <div className="mt-6 space-y-3">
               <ShowInfoBtn userInfo={volunteerInfo}></ShowInfoBtn>
-              <button className="w-full flex items-center justify-center border border-gray-400 bg-white text-gray-700 rounded-lg py-2 hover:bg-gray-100">
-                📞 Contacts
+              <button
+                onClick={() =>
+                  navigate(`/volunteers/${volunteerInfo._id}/editProfile`)
+                }
+                className="w-full flex items-center justify-center border border-gray-400 bg-white text-gray-700 rounded-lg py-2 hover:bg-gray-100"
+              >
+                ✏️ Edit Profile
               </button>
               {sta == "active" ? (
                 <button
@@ -154,7 +167,6 @@ const VolunteerProfile = () => {
                       >
                         <div className="text-left">
                           <span>Title: {notif.title}</span>
-                         
                         </div>
                       </button>
                     </li>
@@ -183,9 +195,13 @@ const VolunteerProfile = () => {
       <dialog id="notification_modal" className="modal">
         <div className="modal-box">
           <form method="dialog">
-            <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+            <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
+              ✕
+            </button>
           </form>
-          <h3 className="font-bold text-lg text-pink-600">{activeNotif?.title}</h3>
+          <h3 className="font-bold text-lg text-pink-600">
+            {activeNotif?.title}
+          </h3>
           <p className="py-4 text-pink-400">{activeNotif?.message}</p>
           <div className="modal-action">
             <form method="dialog">
@@ -193,7 +209,7 @@ const VolunteerProfile = () => {
             </form>
           </div>
         </div>
-        
+
         <form method="dialog" className="modal-backdrop">
           <button>close</button>
         </form>

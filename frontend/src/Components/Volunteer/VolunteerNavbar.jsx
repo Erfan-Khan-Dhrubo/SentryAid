@@ -6,6 +6,7 @@ import { RiSkull2Fill } from "react-icons/ri";
 import { FaHandsHelping } from "react-icons/fa";
 import { NavLink } from "react-router";
 import { GiHamburgerMenu } from "react-icons/gi";
+import { FaChalkboard } from "react-icons/fa";
 
 const VolunteerNavbar = ({ volunteerInfo }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -36,6 +37,11 @@ const VolunteerNavbar = ({ volunteerInfo }) => {
       label: "Get SOS Alert",
       icon: <FaHandsHelping className="mr-3" />,
     },
+    {
+      to: `/volunteers/${volunteerInfo._id}/bulletinBoard`,
+      label: "Bulletin Board",
+      icon: <FaChalkboard className="mr-3" />,
+    },
   ];
 
   return (
@@ -43,7 +49,7 @@ const VolunteerNavbar = ({ volunteerInfo }) => {
       {/* Hamburger for small/medium */}
       <div
         className={`
-    lg:hidden 
+    sm:hidden 
     px-4 py-3 flex justify-between items-center border-gray-200
     ${isOpen ? "bg-white" : "bg-pink-50"}
   `}
@@ -54,7 +60,7 @@ const VolunteerNavbar = ({ volunteerInfo }) => {
       </div>
 
       {isOpen && (
-        <div className="lg:hidden bg-white space-y-2 px-4 py-3 border-b border-gray-200">
+        <div className="sm:hidden bg-white space-y-2 px-4 py-3 border-b border-gray-200">
           {menuLinks.map((link) => (
             <NavLink
               key={link.label}
@@ -75,24 +81,40 @@ const VolunteerNavbar = ({ volunteerInfo }) => {
       )}
 
       {/* Sidebar for large screens */}
-      <aside className="hidden lg:flex lg:w-64 lg:flex-col lg:bg-white lg:shadow-lg lg:h-screen lg:fixed">
-        <div className="mt-6 space-y-2">
-          {menuLinks.map((link) => (
-            <NavLink
-              key={link.label}
-              to={link.to}
-              end
-              className={({ isActive }) =>
-                `flex items-center px-4 py-2  ${
-                  isActive
-                    ? "bg-pink-100 text-pink-600 font-semibold" // active style
-                    : "text-gray-600 hover:bg-pink-50"
-                }`
-              }
-            >
-              {link.icon} {link.label}
-            </NavLink>
-          ))}
+      <aside className="hidden sm:flex sm:justify-between  lg:w-64 w-46 sm:flex-col sm:bg-white sm:shadow-lg ">
+        <div className="flex flex-col justify-between h-full">
+          <div className="mt-6 space-y-2">
+            {menuLinks.map((link) => (
+              <NavLink
+                key={link.label}
+                to={link.to}
+                end
+                className={({ isActive }) =>
+                  `flex items-center px-4 py-2  ${
+                    isActive
+                      ? "bg-pink-100 text-pink-600 font-semibold" // active style
+                      : "text-gray-600 hover:bg-pink-50"
+                  }`
+                }
+              >
+                {link.icon} {link.label}
+              </NavLink>
+            ))}
+          </div>
+          {/* User Profile */}
+          <div className="p-4 border-t hidden lg:flex">
+            <div className="flex items-center space-x-3">
+              <img
+                src="https://www.creativefabrica.com/wp-content/uploads/2021/09/09/User-avatar-profile-icon-Graphics-17068385-1.jpg"
+                alt="Profile"
+                className="w-14 h-10 rounded-full"
+              />
+              <div>
+                <p className="text-sm font-semibold">{volunteerInfo.name}</p>
+                <p className="text-xs text-gray-500">{volunteerInfo.type}</p>
+              </div>
+            </div>
+          </div>
         </div>
       </aside>
     </>

@@ -1,5 +1,5 @@
 import { FaUser, FaTachometerAlt, FaUserShield } from "react-icons/fa";
-import { FaMessage } from "react-icons/fa6";
+import { FaChalkboard } from "react-icons/fa";
 import { FaRankingStar } from "react-icons/fa6";
 import { AiFillEdit } from "react-icons/ai";
 import { NavLink } from "react-router";
@@ -42,11 +42,17 @@ const UserNavbar = ({ userInfo }) => {
           >
             <FaHandsHelping className="mr-3" /> Send SOS
           </NavLink>
+          <NavLink
+            to={`/users/${userInfo._id}/bulletinBoard`}
+            className="flex items-center px-4 py-2 text-gray-600 hover:bg-pink-50 rounded-lg"
+          >
+            <FaChalkboard className="mr-3" /> Bulletin Board
+          </NavLink>
         </nav>
       </div>
 
       {/* User Profile */}
-      <div className="p-4 border-t">
+      <div className="p-4 border-t hidden lg:flex">
         <div className="flex items-center space-x-3">
           <img
             src="https://www.creativefabrica.com/wp-content/uploads/2021/09/09/User-avatar-profile-icon-Graphics-17068385-1.jpg"

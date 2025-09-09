@@ -6,141 +6,213 @@ import {
   Users,
   MapPin,
   Star,
+  Globe,
+  Navigation,
+  Phone,
 } from "lucide-react";
 import { HelpingHand } from "lucide-react";
-import { Link } from "react-router";
+import { useNavigate } from "react-router";
 
-export default function Home() {
+const Home = () => {
+  const navigate = useNavigate();
+
+  const scrollToSection = (id) => {
+    const element = document.getElementById(id);
+    if (!element) return;
+
+    const top = element.offsetTop;
+    const start = window.scrollY;
+    const distance = top - start;
+    const duration = 1000; // milliseconds (1 second)
+    let startTime = null;
+
+    const animation = (currentTime) => {
+      if (startTime === null) startTime = currentTime;
+      const timeElapsed = currentTime - startTime;
+      const progress = Math.min(timeElapsed / duration, 1);
+      window.scrollTo(0, start + distance * easeInOutQuad(progress));
+      if (timeElapsed < duration) requestAnimationFrame(animation);
+    };
+
+    const easeInOutQuad = (t) => (t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t);
+
+    requestAnimationFrame(animation);
+  };
+
   return (
     <div className="min-h-screen bg-pink-50 text-gray-900 overflow-x-hidden">
       {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-pink-50 via-rose-100 to-pink-200">
-        {/* Floating Particles */}
+      <section className="relative min-h-screen flex items-center justify-center bg-pink-50 py-20">
         <div className="absolute inset-0 overflow-hidden">
-          {[...Array(20)].map((_, i) => (
+          {[...Array(15)].map((_, i) => (
             <motion.div
               key={i}
-              className="absolute w-2 h-2 bg-rose-400 rounded-full opacity-70 float-particles"
+              className="absolute w-1.5 h-1.5 bg-rose-300 rounded-full opacity-50"
               style={{
                 left: `${Math.random() * 100}%`,
                 top: `${Math.random() * 100}%`,
-                animationDelay: `${Math.random() * 6}s`,
               }}
-              animate={{
-                y: [0, -30, 0],
-                opacity: [0.3, 1, 0.3],
-              }}
+              animate={{ y: [0, -20, 0], opacity: [0.2, 0.6, 0.2] }}
               transition={{
-                duration: 4 + Math.random() * 2,
+                duration: 3 + Math.random() * 2,
                 repeat: Number.POSITIVE_INFINITY,
                 ease: "easeInOut",
+                delay: Math.random() * 2,
               }}
             />
           ))}
         </div>
 
-        <div className="relative z-10 text-center px-4 max-w-6xl mx-auto">
-          {/* Hero Headline */}
-          <motion.h1
-            className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold mb-6 text-gray-900 leading-tight"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 1 }}
-          >
-            <motion.span
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1.5, ease: "easeOut" }}
-              className="block"
+        <div className="relative z-10 text-center px-4 max-w-5xl mx-auto">
+          <div className="flex justify-center mb-8">
+            <motion.div
+              className="relative w-32 h-32 md:w-40 md:h-40 lg:w-44 lg:h-44"
+              animate={{ rotate: 360 }}
+              transition={{
+                duration: 60,
+                repeat: Number.POSITIVE_INFINITY,
+                ease: "linear",
+              }}
             >
-              SentryAid – Respond Faster, Save Lives
-            </motion.span>
+              {/* Outer circles */}
+              <div className="absolute inset-0 border-2 border-pink-200 rounded-full opacity-60"></div>
+              <div className="absolute inset-3 border border-pink-300 rounded-full opacity-40"></div>
+              <div className="absolute inset-6 border border-rose-200 rounded-full opacity-30"></div>
+
+              {/* Network icons */}
+              {[
+                {
+                  icon: AlertTriangle,
+                  angle: 0,
+                  radius: 50,
+                  color: "text-red-400",
+                },
+                { icon: Heart, angle: 60, radius: 40, color: "text-green-400" },
+                {
+                  icon: Shield,
+                  angle: 120,
+                  radius: 55,
+                  color: "text-blue-400",
+                },
+                {
+                  icon: Phone,
+                  angle: 180,
+                  radius: 45,
+                  color: "text-purple-400",
+                },
+                {
+                  icon: Navigation,
+                  angle: 240,
+                  radius: 52,
+                  color: "text-orange-400",
+                },
+                {
+                  icon: MapPin,
+                  angle: 300,
+                  radius: 42,
+                  color: "text-teal-400",
+                },
+              ].map((item, index) => {
+                const x = Math.cos((item.angle * Math.PI) / 180) * item.radius;
+                const y = Math.sin((item.angle * Math.PI) / 180) * item.radius;
+                return (
+                  <motion.div
+                    key={index}
+                    className={`absolute w-6 h-6 ${item.color} flex items-center justify-center`}
+                    style={{
+                      left: `calc(50% + ${x}px)`,
+                      top: `calc(50% + ${y}px)`,
+                      transform: "translate(-50%, -50%)",
+                    }}
+                    animate={{ scale: [1, 1.2, 1], opacity: [0.6, 1, 0.6] }}
+                    transition={{
+                      duration: 2,
+                      repeat: Number.POSITIVE_INFINITY,
+                      delay: index * 0.3,
+                    }}
+                    whileHover={{ scale: 1.5, opacity: 1 }}
+                  >
+                    <item.icon className="w-4 h-4" />
+                  </motion.div>
+                );
+              })}
+
+              {/* Central globe */}
+              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                <motion.div
+                  className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-pink-200 to-rose-300 rounded-full flex items-center justify-center shadow-lg"
+                  animate={{
+                    boxShadow: [
+                      "0 0 20px rgba(244, 114, 182, 0.3)",
+                      "0 0 40px rgba(244, 114, 182, 0.6)",
+                      "0 0 20px rgba(244, 114, 182, 0.3)",
+                    ],
+                  }}
+                  transition={{ duration: 3, repeat: Number.POSITIVE_INFINITY }}
+                >
+                  <Globe className="w-5 h-5 md:w-6 md:h-6 text-white" />
+                </motion.div>
+              </div>
+            </motion.div>
+          </div>
+
+          <motion.h1
+            className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-gray-900 leading-tight"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1.2, ease: "easeOut" }}
+          >
+            <span className="block text-balance">SentryAid</span>
           </motion.h1>
 
-          {/* Subtitle */}
-          <motion.p
-            className="text-lg sm:text-xl md:text-2xl mb-12 text-gray-700 max-w-3xl mx-auto"
+          <motion.h2
+            className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-semibold mb-6 text-gray-800 leading-relaxed"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, delay: 1.8 }}
+            transition={{ duration: 1, delay: 0.5 }}
           >
-            Connecting users in distress with local volunteers in real time.
+            <span className="text-balance">
+              Your Safety, Our Priority – Connect, Alert, and Respond in
+              Real-Time
+            </span>
+          </motion.h2>
+
+          <motion.p
+            className="text-base sm:text-lg md:text-xl mb-10 text-gray-600 max-w-4xl mx-auto text-balance leading-relaxed"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, delay: 1 }}
+          >
+            Join a community-driven emergency response system with verified
+            volunteers ready to assist whenever you need help. Fast alerts,
+            real-time chat, and community heatmaps – SentryAid keeps your
+            community safer.
           </motion.p>
 
-          {/* Login Buttons */}
           <motion.div
-            className="flex flex-col md:flex-row gap-6 justify-center items-center"
-            initial={{ opacity: 0, y: 40 }}
+            className="flex flex-col sm:flex-row gap-6 justify-center items-center"
+            initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, delay: 2.2 }}
+            transition={{ duration: 1, delay: 1.5 }}
           >
-            {[
-              {
-                label: "Admin Login",
-                icon: Shield,
-                color: "blue",
-                path: "/adminLogin",
-                delay: 0,
-              },
-              {
-                label: "User Login",
-                icon: AlertTriangle,
-                color: "red",
-                path: "/usersLogin",
-                delay: 0.2,
-              },
-              {
-                label: "Volunteer Login",
-                icon: Heart,
-                color: "green",
-                path: "/volunteerLogin",
-                delay: 0.4,
-              },
-            ].map((button) => {
-              const IconComponent = button.icon;
-
-              return (
-                <motion.div
-                  key={button.label}
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.6, delay: 4.5 + button.delay }}
-                  whileHover={{ scale: 1.05, y: -5 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <Link
-                    to={button.path}
-                    className={`
-                px-8 py-6 text-lg font-semibold rounded-xl text-white shadow-2xl transition-all duration-300 flex items-center justify-center
-                ${
-                  button.color === "blue"
-                    ? "bg-blue-600 hover:bg-blue-700 pulse-glow-blue"
-                    : ""
-                }
-                ${
-                  button.color === "red"
-                    ? "bg-red-600 hover:bg-red-700 pulse-glow-red"
-                    : ""
-                }
-                ${
-                  button.color === "green"
-                    ? "bg-green-600 hover:bg-green-700 pulse-glow-green"
-                    : ""
-                }
-              `}
-                  >
-                    <IconComponent className="w-6 h-6 mr-3" />
-                    {button.label}
-                  </Link>
-                </motion.div>
-              );
-            })}
+            <motion.button
+              className="px-8 py-4 bg-rose-600 hover:bg-rose-700 text-white font-semibold rounded-lg shadow-lg text-lg min-w-48 transition-colors duration-200"
+              whileHover={{
+                scale: 1.05,
+                boxShadow: "0 10px 30px rgba(244, 114, 182, 0.4)",
+              }}
+              whileTap={{ scale: 0.98 }}
+              transition={{ duration: 0.2 }}
+              onClick={() => scrollToSection("how-it-works")}
+            >
+              Get Started
+            </motion.button>
           </motion.div>
         </div>
       </section>
 
       {/* How It Works Section */}
-      <section className="py-20 px-4 bg-gradient-to-b from-pink-100 to-rose-50">
+      <section id="how-it-works" className="py-20 px-4 bg-pink-50">
         <div className="max-w-6xl mx-auto">
           <motion.h2
             className="text-4xl md:text-5xl font-bold text-center mb-16 text-gray-900"
@@ -152,88 +224,102 @@ export default function Home() {
             How It Works
           </motion.h2>
 
-          <div className="grid md:grid-cols-3 gap-8 relative">
-            {/* Connector Lines */}
-            <div className="hidden md:block absolute top-1/2 left-1/3 w-1/3 h-0.5 bg-gradient-to-r from-rose-400 to-pink-500 transform -translate-y-1/2"></div>
-            <div className="hidden md:block absolute top-1/2 right-1/3 w-1/3 h-0.5 bg-gradient-to-r from-pink-500 to-rose-400 transform -translate-y-1/2"></div>
-
+          <div className="grid md:grid-cols-3 gap-8">
             {[
               {
-                icon: AlertTriangle,
-                title: "Send SOS",
-                description:
-                  "Users in distress can quickly send emergency alerts with their location.",
-                color: "red",
-                delay: 0,
-              },
-              {
-                icon: Users,
-                title: "Volunteers Respond",
-                description:
-                  "Nearby volunteers receive instant notifications and can offer immediate help.",
-                color: "blue",
-                delay: 0.2,
-              },
-              {
                 icon: Shield,
-                title: "Admins Oversee",
+                title: "Admin",
                 description:
-                  "Emergency coordinators monitor all activities and dispatch professional help when needed.",
-                color: "green",
-                delay: 0.4,
+                  "Manage user and volunteer accounts, approve requests, and oversee emergency broadcasts.",
+                buttonText: "Admin Login",
+                color: "blue",
+                delay: 0,
+                path: "/adminLogin",
               },
-            ].map((step) => (
-              <motion.div
-                key={step.title}
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: step.delay }}
-                viewport={{ once: true }}
-                whileHover={{ scale: 1.05, y: -10 }}
-                className="relative z-10 flex"
-              >
-                {/* Make inner card stretch full height */}
-                <div
-                  className={`p-16 rounded-2xl bg-white/80 backdrop-blur-sm border-pink-200 hover:border-rose-300 transition-all duration-300 shadow-lg flex-1 flex flex-col`}
+              {
+                icon: Heart,
+                title: "Volunteer",
+                description:
+                  "Respond to SOS alerts, manage availability, and assist users during emergencies.",
+                buttonText: "Volunteer Login",
+                color: "green",
+                delay: 0.2,
+                path: "/volunteerLogin",
+              },
+              {
+                icon: AlertTriangle,
+                title: "User",
+                description:
+                  "Send SOS alerts, communicate securely with volunteers, and stay informed.",
+                buttonText: "User Login",
+                color: "red",
+                delay: 0.4,
+                path: "/usersLogin",
+              },
+            ].map((role) => {
+              const Icon = role.icon;
+              return (
+                <motion.div
+                  key={role.title}
+                  initial={{ opacity: 0, y: 40 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: role.delay }}
+                  viewport={{ once: true }}
+                  whileHover={{ scale: 1.05, y: -10 }}
+                  className="relative z-10"
                 >
-                  <motion.div
-                    className={`w-16 h-16 rounded-full flex items-center justify-center mb-6 mx-auto
-                ${
-                  step.color === "red"
-                    ? "bg-gradient-to-br from-red-500 to-red-600 pulse-glow-red"
-                    : ""
-                }
-                ${
-                  step.color === "blue"
-                    ? "bg-gradient-to-br from-blue-500 to-blue-600 pulse-glow-blue"
-                    : ""
-                }
-                ${
-                  step.color === "green"
-                    ? "bg-gradient-to-br from-green-500 to-green-600 pulse-glow-green"
-                    : ""
-                }
-              `}
-                    whileHover={{ rotate: 15 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <step.icon className="w-8 h-8 text-white" />
-                  </motion.div>
-                  <h3 className="text-2xl font-bold mb-4 text-center text-gray-900">
-                    {step.title}
-                  </h3>
-                  <p className="text-gray-600 text-center text-pretty flex-1">
-                    {step.description}
-                  </p>
-                </div>
-              </motion.div>
-            ))}
+                  <div className="p-8 bg-white rounded-xl shadow-lg border border-pink-200 hover:border-rose-300 transition-all duration-300 h-full flex flex-col">
+                    <motion.div
+                      className={`
+                        w-16 h-16 rounded-full flex items-center justify-center mb-6 mx-auto
+                        ${
+                          role.color === "red"
+                            ? "bg-gradient-to-br from-red-500 to-red-600"
+                            : role.color === "blue"
+                            ? "bg-gradient-to-br from-blue-500 to-blue-600"
+                            : "bg-gradient-to-br from-green-500 to-green-600"
+                        }
+                      `}
+                      whileHover={{ rotate: 15 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <Icon className="w-8 h-8 text-white" />
+                    </motion.div>
+
+                    <h3 className="text-2xl font-bold mb-4 text-center text-gray-900">
+                      {role.title}
+                    </h3>
+                    <p className="text-gray-600 text-center text-pretty mb-8 flex-grow">
+                      {role.description}
+                    </p>
+
+                    <motion.button
+                      className={`
+                        w-full px-6 py-3 text-white font-semibold rounded-lg shadow-lg transition-all duration-300
+                        ${
+                          role.color === "blue"
+                            ? "bg-blue-600 hover:bg-blue-700"
+                            : role.color === "red"
+                            ? "bg-red-600 hover:bg-red-700"
+                            : "bg-green-600 hover:bg-green-700"
+                        }
+                      `}
+                      whileHover={{ scale: 1.02, y: -2 }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={() => navigate(role.path)}
+                    >
+                      {role.buttonText}
+                    </motion.button>
+                  </div>
+                </motion.div>
+              );
+            })}
           </div>
         </div>
       </section>
 
       {/* Live Risk Map Section */}
-      <section className="py-20 px-4 bg-gradient-to-b from-rose-50 to-pink-100">
+      <section className="py-20 px-4 bg-pink-50">
         <div className="max-w-6xl mx-auto text-center">
           <motion.h2
             className="text-4xl md:text-5xl font-bold mb-8 text-gray-900"
@@ -429,7 +515,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
       {/* Footer */}
       <footer className="bg-gradient-to-r from-rose-100 to-pink-100 border-t border-pink-200 py-12 px-4">
         <div className="max-w-6xl mx-auto">
@@ -438,12 +523,9 @@ export default function Home() {
               className="flex items-center mb-6 md:mb-0"
               whileHover={{ scale: 1.05 }}
             >
-              <motion.div className="w-8 h-8 bg-gradient-to-br from-pink-400 to-pink-500 rounded-lg flex items-center justify-center mr-3 heartbeat">
-                <HelpingHand className="w-6 h-6 text-white" />
+              <motion.div className="flex items-center justify-center mr-3 heartbeat">
+                <img className="w-40" src="../logo.png" alt="" />
               </motion.div>
-              <span className="text-2xl font-bold text-gray-900">
-                SentryAid
-              </span>
             </motion.div>
 
             <div className="flex flex-wrap justify-center gap-6 mb-6 md:mb-0">
@@ -491,4 +573,6 @@ export default function Home() {
       </footer>
     </div>
   );
-}
+};
+
+export default Home;

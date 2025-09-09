@@ -1,26 +1,20 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import { useNavigate } from "react-router";
+import React, { useState } from "react";
 import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { NavLink, useNavigate } from "react-router";
+import axios from "axios";
+import { AlertTriangle } from "lucide-react";
 
 const UserLogin = () => {
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const navigate = useNavigate();
-  const [user, setUser] = useState([]);
 
-  useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      const parsedUser = JSON.parse(storedUser); // convert string → object
-      setIsLoggedIn(true);
-      setUser(parsedUser);
-    }
-  }, []);
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
+
+    console.log("📡 Attempting to login with:", { name, password }); // log before sending
 
     try {
       const res = await axios.post("http://localhost:5001/api/users/login", {
@@ -28,80 +22,89 @@ const UserLogin = () => {
         password,
       });
 
+      console.log("✅ Backend response:", res.data); // log the response
+
+      if (res.data.request === "pending") {
+        alert("Your signup request is under review.");
+        return;
+      }
+
+      // Save to localStorage
       localStorage.setItem("user", JSON.stringify(res.data));
 
-      toast.success("user login successful! 🎉");
+      // Show success message
+      toast.success("Login successful! 🎉");
+
+      // Navigate to volunteer dashboard
       navigate(`/users/${res.data._id}`);
     } catch (err) {
+      console.error("❌ Login error:", err); // log full error for debugging
+
       if (err.response) {
-        toast.error(err.response.data.message);
+        toast.error(err.response.data.message); // server returned error
       } else {
-        toast.error("Something went wrong. Please try again.");
+        toast.error("Something went wrong. Please try again."); // network or CORS issue
       }
     }
   };
 
-  if (isLoggedIn) {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-pink-50">
-        <div className="bg-white py-12 px-8 rounded-xl shadow-lg w-full max-w-md text-center">
-          <h2 className="text-xl font-semibold text-gray-700">
-            ✅ User already logged in
-          </h2>
-          <button
-            onClick={() => navigate(`/users/${user._id}`)}
-            className="mt-8 bg-pink-400 text-white px-4 py-2 rounded-lg hover:bg-pink-600 transition"
-          >
-            Go to User Dashboard
-          </button>
+  return (
+    <div className="flex flex-col gap-6">
+      <div className="flex justify-center mt-4">
+        <div className="w-14 h-14 flex items-center justify-center rounded-full bg-pink-100">
+          <AlertTriangle className="w-8 h-8 text-pink-500" />
         </div>
       </div>
-    );
-  }
 
-  return (
-    <div className="flex items-center justify-center min-h-screen bg-pink-50">
-      <div className="bg-white py-16 px-12 rounded-xl shadow-lg w-full max-w-md">
-        <h2 className="text-2xl font-bold text-center mb-6 text-gray-800">
-          User Login
+      {/* Title */}
+      <div>
+        <h2 className="text-2xl font-semibold text-center text-gray-800">
+          SentryAid Login
         </h2>
-        <form onSubmit={handleLogin} className="space-y-4">
-          {/* Name */}
-          <div className="text-black">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Name
-            </label>
-            <input
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className="w-full border border-gray-300 px-4 py-2 rounded-lg focus:ring-2 focus:ring-pink-400 focus:outline-none"
-              required
-            />
-          </div>
-
-          {/* Password */}
-          <div className="text-black">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Password
-            </label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full border border-gray-300 px-4 py-2 rounded-lg focus:ring-2 focus:ring-pink-400 focus:outline-none"
-              required
-            />
-          </div>
-
-          <button
-            type="submit"
-            className="w-full bg-pink-500 text-white py-2 rounded-lg hover:bg-pink-600 transition"
-          >
-            Login
-          </button>
-        </form>
+        <p className="text-sm text-black text-center mt-2">
+          Welcome back! Please sign in to your account.
+        </p>
       </div>
+
+      <form onSubmit={handleLogin} className="space-y-4">
+        {/* Name */}
+        <div className="text-black">
+          <input
+            type="text"
+            placeholder="Enter your name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            className="bg-transparent border-b focus:outline-none focus:border-pink-500 py-2 px-1  w-full mt-1"
+            required
+          />
+        </div>
+
+        {/* Password */}
+        <div className="text-black">
+          <input
+            type="password"
+            placeholder="Enter your password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="bg-transparent border-b focus:outline-none focus:border-pink-500 py-2 px-1  w-full mt-1"
+            required
+          />
+        </div>
+
+        {/* Submit Button */}
+        <button
+          type="submit"
+          className="w-full mt-4 bg-pink-400 text-white  py-2 rounded-lg hover:bg-pink-600 transition duration-300"
+        >
+          Login as User
+        </button>
+
+        {/* links */}
+        <div className="flex justify-between text-sm text-pink-500 mt-2">
+          <NavLink to={"/volunteerLogin"}>Login as Volunteer</NavLink>
+          <NavLink to={"/adminLogin"}>Login as Admin</NavLink>
+        </div>
+      </form>
     </div>
   );
 };

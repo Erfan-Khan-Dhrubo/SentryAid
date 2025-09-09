@@ -1,16 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { NavLink, useNavigate } from "react-router";
-import axios from "axios";
-import { toast } from "react-toastify";
+import { useNavigate } from "react-router";
+import UserSignup from "../../Components/User/UserSignup";
+import UserLogin from "./UserLogin";
 import { motion } from "framer-motion";
 import { Shield } from "lucide-react";
 
-const AdminLogin = () => {
-  const [name, setName] = useState("");
-  const [password, setPassword] = useState("");
-  const [role, setRole] = useState(null); // stores logged-in role
+const User = () => {
+  const [isLogin, setIsLogin] = useState(true);
+  const [role, setRole] = useState(null);
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
 
   // Get volunteer, user, or admin from localStorage once on mount
   useEffect(() => {
@@ -18,9 +16,13 @@ const AdminLogin = () => {
     const userStr = localStorage.getItem("user");
     const adminStr = localStorage.getItem("admin");
 
-    if (volunteerStr) setRole(JSON.parse(volunteerStr));
-    else if (userStr) setRole(JSON.parse(userStr));
-    else if (adminStr) setRole(JSON.parse(adminStr));
+    if (volunteerStr) {
+      setRole(JSON.parse(volunteerStr));
+    } else if (userStr) {
+      setRole(JSON.parse(userStr));
+    } else if (adminStr) {
+      setRole(JSON.parse(adminStr));
+    }
   }, []);
 
   // Check if someone is logged in
@@ -41,30 +43,6 @@ const AdminLogin = () => {
         break;
       default:
         break;
-    }
-  };
-
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-
-    try {
-      const res = await axios.post("http://localhost:5001/api/admin/login", {
-        name,
-        password,
-      });
-
-      localStorage.setItem("admin", JSON.stringify(res.data));
-      setRole(res.data); // triggers dashboard logic
-
-      navigate(`/admin`);
-
-      toast.success("Admin login successful! 🎉");
-    } catch (err) {
-      if (err.response) toast.error(err.response.data.message);
-      else toast.error("Something went wrong. Please try again.");
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -300,64 +278,38 @@ const AdminLogin = () => {
 
         {/* ... keep the rest of the animated shapes (I didn’t remove them) ... */}
       </div>
-      <div className=" w-full max-w-md  z-2 bg-white/5 backdrop-blur-xl p-8 rounded-xl shadow-2xl  text-white border border-white/20">
+      <div className=" w-full max-w-md p-8 z-2 bg-white/5 backdrop-blur-xl rounded-xl shadow-2xl  text-white border border-white/20">
         {!isLoggedIn ? (
           <>
-            <div className="flex justify-center mt-4">
-              <div className="w-14 h-14 flex items-center justify-center rounded-full bg-pink-100">
-                <Shield className="w-8 h-8 text-pink-500" />
-              </div>
-            </div>
-
-            {/* Title */}
-            <div className="py-4">
-              <h2 className="text-2xl font-semibold text-center text-gray-800">
-                SentryAid Signup
-              </h2>
-              <p className="text-sm text-black text-center mt-2">
-                Administrator Access — Sign in to continue.
-              </p>
-            </div>
-            <form onSubmit={handleLogin} className="space-y-4">
-              {/* Name */}
-              <div className="text-black">
-                <input
-                  type="text"
-                  placeholder="Enter your name"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  className="bg-transparent border-b focus:outline-none focus:border-pink-500 py-2 px-1  w-full mt-1"
-                  required
-                />
-              </div>
-
-              {/* Password */}
-              <div className="text-black">
-                <input
-                  type="password"
-                  placeholder="Enter your password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="bg-transparent border-b focus:outline-none focus:border-pink-500 py-2 px-1  w-full mt-1"
-                  required
-                />
-              </div>
-
+            {/* Toggle Buttons */}
+            <div className="flex justify-around mb-6">
               <button
-                type="submit"
-                className="w-full mt-4 bg-pink-500 text-white py-2 rounded-lg hover:bg-pink-600 transition"
-                disabled={loading}
+                onClick={() => setIsLogin(true)}
+                className={`w-1/2 py-2 font-semibold ${
+                  isLogin
+                    ? "border-b-2 border-pink-600 text-pink-400"
+                    : "text-gray-500"
+                }`}
               >
-                {loading ? "Logging in..." : "Login as Admin"}
+                Login
               </button>
-              <div className="flex justify-between text-sm text-pink-500 mt-2">
-                <NavLink to={"/volunteerLogin"}>Login as Volunteer</NavLink>
-                <NavLink to={"/usersLogin"}>Login as User</NavLink>
-              </div>
-            </form>
+              <button
+                onClick={() => setIsLogin(false)}
+                className={`w-1/2 py-2 font-semibold ${
+                  !isLogin
+                    ? "border-b-2 border-pink-600 text-pink-400"
+                    : "text-gray-500"
+                }`}
+              >
+                Signup
+              </button>
+            </div>
+
+            {/* Show Login or Signup Component */}
+            {isLogin ? <UserLogin /> : <UserSignup />}
           </>
         ) : (
-          <div className="text-center">
+          <div className="text-center ">
             <div className="flex flex-col gap-4 py-4">
               <div className="flex justify-center mt-4">
                 <div className="w-14 h-14 flex items-center justify-center rounded-full bg-pink-100">
@@ -384,4 +336,4 @@ const AdminLogin = () => {
   );
 };
 
-export default AdminLogin;
+export default User;

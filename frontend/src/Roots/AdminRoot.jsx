@@ -14,7 +14,6 @@ const AdminRoot = () => {
     <div className="flex flex-col lg:flex-row min-h-screen bg-pink-50">
       {/* Mobile Header / Hamburger */}
       <div className="lg:hidden bg-white shadow-md px-4 py-3 flex items-center justify-between">
-        <h1 className="font-semibold text-gray-700 text-lg">Admin Panel</h1>
         <button
           onClick={() => setIsOpen(!isOpen)}
           className="text-gray-700 focus:outline-none"
@@ -81,5 +80,3 @@ const AdminRoot = () => {
 };
 
 export default AdminRoot;
-
-

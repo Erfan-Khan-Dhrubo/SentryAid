@@ -1,58 +1,45 @@
 import React, { useState } from "react";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { NavLink, useNavigate } from "react-router";
 import axios from "axios";
-import { Heart } from "lucide-react";
+import { NavLink, useNavigate } from "react-router";
+import { AlertTriangle } from "lucide-react";
 
-const VolunteerLogin = () => {
+const UserSignup = () => {
   const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
+  const handleSignup = async (e) => {
     e.preventDefault();
-
-    console.log("📡 Attempting to login with:", { name, password }); // log before sending
+    setLoading(true);
 
     try {
-      const res = await axios.post(
-        "http://localhost:5001/api/volunteers/login",
-        { name, password }
+      // Send signup request
+      const res = await axios.post("http://localhost:5001/api/users", {
+        name,
+        email,
+        password,
+      });
+      alert(
+        "Your signup request has been sent for review. We will notify you by email."
       );
-
-      console.log("✅ Backend response:", res.data); // log the response
-
-      if (res.data.request === "pending") {
-        alert("Your signup request is under review.");
-        return;
-      }
-
-      // Save to localStorage
-      localStorage.setItem("volunteer", JSON.stringify(res.data));
-
-      // Show success message
-      toast.success("Login successful! 🎉");
-
-      // Navigate to volunteer dashboard
-      navigate(`/volunteers/${res.data._id}`);
-    } catch (err) {
-      console.error("❌ Login error:", err); // log full error for debugging
-
-      if (err.response) {
-        toast.error(err.response.data.message); // server returned error
-      } else {
-        toast.error("Something went wrong. Please try again."); // network or CORS issue
-      }
+      navigate("/");
+    } catch (error) {
+      console.error("Error creating volunteer", error);
+    } finally {
+      setLoading(false);
     }
+
+    console.log("Signup with:", { name, email, password });
   };
 
   return (
     <div className="flex flex-col gap-6">
       <div className="flex justify-center mt-4">
         <div className="w-14 h-14 flex items-center justify-center rounded-full bg-pink-100">
-          <Heart className="w-8 h-8 text-pink-500" />
+          <AlertTriangle className="w-8 h-8 text-pink-500" />
         </div>
       </div>
 
@@ -66,7 +53,7 @@ const VolunteerLogin = () => {
         </p>
       </div>
 
-      <form onSubmit={handleLogin} className="space-y-4">
+      <form onSubmit={handleSignup} className="space-y-4">
         {/* Name */}
         <div className="text-black">
           <input
@@ -74,6 +61,18 @@ const VolunteerLogin = () => {
             placeholder="Enter your name"
             value={name}
             onChange={(e) => setName(e.target.value)}
+            className="bg-transparent border-b focus:outline-none focus:border-pink-500 py-2 px-1  w-full mt-1"
+            required
+          />
+        </div>
+
+        {/* Email */}
+        <div className="text-black">
+          <input
+            type="email"
+            placeholder="Enter your email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             className="bg-transparent border-b focus:outline-none focus:border-pink-500 py-2 px-1  w-full mt-1"
             required
           />
@@ -94,12 +93,15 @@ const VolunteerLogin = () => {
         {/* Submit Button */}
         <button
           type="submit"
-          className="w-full mt-4 bg-pink-400 text-white py-2 rounded-lg hover:bg-pink-600 transition duration-300"
+          className="w-full mt-4  bg-pink-400 text-white py-2 rounded-lg hover:bg-pink-600 transition duration-300"
+          disabled={loading}
         >
-          Login as Volunteer
+          Signup as User
         </button>
+
+        {/* links */}
         <div className="flex justify-between text-sm text-pink-500 mt-2">
-          <NavLink to={"/usersLogin"}>Login as User</NavLink>
+          <NavLink to={"/volunteerLogin"}>Login as Volunteer</NavLink>
           <NavLink to={"/adminLogin"}>Login as Admin</NavLink>
         </div>
       </form>
@@ -107,4 +109,4 @@ const VolunteerLogin = () => {
   );
 };
 
-export default VolunteerLogin;
+export default UserSignup;

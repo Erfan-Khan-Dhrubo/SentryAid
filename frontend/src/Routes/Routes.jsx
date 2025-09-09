@@ -5,8 +5,6 @@ import UserRoot from "../Roots/UserRoot";
 import AdminRoot from "../Roots/AdminRoot";
 import Admin from "../Pages/Admin/Admin";
 import AlertMessage from "./../Pages/Admin/AlertMessage";
-import UserLogin from "./../Pages/Users/UserLogin";
-import UserRegister from "./../Pages/Users/UserRegister";
 import AdminLogin from "./../Pages/Admin/AdminLogin";
 import MainRoot from "../Roots/MainRoot";
 import EditProfile from "./../Pages/Users/EditProfile";
@@ -19,6 +17,9 @@ import ReportVolunteer from "./../Pages/reportVolunteer";
 import Volunteer from "./../Pages/Volunteer/Volunteer";
 import Sos from "../Components/User/SOS/Sos";
 import SosAlert from "../Components/Volunteer/SOS Alert/SosAlert";
+import User from "../Pages/Users/User";
+import CreateBulletinMsg from "../Pages/CreateBulletinMsg";
+import BulletinBoard from "../Pages/BulletinBoard";
 
 export const router = createBrowserRouter([
   {
@@ -56,16 +57,21 @@ export const router = createBrowserRouter([
             path: "sos",
             element: <Sos />,
           },
+          {
+            path: "bulletinBoard",
+            element: <BulletinBoard />,
+          },
         ],
       },
       {
         path: "usersLogin",
-        element: <UserLogin />,
+        element: <User />,
       },
       {
-        path: "usersRegister",
-        element: <UserRegister />,
+        path: "createBulletinMsg",
+        element: <CreateBulletinMsg />,
       },
+
       // Volunteer Routes
       {
         path: "volunteers/:id",
@@ -91,6 +97,10 @@ export const router = createBrowserRouter([
           {
             path: "sosAlert",
             element: <SosAlert />,
+          },
+          {
+            path: "bulletinBoard",
+            element: <BulletinBoard />,
           },
         ],
       },
@@ -123,6 +133,10 @@ export const router = createBrowserRouter([
           {
             path: "heatMap",
             element: <HeatMap />,
+          },
+          {
+            path: "bulletinBoard",
+            element: <BulletinBoard />,
           },
         ],
       },

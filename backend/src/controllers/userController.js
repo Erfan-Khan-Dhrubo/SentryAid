@@ -57,7 +57,7 @@ export async function createUser(req, res) {
     res.status(201).json(savedUser);
   } catch (error) {
     console.error("Error in createUser controller", error);
-    res.status(500).json({ message: "Internal server error" });
+    res.status(500).json({ message: "Internal server errorrr" });
   }
 }
 

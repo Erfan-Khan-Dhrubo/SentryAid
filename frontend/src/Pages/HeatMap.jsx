@@ -61,10 +61,12 @@ const HeatMap = () => {
   return (
     <div className="w-full p-12 bg-pink-50">
       <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
-        <h2 className="text-xl font-bold text-gray-800 mb-8">
+        <h2 className="sm:text-xl text-lg font-bold text-gray-800 mb-8">
           🚨 Accident Heatmap
         </h2>
-        <span className="text-sm text-gray-500">Updated live</span>
+        <span className="hidden sm:flex text-sm text-gray-500">
+          Updated live
+        </span>
       </div>
       <MapContainer
         center={[23.77, 90.41]}

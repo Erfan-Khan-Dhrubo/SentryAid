@@ -17,6 +17,7 @@ import messageRoutes from "./routes/messageRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
 import reportRoutes from "./routes/reportRoutes.js";
 import notificationRoutes from "./routes/notificationRoutes.js";
+import BulletinMsgRoutes from "./routes/BulletinMsgRoutes.js";
 
 const app = express();
 const PORT = process.env.PORT || 5001;
@@ -36,6 +37,7 @@ app.use("/api/messages", messageRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/reports", reportRoutes);
 app.use("/api/notifications", notificationRoutes);
+app.use("/api/bulletinMsg", BulletinMsgRoutes);
 
 // Create HTTP server for socket.io
 const server = http.createServer(app);

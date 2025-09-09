@@ -153,17 +153,19 @@ const VolunteerRanking = () => {
                   <div className="flex items-center justify-between">
                     {/* Left side */}
                     <div className="flex items-center space-x-4 flex-1 min-w-0">
-                      <div className="flex-shrink-0 w-10 h-10 flex items-center justify-center border border-indigo-800 rounded-full bg-indigo-100 text-indigo-800 font-bold text-lg">
+                      <div className="flex-shrink-0 sm:w-10 w-8 sm:h-10 h-8 flex items-center justify-center border border-indigo-800 rounded-full bg-indigo-100 text-indigo-800 font-bold text-lg">
                         {getRankBadge(index)}
                       </div>
 
-                      {getAvatarPlaceholder(volunteer.name)}
+                      <div className="hidden sm:flex">
+                        {getAvatarPlaceholder(volunteer.name)}
+                      </div>
 
                       <div className="min-w-0 flex-1">
-                        <p className="text-lg font-medium text-gray-900">
+                        <p className="sm:text-lg font-medium text-gray-900">
                           {volunteer.name}
                         </p>
-                        <p className="text-sm text-gray-500">
+                        <p className="text-sm text-gray-500 hidden sm:flex">
                           {volunteer.email}
                         </p>
 
@@ -179,7 +181,7 @@ const VolunteerRanking = () => {
 
                     {/* Right side */}
                     <div className="flex items-center space-x-4">
-                      <div className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800 border border-green-200">
+                      <div className="inline-flex items-center sm:px-3 px-2 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800 border border-green-200">
                         SOS:{" "}
                         <span className="font-bold ml-1">
                           {volunteer.score}
@@ -188,7 +190,7 @@ const VolunteerRanking = () => {
                       {!volunteerView && (
                         <button
                           onClick={() => handleReport(volunteer._id)}
-                          className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-red-600 hover:bg-red-700"
+                          className="inline-flex items-center sm:px-3 px-2 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-red-600 hover:bg-red-700"
                         >
                           Report
                         </button>

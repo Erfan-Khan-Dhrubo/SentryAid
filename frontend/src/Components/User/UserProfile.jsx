@@ -78,7 +78,7 @@ const UserProfile = () => {
   };
 
   return (
-    <div className="flex flex-col gap-12 bg-pink-50 min-h-screen px-4 sm:px-8 md:px-12 lg:px-16 py-20">
+    <div className="flex flex-col gap-12 bg-pink-50 min-h-screen px-4 sm:px-8 md:px-12 lg:px-16 py-4">
       <div className="bg-pink-50 flex items-center justify-center w-full">
         <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-3 gap-6 w-full">
           {/* Profile Card */}
@@ -93,12 +93,20 @@ const UserProfile = () => {
             </button>
 
             <div className="mt-6 space-y-3">
-              <button className="w-full flex items-center justify-center border border-gray-400 bg-white text-gray-700 rounded-lg py-2 hover:bg-gray-100">
+              <button
+                onClick={() =>
+                  navigate(`/users/${userInfo._id}/volunteerRanking`)
+                }
+                className="w-full flex items-center justify-center border border-gray-400 bg-white text-gray-700 rounded-lg py-2 hover:bg-gray-100"
+              >
                 ❌ Report
               </button>
               <ShowInfoBtn userInfo={userInfo}></ShowInfoBtn>
-              <button className="w-full flex items-center justify-center border border-gray-400 bg-white text-gray-700 rounded-lg py-2 hover:bg-gray-100">
-                📞 Contacts
+              <button
+                onClick={() => navigate(`/users/${userInfo._id}/editProfile`)}
+                className="w-full flex items-center justify-center border border-gray-400 bg-white text-gray-700 rounded-lg py-2 hover:bg-gray-100"
+              >
+                ✏️ Edit Profile
               </button>
             </div>
           </div>
