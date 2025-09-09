@@ -93,12 +93,20 @@ const UserProfile = () => {
             </button>
 
             <div className="mt-6 space-y-3">
-              <button className="w-full flex items-center justify-center border border-gray-400 bg-white text-gray-700 rounded-lg py-2 hover:bg-gray-100">
+              <button
+                onClick={() =>
+                  navigate(`/users/${userInfo._id}/volunteerRanking`)
+                }
+                className="w-full flex items-center justify-center border border-gray-400 bg-white text-gray-700 rounded-lg py-2 hover:bg-gray-100"
+              >
                 ❌ Report
               </button>
               <ShowInfoBtn userInfo={userInfo}></ShowInfoBtn>
-              <button className="w-full flex items-center justify-center border border-gray-400 bg-white text-gray-700 rounded-lg py-2 hover:bg-gray-100">
-                📞 Contacts
+              <button
+                onClick={() => navigate(`/users/${userInfo._id}/editProfile`)}
+                className="w-full flex items-center justify-center border border-gray-400 bg-white text-gray-700 rounded-lg py-2 hover:bg-gray-100"
+              >
+                ✏️ Edit Profile
               </button>
             </div>
           </div>

@@ -1,5 +1,6 @@
 import React from "react";
 import { NavLink, useNavigate } from "react-router";
+import { motion } from "framer-motion";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -27,7 +28,9 @@ const Navbar = () => {
   return (
     <div className="sticky top-0 bg-pink-100 p-6 flex justify-between items-center border-b-2 border-pink-400 z-50">
       <NavLink to={"/"}>
-        <div className="text-xl font-bold text-pink-600">SentryAid</div>
+        <motion.div className="flex items-center justify-center mr-3 heartbeat">
+          <img className="w-38" src="../logo.png" alt="" />
+        </motion.div>
       </NavLink>
 
       <div className="flex gap-4">
@@ -36,7 +39,7 @@ const Navbar = () => {
             onClick={handleVolunteerLogout}
             className="bg-pink-400 text-white px-4 py-2 rounded-lg hover:bg-pink-500 transition duration-300"
           >
-            Logout (Volunteer)
+            Logout
           </button>
         )}
 
@@ -45,7 +48,7 @@ const Navbar = () => {
             onClick={handleAdminLogout}
             className="bg-pink-400 text-white px-4 py-2 rounded-lg hover:bg-pink-500 transition duration-300"
           >
-            Logout (Admin)
+            Logout
           </button>
         )}
 
@@ -54,7 +57,7 @@ const Navbar = () => {
             onClick={handleUserLogout}
             className="bg-pink-400 text-white px-4 py-2 rounded-lg hover:bg-pink-500 transition duration-300"
           >
-            Logout (User)
+            Logout
           </button>
         )}
       </div>

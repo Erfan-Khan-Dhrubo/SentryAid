@@ -523,12 +523,9 @@ const Home = () => {
               className="flex items-center mb-6 md:mb-0"
               whileHover={{ scale: 1.05 }}
             >
-              <motion.div className="w-8 h-8 bg-gradient-to-br from-pink-400 to-pink-500 rounded-lg flex items-center justify-center mr-3 heartbeat">
-                <HelpingHand className="w-6 h-6 text-white" />
+              <motion.div className="flex items-center justify-center mr-3 heartbeat">
+                <img className="w-40" src="../logo.png" alt="" />
               </motion.div>
-              <span className="text-2xl font-bold text-gray-900">
-                SentryAid
-              </span>
             </motion.div>
 
             <div className="flex flex-wrap justify-center gap-6 mb-6 md:mb-0">

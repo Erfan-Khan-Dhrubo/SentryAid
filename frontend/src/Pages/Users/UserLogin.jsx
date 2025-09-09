@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useNavigate } from "react-router";
+import { NavLink, useNavigate } from "react-router";
 import axios from "axios";
+import { AlertTriangle } from "lucide-react";
 
 const UserLogin = () => {
   const [name, setName] = useState("");
@@ -48,38 +49,44 @@ const UserLogin = () => {
   };
 
   return (
-    <div>
-      <h2 className="text-2xl font-bold text-center text-gray-800 mb-6 pt-6">
-        User Login
-      </h2>
+    <div className="flex flex-col gap-6">
+      <div className="flex justify-center mt-4">
+        <div className="w-14 h-14 flex items-center justify-center rounded-full bg-pink-100">
+          <AlertTriangle className="w-8 h-8 text-pink-500" />
+        </div>
+      </div>
+
+      {/* Title */}
+      <div>
+        <h2 className="text-2xl font-semibold text-center text-gray-800">
+          SentryAid Login
+        </h2>
+        <p className="text-sm text-black text-center mt-2">
+          Welcome back! Please sign in to your account.
+        </p>
+      </div>
 
       <form onSubmit={handleLogin} className="space-y-4">
         {/* Name */}
         <div className="text-black">
-          <label className="block text-sm font-medium text-gray-700">
-            Name
-          </label>
           <input
             type="text"
             placeholder="Enter your name"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="mt-1 w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-300"
+            className="bg-transparent border-b focus:outline-none focus:border-pink-500 py-2 px-1  w-full mt-1"
             required
           />
         </div>
 
         {/* Password */}
         <div className="text-black">
-          <label className="block text-sm font-medium text-gray-700">
-            Password
-          </label>
           <input
             type="password"
             placeholder="Enter your password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="mt-1 w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-300"
+            className="bg-transparent border-b focus:outline-none focus:border-pink-500 py-2 px-1  w-full mt-1"
             required
           />
         </div>
@@ -87,10 +94,16 @@ const UserLogin = () => {
         {/* Submit Button */}
         <button
           type="submit"
-          className="w-full bg-pink-400 text-white py-2 rounded-lg hover:bg-pink-600 transition duration-300"
+          className="w-full mt-4 bg-pink-400 text-white  py-2 rounded-lg hover:bg-pink-600 transition duration-300"
         >
-          Login
+          Login as User
         </button>
+
+        {/* links */}
+        <div className="flex justify-between text-sm text-pink-500 mt-2">
+          <NavLink to={"/volunteerLogin"}>Login as Volunteer</NavLink>
+          <NavLink to={"/adminLogin"}>Login as Admin</NavLink>
+        </div>
       </form>
     </div>
   );

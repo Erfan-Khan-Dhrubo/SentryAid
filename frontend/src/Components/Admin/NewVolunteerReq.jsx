@@ -24,14 +24,19 @@ const NewVolunteerReq = ({ users, setUsers }) => {
           </thead>
 
           <tbody>
-            {users.map((user, idx) => {
-              // console.log(user.name);
-              if (user.request === "pending") {
-                return (
+            {users.filter((user) => user.request === "pending").length > 0 ? (
+              users
+                .filter((user) => user.request === "pending")
+                .map((user, idx) => (
                   <AdminRequestRow key={idx} user={user} setUsers={setUsers} />
-                );
-              }
-            })}
+                ))
+            ) : (
+              <tr>
+                <td colSpan={"4"} className="text-center p-8">
+                  No requests to review right now.
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>

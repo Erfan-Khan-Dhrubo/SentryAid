@@ -81,7 +81,7 @@ const VolunteerNavbar = ({ volunteerInfo }) => {
       )}
 
       {/* Sidebar for large screens */}
-      <aside className="hidden sm:flex  lg:w-64 w-46 sm:flex-col sm:bg-white sm:shadow-lg lg:h-screen">
+      <aside className="hidden sm:flex sm:justify-between  lg:w-64 w-46 sm:flex-col sm:bg-white sm:shadow-lg ">
         <div className="flex flex-col justify-between h-full">
           <div className="mt-6 space-y-2">
             {menuLinks.map((link) => (

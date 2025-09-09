@@ -115,8 +115,13 @@ const VolunteerProfile = () => {
 
             <div className="mt-6 space-y-3">
               <ShowInfoBtn userInfo={volunteerInfo}></ShowInfoBtn>
-              <button className="w-full flex items-center justify-center border border-gray-400 bg-white text-gray-700 rounded-lg py-2 hover:bg-gray-100">
-                📞 Contacts
+              <button
+                onClick={() =>
+                  navigate(`/volunteers/${volunteerInfo._id}/editProfile`)
+                }
+                className="w-full flex items-center justify-center border border-gray-400 bg-white text-gray-700 rounded-lg py-2 hover:bg-gray-100"
+              >
+                ✏️ Edit Profile
               </button>
               {sta == "active" ? (
                 <button
