@@ -19,11 +19,13 @@ const CreateBulletinMsg = () => {
   useEffect(() => {
     const volunteer = localStorage.getItem("volunteer");
     const user = localStorage.getItem("user");
+    const admin = localStorage.getItem("admin");
 
     let storedRole = null;
 
     if (volunteer) storedRole = JSON.parse(volunteer);
     else if (user) storedRole = JSON.parse(user);
+    else if (admin) storedRole = JSON.parse(admin);
 
     if (storedRole) {
       setRole(storedRole);

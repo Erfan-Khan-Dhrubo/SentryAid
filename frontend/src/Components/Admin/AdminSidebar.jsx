@@ -2,6 +2,7 @@ import { FaUserShield } from "react-icons/fa";
 import { FaMessage } from "react-icons/fa6";
 import { NavLink } from "react-router";
 import { RiSkull2Fill } from "react-icons/ri";
+import { FaChalkboard } from "react-icons/fa";
 
 const AdminSidebar = () => {
   return (
@@ -46,11 +47,23 @@ const AdminSidebar = () => {
           >
             <RiSkull2Fill className="mr-3" /> Risk Zones
           </NavLink>
+          <NavLink
+            to={`/admin/bulletinBoard`}
+            className={({ isActive }) =>
+              `flex items-center px-4 py-2 rounded-lg ${
+                isActive
+                  ? "bg-pink-100 text-pink-600 font-semibold"
+                  : "text-gray-600 hover:bg-pink-50"
+              }`
+            }
+          >
+            <FaChalkboard className="mr-3" /> Bulletin Board
+          </NavLink>
         </nav>
       </div>
 
       {/* User Profile */}
-      <div className="p-4 border-t">
+      <div className="p-4 border-t hidden lg:flex">
         <div className="flex items-center space-x-3">
           <img
             src="https://www.creativefabrica.com/wp-content/uploads/2021/09/09/User-avatar-profile-icon-Graphics-17068385-1.jpg"
@@ -68,4 +81,3 @@ const AdminSidebar = () => {
 };
 
 export default AdminSidebar;
-

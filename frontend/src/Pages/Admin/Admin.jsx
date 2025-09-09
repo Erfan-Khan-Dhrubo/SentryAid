@@ -33,8 +33,8 @@ const Admin = () => {
       </header>
 
       {/* Tabs */}
-      <div className="mt-6 px-4 sm:px-10">
-        <div className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4 rounded-xl overflow-hidden">
+      <div className="mt-6 px-4 sm:px-10 ">
+        <div className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4 rounded-xl overflow-hidden ">
           <button
             onClick={() => setActiveTab("users")}
             className={`px-4 py-2 sm:flex-1 rounded-md transition-colors duration-200 ${
@@ -43,7 +43,7 @@ const Admin = () => {
                 : "bg-white text-gray-800 hover:bg-pink-100"
             }`}
           >
-            Approve New Volunteers
+            Approve New Users
           </button>
           <button
             onClick={() => setActiveTab("volunteers")}
@@ -53,7 +53,7 @@ const Admin = () => {
                 : "bg-white text-gray-800 hover:bg-pink-100"
             }`}
           >
-            Approve User Volunteer Requests
+            Approve New Volunteers
           </button>
           <button
             onClick={() => setActiveTab("reports")}

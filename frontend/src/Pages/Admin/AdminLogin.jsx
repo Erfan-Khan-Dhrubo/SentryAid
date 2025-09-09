@@ -1,23 +1,50 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router";
+import axios from "axios";
 import { toast } from "react-toastify";
 
 const AdminLogin = () => {
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [role, setRole] = useState(null); // stores logged-in role
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
+  // Get volunteer, user, or admin from localStorage once on mount
   useEffect(() => {
-    const admin = localStorage.getItem("admin");
-    if (admin) {
-      setIsLoggedIn(true);
-    }
+    const volunteerStr = localStorage.getItem("volunteer");
+    const userStr = localStorage.getItem("user");
+    const adminStr = localStorage.getItem("admin");
+
+    if (volunteerStr) setRole(JSON.parse(volunteerStr));
+    else if (userStr) setRole(JSON.parse(userStr));
+    else if (adminStr) setRole(JSON.parse(adminStr));
   }, []);
+
+  // Check if someone is logged in
+  const isLoggedIn = !!role;
+
+  const handleDashboardNavigate = () => {
+    if (!role) return;
+
+    switch (role.type) {
+      case "volunteer":
+        navigate(`/volunteers/${role._id}`);
+        break;
+      case "user":
+        navigate(`/users/${role._id}`);
+        break;
+      case "admin":
+        navigate("/admin");
+        break;
+      default:
+        break;
+    }
+  };
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
     try {
       const res = await axios.post("http://localhost:5001/api/admin/login", {
@@ -26,78 +53,76 @@ const AdminLogin = () => {
       });
 
       localStorage.setItem("admin", JSON.stringify(res.data));
+      setRole(res.data); // triggers dashboard logic
 
       toast.success("Admin login successful! 🎉");
-      navigate("/admin");
     } catch (err) {
-      if (err.response) {
-        toast.error(err.response.data.message);
-      } else {
-        toast.error("Something went wrong. Please try again.");
-      }
+      if (err.response) toast.error(err.response.data.message);
+      else toast.error("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
-  if (isLoggedIn) {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-pink-50">
-        <div className="bg-white py-12 px-8 rounded-xl shadow-lg w-full max-w-md text-center">
-          <h2 className="text-xl font-semibold text-gray-700">
-            ✅ Admin already logged in
-          </h2>
-          <button
-            onClick={() => navigate("/admin")}
-            className="mt-8 bg-pink-400 text-white px-4 py-2 rounded-lg hover:bg-pink-600 transition"
-          >
-            Go to Admin Panel
-          </button>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className="flex items-center justify-center min-h-screen bg-pink-50">
-      <div className="bg-white py-16 px-12 rounded-xl shadow-lg w-full max-w-md">
-        <h2 className="text-2xl font-bold text-center mb-6 text-gray-800">
-          Admin Login
-        </h2>
-        <form onSubmit={handleLogin} className="space-y-4">
-          {/* Name */}
-          <div className="text-black">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Name
-            </label>
-            <input
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className="w-full border border-gray-300 px-4 py-2 rounded-lg focus:ring-2 focus:ring-pink-400 focus:outline-none"
-              required
-            />
-          </div>
+    <div className="min-h-screen flex items-center justify-center bg-pink-50">
+      <div className="bg-white shadow-lg rounded-2xl w-full max-w-md px-12 py-16">
+        {!isLoggedIn ? (
+          <>
+            <h2 className="text-2xl font-bold text-center mb-6 text-gray-800">
+              Admin Login
+            </h2>
+            <form onSubmit={handleLogin} className="space-y-4">
+              {/* Name */}
+              <div className="text-black">
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Name
+                </label>
+                <input
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="w-full border border-gray-300 px-4 py-2 rounded-lg focus:ring-2 focus:ring-pink-400 focus:outline-none"
+                  required
+                />
+              </div>
 
-          {/* Password */}
-          <div className="text-black">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Password
-            </label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full border border-gray-300 px-4 py-2 rounded-lg focus:ring-2 focus:ring-pink-400 focus:outline-none"
-              required
-            />
-          </div>
+              {/* Password */}
+              <div className="text-black">
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Password
+                </label>
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full border border-gray-300 px-4 py-2 rounded-lg focus:ring-2 focus:ring-pink-400 focus:outline-none"
+                  required
+                />
+              </div>
 
-          <button
-            type="submit"
-            className="w-full bg-pink-500 text-white py-2 rounded-lg hover:bg-pink-600 transition"
-          >
-            Login
-          </button>
-        </form>
+              <button
+                type="submit"
+                className="w-full bg-pink-500 text-white py-2 rounded-lg hover:bg-pink-600 transition"
+                disabled={loading}
+              >
+                {loading ? "Logging in..." : "Login"}
+              </button>
+            </form>
+          </>
+        ) : (
+          <div className="text-center">
+            <div className="text-pink-400 font-semibold text-xl mb-4">
+              You are already logged in as {role.name} ({role.type})
+            </div>
+            <button
+              onClick={handleDashboardNavigate}
+              className="bg-pink-400 text-white mt-6 px-6 py-2 rounded-lg hover:bg-pink-500 transition duration-300"
+            >
+              Go to Dashboard
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

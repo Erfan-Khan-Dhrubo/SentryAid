@@ -134,6 +134,10 @@ export const router = createBrowserRouter([
             path: "heatMap",
             element: <HeatMap />,
           },
+          {
+            path: "bulletinBoard",
+            element: <BulletinBoard />,
+          },
         ],
       },
     ],
