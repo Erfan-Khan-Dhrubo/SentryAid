@@ -26,7 +26,7 @@ const Navbar = () => {
   };
 
   return (
-    <div className="sticky top-0 bg-pink-100 p-6 flex justify-between items-center border-b-2 border-pink-400 z-50">
+    <div className="sticky top-0 left-0 w-full flex justify-between items-center px-8 py-4 bg-white/70 backdrop-blur-md shadow-sm border-b border-pink-400 z-50">
       <NavLink to={"/"}>
         <motion.div className="flex items-center justify-center mr-3 heartbeat">
           <img className="w-38" src="../logo.png" alt="" />
