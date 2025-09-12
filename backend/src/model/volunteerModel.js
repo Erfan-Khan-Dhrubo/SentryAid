@@ -36,7 +36,7 @@ const volunteerSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      default: "inactive",
+      default: "active",
     },
     type: {
       type: String,

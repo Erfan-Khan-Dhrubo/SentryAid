@@ -21,12 +21,12 @@ const UserRoot = () => {
   return (
     <div className="flex flex-col h-screen">
       {/* Hamburger Navbar for small/medium screens */}
-      <div className="lg:hidden bg-white shadow px-4 py-3 flex items-center justify-between">
-        <h2 className="text-lg font-semibold text-gray-700">Menu</h2>
-        <button
-          className="p-2 bg-gray-100 rounded"
-          onClick={() => setIsOpen(!isOpen)}
-        >
+      <div
+        className={`lg:hidden ${
+          isOpen ? "bg-white" : "bg-pink-50"
+        }  shadow px-4 py-3 flex items-center justify-between`}
+      >
+        <button className="p-2  rounded" onClick={() => setIsOpen(!isOpen)}>
           <GiHamburgerMenu className="w-6 h-6" />
         </button>
       </div>
@@ -54,4 +54,3 @@ const UserRoot = () => {
 };
 
 export default UserRoot;
-

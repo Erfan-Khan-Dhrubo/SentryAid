@@ -40,9 +40,9 @@ const Home = () => {
   };
 
   return (
-    <div className="min-h-screen bg-pink-50 text-gray-900 overflow-x-hidden">
+    <div className="min-h-screen  text-gray-900 overflow-x-hidden bg-gradient-to-br from-pink-200 via-rose-100 to-pink-100">
       {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center bg-pink-50 py-20">
+      <section className="relative min-h-screen flex items-center justify-center  py-20">
         <div className="absolute inset-0 overflow-hidden">
           {[...Array(15)].map((_, i) => (
             <motion.div
@@ -212,7 +212,7 @@ const Home = () => {
       </section>
 
       {/* How It Works Section */}
-      <section id="how-it-works" className="py-20 px-4 bg-pink-50">
+      <section id="how-it-works" className="py-20 px-4 ">
         <div className="max-w-6xl mx-auto">
           <motion.h2
             className="text-4xl md:text-5xl font-bold text-center mb-16 text-gray-900"
@@ -319,7 +319,7 @@ const Home = () => {
       </section>
 
       {/* Live Risk Map Section */}
-      <section className="py-20 px-4 bg-pink-50">
+      <section className="py-20 px-4 ">
         <div className="max-w-6xl mx-auto text-center">
           <motion.h2
             className="text-4xl md:text-5xl font-bold mb-8 text-gray-900"
@@ -431,7 +431,7 @@ const Home = () => {
       </section>
 
       {/* Testimonials Section */}
-      <section className="py-20 px-4 bg-gradient-to-b from-pink-100 to-rose-50">
+      <section className="py-20 px-4 ">
         <div className="max-w-6xl mx-auto">
           <motion.h2
             className="text-4xl md:text-5xl font-bold text-center mb-16 text-gray-900"

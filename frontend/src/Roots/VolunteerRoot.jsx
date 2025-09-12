@@ -18,7 +18,7 @@ const VolunteerRoot = () => {
   }, [id]);
 
   return (
-    <div className="min-h-screen w-full bg-white flex flex-col sm:flex-row">
+    <div className="min-h-screen w-full bg-white flex flex-col lg:flex-row">
       {/* Navbar / Sidebar */}
       <VolunteerNavbar volunteerInfo={volunteerInfo} />
 

@@ -38,7 +38,7 @@ const BulletinBoard = () => {
       <div className="max-w-4xl mx-auto">
         {/* Header Section */}
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-10 gap-8">
-          <h2 className="sm:text-4xl text-3xl font-extrabold text-pink-600 drop-shadow">
+          <h2 className="sm:text-4xl mb-8 text-3xl font-extrabold text-pink-600 drop-shadow">
             📢 Bulletin Board
           </h2>
           <button

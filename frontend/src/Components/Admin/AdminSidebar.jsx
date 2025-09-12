@@ -6,9 +6,8 @@ import { FaChalkboard } from "react-icons/fa";
 
 const AdminSidebar = () => {
   return (
-    <aside className="hidden lg:flex lg:w-64 lg:bg-white lg:shadow-lg lg:flex-col lg:justify-between lg:min-h-screen">
+    <aside className="hidden lg:flex lg:w-64 lg:bg-white lg:shadow-lg lg:flex-col lg:justify-between lg:min-h-screen pt-8">
       <div>
-        <div className="p-4 font-bold text-2xl text-pink-600">SentryAid</div>
         <nav className="mt-6 space-y-2 middle">
           <NavLink
             to={"/admin"}
