@@ -10,7 +10,7 @@ const UserNavbar = ({ userInfo }) => {
   return (
     <aside className="w-full lg:w-64 bg-white shadow-lg flex flex-col justify-between h-full lg:pt-8">
       <div>
-        <nav className="mt-6 space-y-2 middle">
+        <nav className="lg:mt-6 space-y-2 middle">
           <NavLink
             to={`/users/${userInfo._id}`}
             end

@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "http://localhost:5001/api", // http://localhost:5001/api for deployment
+  baseURL: "https://sentryaid-backend.onrender.com/api", // http://localhost:5001/api for deployment
 });
 
 export default api;

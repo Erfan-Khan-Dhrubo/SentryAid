@@ -102,7 +102,7 @@ const VolunteerProfile = () => {
   return (
     <div className="flex flex-col gap-12 bg-pink-50 min-h-screen sm:p-16 p-8 ">
       <div className="bg-pink-50 flex items-center justify-center">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 w-full">
           {/* Profile Card */}
           <div className="bg-blue-200 rounded-lg p-6 text-center text-black shadow-lg py-12">
             <div className="flex justify-center">

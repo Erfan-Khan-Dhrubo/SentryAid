@@ -1,4 +1,4 @@
 import { io } from "socket.io-client";
 
-const socket = io("http://localhost:5001"); // http://localhost:5001
+const socket = io("https://sentryaid-backend.onrender.com"); // http://localhost:5001
 export default socket;
