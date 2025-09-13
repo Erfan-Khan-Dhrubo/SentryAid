@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { NavLink, useNavigate } from "react-router";
-import axios from "axios";
+import api from "../../Utilities/axios";
 import { AlertTriangle } from "lucide-react";
 
 const UserLogin = () => {
@@ -17,7 +17,7 @@ const UserLogin = () => {
     console.log("📡 Attempting to login with:", { name, password }); // log before sending
 
     try {
-      const res = await axios.post("http://localhost:5001/api/users/login", {
+      const res = await api.post(`/users/login`, {
         name,
         password,
       });

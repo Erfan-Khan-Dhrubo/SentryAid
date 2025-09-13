@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { NavLink, useNavigate } from "react-router";
-import axios from "axios";
 import { Heart } from "lucide-react";
+import api from "../../Utilities/axios";
 
 const VolunteerLogin = () => {
   const [name, setName] = useState("");
@@ -17,8 +17,8 @@ const VolunteerLogin = () => {
     console.log("📡 Attempting to login with:", { name, password }); // log before sending
 
     try {
-      const res = await axios.post(
-        "http://localhost:5001/api/volunteers/login",
+      const res = await api.post(
+        `/volunteers/login`,
         { name, password }
       );
 

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import axios from "axios";
 import { NavLink, useNavigate } from "react-router";
 import { Heart } from "lucide-react";
+import api from "../../Utilities/axios";
 
 const VolunteerSignup = () => {
   const [name, setName] = useState("");
@@ -17,7 +17,7 @@ const VolunteerSignup = () => {
 
     try {
       // Send signup request
-      const res = await axios.post("http://localhost:5001/api/volunteers", {
+      const res = await api.post(`/volunteers`, {
         name,
         email,
         password,

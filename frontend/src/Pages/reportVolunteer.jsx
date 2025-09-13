@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router";
 import { ToastContainer, toast } from "react-toastify";
-import axios from "axios";
+import api from "../Utilities/axios";
 import "react-toastify/dist/ReactToastify.css";
 
 const ReportVolunteer = () => {
@@ -28,8 +28,8 @@ const ReportVolunteer = () => {
   useEffect(() => {
     const fetchVolunteerData = async () => {
       try {
-        const res = await axios.get(
-          `http://localhost:5001/api/volunteers/${volunteerId}`
+        const res = await api.get(
+          `/volunteers/${volunteerId}`
         );
         setVolunteer(res.data);
       } catch (error) {
@@ -48,8 +48,8 @@ const ReportVolunteer = () => {
     const fetchUserData = async () => {
       try {
         setIsUserLoading(true);
-        const res = await axios.get(
-          `http://localhost:5001/api/users/${userId}`
+        const res = await api.get(
+          `/users/${userId}`
         );
         setUser(res.data);
       } catch (error) {
@@ -106,22 +106,22 @@ const ReportVolunteer = () => {
         message: formData.message,
       };
 
-      const response = await axios.post(
-        "http://localhost:5001/api/reports",
+      const response = await api.post(
+        `/reports`,
         reportData
       );
 
       // Deduct score from volunteer
-      const res = await axios.get(
-        `http://localhost:5001/api/volunteers/${volunteerId}`
+      const res = await api.get(
+        `/volunteers/${volunteerId}`
       );
       const fetchedVolunteer = res.data;
       const updatedVolunteer = {
         ...fetchedVolunteer,
         score: fetchedVolunteer.score - 5,
       };
-      await axios.put(
-        `http://localhost:5001/api/volunteers/${volunteerId}`,
+      await api.put(
+        `/volunteers/${volunteerId}`,
         updatedVolunteer
       );
 

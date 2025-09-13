@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import api from "../Utilities/axios";
 import { useNavigate } from "react-router";
 
 const BulletinBoard = () => {
@@ -11,7 +11,7 @@ const BulletinBoard = () => {
   useEffect(() => {
     const fetchMessages = async () => {
       try {
-        const res = await axios.get("http://localhost:5001/api/bulletinMsg");
+        const res = await api.get(`/bulletinMsg`);
         setMessages(res.data);
       } catch (error) {
         console.error("Error fetching bulletin messages", error);

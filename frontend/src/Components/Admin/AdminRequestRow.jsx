@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router";
 import { sendMail } from "../../Utilities/SendMail";
+import api from "../../Utilities/axios";
 
 const AdminRequestRow = ({ user, setUsers }) => {
   const navigate = useNavigate();
@@ -18,16 +18,16 @@ const AdminRequestRow = ({ user, setUsers }) => {
     try {
       if (user.type === "user") {
         const updateNote = { ...user, request: "rejected" };
-        const res1 = await axios.put(
-          `http://localhost:5001/api/users/${id}`,
+        const res1 = await api.put(
+          `/users/${id}`,
           updateNote
         );
         sendMail(res1.data.email, msg, "Volunteers’ Requests Rejected");
-        const res = await axios.get("http://localhost:5001/api/users");
+        const res = await api.get(`/users`);
         setUsers(res.data);
       } else {
-        const res = await axios.delete(
-          `http://localhost:5001/api/volunteers/${id}`
+        const res = await api.delete(
+          `/volunteers/${id}`
         );
         sendMail(res.data.email, msg, "Volunteers’ Requests Rejected");
         setUsers((prev) => prev.filter((user) => user._id !== id));
@@ -45,8 +45,8 @@ const AdminRequestRow = ({ user, setUsers }) => {
     try {
       const updateNote = { ...user, request: "accepted" };
       if (user.type === "user") {
-        const res1 = await axios.put(
-          `http://localhost:5001/api/users/${id}`,
+        const res1 = await api.put(
+          `/users/${id}`,
           updateNote
         );
         sendMail(
@@ -54,11 +54,11 @@ const AdminRequestRow = ({ user, setUsers }) => {
           "Your volunteers’ requests have been accepted",
           "Volunteers’ Requests Accepted"
         );
-        const res = await axios.get("http://localhost:5001/api/users");
+        const res = await api.get(`/users`);
         setUsers(res.data);
       } else {
-        const res1 = await axios.put(
-          `http://localhost:5001/api/volunteers/${id}`,
+        const res1 = await api.put(
+          `/volunteers/${id}`,
           updateNote
         );
         sendMail(
@@ -66,7 +66,7 @@ const AdminRequestRow = ({ user, setUsers }) => {
           "Your volunteers’ requests have been accepted",
           "Volunteers’ Requests Accepted"
         );
-        const res2 = await axios.get("http://localhost:5001/api/volunteers");
+        const res2 = await api.get(`/volunteers`);
         setUsers(res2.data);
       }
     } catch (error) {

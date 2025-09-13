@@ -1,8 +1,8 @@
 import ShowInfoBtn from "../Common Components/ShowInfoBtn";
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { TImeFormate } from "./../../Utilities/timeFormater";
 import { useNavigate } from "react-router";
+import api from "../../Utilities/axios";
 
 const UserProfile = () => {
   const [notifications, setNotifications] = useState([]);
@@ -21,7 +21,7 @@ const UserProfile = () => {
 
   const fetchMsg = async () => {
     try {
-      const res = await axios.get("http://localhost:5001/api/messages");
+      const res = await api.get(`/messages`);
       setNotifications(res.data);
     } catch (error) {
       console.log("error fetching notes");
@@ -31,8 +31,8 @@ const UserProfile = () => {
   const fetchUserReports = async () => {
     try {
       setLoadingReports(true);
-      const response = await axios.get(
-        `http://localhost:5001/api/reports/reporter/${userInfo._id}`
+      const response = await api.get(
+        `/reports/reporter/${userInfo._id}`
       );
       setUserReports(response.data.reports || []);
     } catch (error) {
@@ -63,8 +63,8 @@ const UserProfile = () => {
     };
 
     try {
-      await axios.put(
-        `http://localhost:5001/api/messages/${notificationObj._id}`,
+      await api.put(
+        `/messages/${notificationObj._id}`,
         updatedNotification
       );
     } catch (error) {

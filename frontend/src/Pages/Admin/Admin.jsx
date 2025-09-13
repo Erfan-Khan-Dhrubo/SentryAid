@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import NewVolunteerReq from "../../Components/Admin/NewVolunteerReq";
 import ReportsTable from "../../Components/Admin/ReportsTable";
-import axios from "axios";
+import api from "../../Utilities/axios";
 
 const Admin = () => {
   const [activeTab, setActiveTab] = useState("users");
@@ -11,9 +11,9 @@ const Admin = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const res = await axios.get("http://localhost:5001/api/users");
+        const res = await api.get(`/users`);
         setUsers(res.data);
-        const res2 = await axios.get("http://localhost:5001/api/volunteers");
+        const res2 = await api.get(`/volunteers`);
         setVolunteers(res2.data);
       } catch (error) {
         console.log("Error fetching data", error);

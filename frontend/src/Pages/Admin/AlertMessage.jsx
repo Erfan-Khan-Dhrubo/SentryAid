@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { toast, ToastContainer } from "react-toastify";
-import axios from "axios";
+import api from "../../Utilities/axios";
 import { TImeFormate } from "../../Utilities/timeFormater";
 
 const AlertMessage = () => {
@@ -12,7 +12,7 @@ const AlertMessage = () => {
   // Fetch messages function (can be called anywhere)
   const fetchAllMsg = async () => {
     try {
-      const res = await axios.get("http://localhost:5001/api/messages");
+      const res = await api.get(`/messages`);
       setAllMsg(res.data);
     } catch (error) {
       console.log("error fetching messages", error);
@@ -37,7 +37,7 @@ const AlertMessage = () => {
     try {
       const message = { title, message: msg };
       console.log(message);
-      await axios.post("http://localhost:5001/api/messages", message);
+      await api.post(`/messages`, message);
 
       toast(
         <div className="space-y-1 text-black">
