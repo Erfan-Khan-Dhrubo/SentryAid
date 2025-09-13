@@ -1,7 +1,3 @@
-// Load env variables
-import dotenv from "dotenv";
-dotenv.config();
-
 import express from "express";
 import cors from "cors";
 import http from "http";
@@ -9,6 +5,10 @@ import { Server } from "socket.io";
 
 // DB
 import { connectDB } from "./config/db.js";
+
+// Load env variables
+import dotenv from "dotenv";
+dotenv.config();
 
 // Routes
 import userRoutes from "./routes/userRoutes.js";
