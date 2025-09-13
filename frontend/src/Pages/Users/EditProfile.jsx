@@ -4,7 +4,7 @@ import api from "../../Utilities/axios";
 import { sendMail } from "../../Utilities/SendMail";
 
 const EditProfile = () => {
-  const [user, setUser] = useState([]);
+  const [user, setUser] = useState({});
   const [preMail, setPreMail] = useState("");
   const [presentMail, setPresentMail] = useState("");
   const [saving, setSaving] = useState(false);
@@ -26,7 +26,7 @@ const EditProfile = () => {
   }, []);
 
   useEffect(() => {
-    if (!userType) return; // only run if we actually have a name
+    if (!userType || !id) return; // ensure both exist before fetching
     const fetchNote = async () => {
       try {
         if (userType === "user") {
@@ -34,9 +34,7 @@ const EditProfile = () => {
           setUser(res.data);
           setPreMail(res.data.email);
         } else if (userType === "volunteer") {
-          const res = await api.get(
-            `/volunteers/${id}`
-          );
+          const res = await api.get(`/volunteers/${id}`);
           setUser(res.data);
           setPreMail(res.data.email);
         }
@@ -44,9 +42,8 @@ const EditProfile = () => {
         console.log("Error in fetching note", error);
       }
     };
-
     fetchNote();
-  }, [userType]);
+  }, [userType, id]); // include id here
 
   const handleAccept = async (e, id) => {
     //navigate("/admin");
@@ -59,10 +56,7 @@ const EditProfile = () => {
     try {
       // const updateNote = { ...user, request: "accepted" };
       if (userType === "user") {
-        const res = await api.put(
-          `/users/${id}`,
-          user
-        );
+        const res = await api.put(`/users/${id}`, user);
         setUser(res.data);
         setPresentMail(res.data.email);
         sendMail(
@@ -71,10 +65,7 @@ const EditProfile = () => {
           "Profile Update"
         );
       } else if (userType === "volunteer") {
-        const res = await api.put(
-          `/volunteers/${id}`,
-          user
-        );
+        const res = await api.put(`/volunteers/${id}`, user);
         setUser(res.data);
         setPresentMail(res.data.email);
         sendMail(

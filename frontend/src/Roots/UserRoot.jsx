@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { Outlet, useParams } from "react-router";
 import UserNavbar from "../Components/User/UserNavbar";
 import { GiHamburgerMenu } from "react-icons/gi";
-import api from "../Utilities/axios";
 
 const UserRoot = () => {
   const [userInfo, setUserInfo] = useState([]);
@@ -10,14 +9,9 @@ const UserRoot = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
-    const getUser = async () => {
-      // const data = await fetchSpecific(`http://localhost:5001/api/users/${id}`);
-      const data = await api.get(`/users/${id}`);
-      setUserInfo(data);
-    };
-
-    getUser();
-  }, [id]);
+    const user = JSON.parse(localStorage.getItem("user"));
+    setUserInfo(user);
+  }, []);
 
   return (
     <div className="flex flex-col h-screen">

@@ -41,15 +41,12 @@ const UserProfile = () => {
   };
 
   useEffect(() => {
-    fetchMsg();
-    fetchUserReports();
-
-    // const interval = setInterval(() => {
-    //   fetchMsg();
-    // }, 10000);
-
-    // return () => clearInterval(interval);
-  }, [userInfo._id]);
+    if (userInfo && userInfo._id) {
+      // ✅ only run when userInfo is ready
+      fetchMsg();
+      fetchUserReports();
+    }
+  }, [userInfo]); // ✅ depends on whole userInfo
 
   const handleNotificationClick = async (notificationObj, id) => {
     document.getElementById("my_modal_2").showModal();

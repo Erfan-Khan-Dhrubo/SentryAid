@@ -1,21 +1,14 @@
 import { useEffect, useState } from "react";
-import { Outlet, useParams } from "react-router";
+import { Outlet } from "react-router";
 import VolunteerNavbar from "../Components/Volunteer/VolunteerNavbar";
 
 const VolunteerRoot = () => {
   const [volunteerInfo, setVolunteerInfo] = useState({});
-  const { id } = useParams();
 
   useEffect(() => {
-    const getUser = async () => {
-      // const data = await fetchSpecific(
-      //   `http://localhost:5001/api/volunteers/${id}`
-      // );
-      const data = await api.get(`/volunteers/${id}`);
-      setVolunteerInfo(data);
-    };
-    getUser();
-  }, [id]);
+    const user = JSON.parse(localStorage.getItem("volunteer"));
+    setVolunteerInfo(user);
+  }, []);
 
   return (
     <div className="min-h-screen w-full bg-white flex flex-col lg:flex-row">
