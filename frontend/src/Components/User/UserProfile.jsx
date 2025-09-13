@@ -31,9 +31,7 @@ const UserProfile = () => {
   const fetchUserReports = async () => {
     try {
       setLoadingReports(true);
-      const response = await api.get(
-        `/reports/reporter/${userInfo._id}`
-      );
+      const response = await api.get(`/reports/reporter/${userInfo._id}`);
       setUserReports(response.data.reports || []);
     } catch (error) {
       console.error("Error fetching user reports:", error);
@@ -50,7 +48,7 @@ const UserProfile = () => {
     //   fetchMsg();
     // }, 10000);
 
-    return () => clearInterval(interval);
+    // return () => clearInterval(interval);
   }, [userInfo._id]);
 
   const handleNotificationClick = async (notificationObj, id) => {
@@ -63,10 +61,7 @@ const UserProfile = () => {
     };
 
     try {
-      await api.put(
-        `/messages/${notificationObj._id}`,
-        updatedNotification
-      );
+      await api.put(`/messages/${notificationObj._id}`, updatedNotification);
     } catch (error) {
       console.log("Error updating volunteer", error);
     }
