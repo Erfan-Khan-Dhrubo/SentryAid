@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { NavLink, useNavigate, useParams } from "react-router";
-import axios from "axios";
+import api from "../../Utilities/axios";
 import { sendMail } from "../../Utilities/SendMail";
 
 const EditProfile = () => {
@@ -30,12 +30,12 @@ const EditProfile = () => {
     const fetchNote = async () => {
       try {
         if (userType === "user") {
-          const res = await axios.get(`http://localhost:5001/api/users/${id}`);
+          const res = await api.get(`/users/${id}`);
           setUser(res.data);
           setPreMail(res.data.email);
         } else if (userType === "volunteer") {
-          const res = await axios.get(
-            `http://localhost:5001/api/volunteers/${id}`
+          const res = await api.get(
+            `/volunteers/${id}`
           );
           setUser(res.data);
           setPreMail(res.data.email);
@@ -59,8 +59,8 @@ const EditProfile = () => {
     try {
       // const updateNote = { ...user, request: "accepted" };
       if (userType === "user") {
-        const res = await axios.put(
-          `http://localhost:5001/api/users/${id}`,
+        const res = await api.put(
+          `/users/${id}`,
           user
         );
         setUser(res.data);
@@ -71,8 +71,8 @@ const EditProfile = () => {
           "Profile Update"
         );
       } else if (userType === "volunteer") {
-        const res = await axios.put(
-          `http://localhost:5001/api/volunteers/${id}`,
+        const res = await api.put(
+          `/volunteers/${id}`,
           user
         );
         setUser(res.data);

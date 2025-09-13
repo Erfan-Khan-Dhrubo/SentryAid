@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { TImeFormate } from "../../Utilities/timeFormater";
+import api from "../../Utilities/axios";
 
 const ReportsTable = () => {
   const [reports, setReports] = useState([]);
@@ -11,7 +12,7 @@ const ReportsTable = () => {
 
   const fetchReports = async () => {
     try {
-      const response = await axios.get("http://localhost:5001/api/reports");
+      const response = await api.get(`/reports`);
       setReports(response.data.reports || []);
     } catch (error) {
       console.error("Error fetching reports:", error);
@@ -31,8 +32,8 @@ const ReportsTable = () => {
 
   const updateReportStatus = async (reportId, newStatus, adminNotes = "") => {
     try {
-      const response = await axios.put(
-        `http://localhost:5001/api/reports/${reportId}`,
+      const response = await api.put(
+        `/reports/${reportId}`,
         {
           status: newStatus,
           adminNotes,
@@ -316,14 +317,14 @@ const ReportsTable = () => {
                     onClick={async () => {
                       try {
                         // 1️⃣ Check if volunteer exists
-                        const res = await axios.get(
-                          `http://localhost:5001/api/volunteers/${report.volunteerId}`
+                        const res = await api.get(
+                          `/volunteers/${report.volunteerId}`
                         );
 
                         if (res.data) {
                           // 2️⃣ Volunteer exists → delete
-                          await axios.delete(
-                            `http://localhost:5001/api/volunteers/${report.volunteerId}`
+                          await api.delete(
+                            `/volunteers/${report.volunteerId}`
                           );
                           toast.success("✅ Volunteer banned successfully");
                         }

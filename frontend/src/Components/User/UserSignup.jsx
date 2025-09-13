@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import axios from "axios";
 import { NavLink, useNavigate } from "react-router";
 import { AlertTriangle } from "lucide-react";
+import api from "../../Utilities/axios";
 
 const UserSignup = () => {
   const [name, setName] = useState("");
@@ -17,7 +17,7 @@ const UserSignup = () => {
 
     try {
       // Send signup request
-      const res = await axios.post("http://localhost:5001/api/users", {
+      const res = await api.post(`/users`, {
         name,
         email,
         password,

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router";
-import axios from "axios";
+import api from "../../Utilities/axios";
 import { toast } from "react-toastify";
 import { motion } from "framer-motion";
 import { Shield } from "lucide-react";
@@ -49,7 +49,7 @@ const AdminLogin = () => {
     setLoading(true);
 
     try {
-      const res = await axios.post("http://localhost:5001/api/admin/login", {
+      const res = await api.post(`/admin/login`, {
         name,
         password,
       });

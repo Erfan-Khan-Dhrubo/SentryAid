@@ -17,7 +17,7 @@ import ReceiverMessageDisplay from "./Receiver Components/ReceiverMessageDisplay
 import ReceiverMsgInput from "./Receiver Components/ReceiverMsgInput";
 import ReceiverInstructions from "./Receiver Components/ReceiverInstructions";
 import socket from "./../../../Utilities/socket";
-import axios from "axios";
+import api from "../../../Utilities/axios";
 
 // Remove Leaflet's default method of finding marker image URLs
 // (because in React/Vite/Webpack builds, the default local image path breaks)
@@ -367,13 +367,13 @@ const SosAlert = () => {
       setCurrentSenderId(null);
       setCurrentSenderName("");
       try {
-        const res = await axios.get(
-          `http://localhost:5001/api/volunteers/${volunteer._id}`
+        const res = await api.get(
+          `/volunteers/${volunteer._id}`
         );
         const fetchedUser = res.data;
         const user = { ...fetchedUser, score: fetchedUser.score + 5 };
-        await axios.put(
-          `http://localhost:5001/api/volunteers/${volunteer._id}`,
+        await api.put(
+          `/volunteers/${volunteer._id}`,
           user
         );
       } catch (err) {

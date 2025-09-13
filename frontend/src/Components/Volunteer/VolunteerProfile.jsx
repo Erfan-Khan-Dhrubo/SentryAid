@@ -1,7 +1,8 @@
 import ShowInfoBtn from "../Common Components/ShowInfoBtn";
 import { useEffect, useState } from "react";
-import axios from "axios";
+
 import { useNavigate } from "react-router";
+import api from "../../Utilities/axios";
 
 const VolunteerProfile = () => {
   const [notifications, setNotifications] = useState([]);
@@ -26,7 +27,7 @@ const VolunteerProfile = () => {
   useEffect(() => {
     const fetchAlerts = async () => {
       try {
-        const response = await axios.get("http://localhost:5001/api/messages");
+        const response = await api.get(`/messages`);
         setNotifications(response.data);
       } catch (error) {
         console.error("Failed to load alerts:", error);
@@ -40,8 +41,8 @@ const VolunteerProfile = () => {
     if (volunteerInfo && volunteerInfo._id) {
       try {
         // Mark message as read by this volunteer
-        await axios.patch(
-          `http://localhost:5001/api/messages/${notif._id}/read-by-volunteer/${volunteerInfo._id}`
+        await api.patch(
+          `/messages/${notif._id}/read-by-volunteer/${volunteerInfo._id}`
         );
 
         // Update local state to reflect read status
@@ -76,8 +77,8 @@ const VolunteerProfile = () => {
     localStorage.setItem("volunteer", JSON.stringify(volunteerUpdate));
 
     try {
-      const res = await axios.put(
-        `http://localhost:5001/api/volunteers/${volunteerInfo._id}`,
+      const res = await api.put(
+        `/volunteers/${volunteerInfo._id}`,
         volunteerUpdate
       );
       console.log("Updated Volunteer:", res.data);

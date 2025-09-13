@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import api from "../Utilities/axios";
 import { useNavigate } from "react-router";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -54,7 +54,7 @@ const CreateBulletinMsg = () => {
     }
 
     try {
-      await axios.post("http://localhost:5001/api/bulletinMsg", {
+      await api.post(`/bulletinMsg`, {
         name,
         type,
         title,
