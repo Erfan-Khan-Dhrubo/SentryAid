@@ -49,7 +49,7 @@ const VolunteerNavbar = ({ volunteerInfo }) => {
       {/* Hamburger for small/medium */}
       <div
         className={`
-    sm:hidden 
+    lg:hidden 
     px-4 py-3 flex justify-between items-center border-gray-200
     ${isOpen ? "bg-white" : "bg-pink-50"}
   `}
@@ -60,7 +60,7 @@ const VolunteerNavbar = ({ volunteerInfo }) => {
       </div>
 
       {isOpen && (
-        <div className="sm:hidden bg-white space-y-2 px-4 py-3 border-b border-gray-200">
+        <div className="lg:hidden bg-white space-y-2 px-4 py-3 border-b border-gray-200">
           {menuLinks.map((link) => (
             <NavLink
               key={link.label}
@@ -81,7 +81,7 @@ const VolunteerNavbar = ({ volunteerInfo }) => {
       )}
 
       {/* Sidebar for large screens */}
-      <aside className="hidden sm:flex sm:justify-between  lg:w-64 w-46 sm:flex-col sm:bg-white sm:shadow-lg ">
+      <aside className="hidden lg:flex sm:justify-between  lg:w-64 w-46 lg:flex-col sm:bg-white lg:shadow-lg pt-8">
         <div className="flex flex-col justify-between h-full">
           <div className="mt-6 space-y-2">
             {menuLinks.map((link) => (

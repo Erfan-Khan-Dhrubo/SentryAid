@@ -48,7 +48,6 @@ const UserProfile = () => {
 
     const interval = setInterval(() => {
       fetchMsg();
-      fetchUserReports();
     }, 10000);
 
     return () => clearInterval(interval);
@@ -209,7 +208,7 @@ const UserProfile = () => {
                 </p>
                 <div className="flex justify-between items-center">
                   <span
-                    className={`badge badge-sm ${
+                    className={`badge badge-sm py-1 px-2  ${
                       report.status === "resolved"
                         ? "badge-success"
                         : report.status === "under_review"

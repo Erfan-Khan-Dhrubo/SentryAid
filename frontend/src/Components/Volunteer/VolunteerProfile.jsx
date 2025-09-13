@@ -142,8 +142,8 @@ const VolunteerProfile = () => {
           </div>
 
           {/* Alert Messages - UPDATED */}
-          <div className="bg-white rounded-lg shadow-lg p-6 border-t-8 border-pink-400">
-            <h2 className="text-xl font-bold text-pink-500 mb-4 flex items-center gap-2">
+          <div className="bg-white  rounded-lg shadow-lg p-6 border-t-8 border-pink-400">
+            <h2 className="text-xl font-bold text-pink-500 mb-8 flex items-center gap-2">
               Alert Messages
               {unreadCount > 0 && (
                 <span className="bg-gray-500 text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center">
@@ -151,7 +151,7 @@ const VolunteerProfile = () => {
                 </span>
               )}
             </h2>
-            <ul className="space-y-3">
+            <ul className="space-y-3 ">
               {notifications.length === 0 ? (
                 <li className="text-gray-400">No notifications available.</li>
               ) : (
@@ -162,7 +162,7 @@ const VolunteerProfile = () => {
                       <button
                         className={`border flex items-center px-4 w-full py-3 rounded-lg border-pink-400 ${
                           isRead ? "font-normal" : "font-bold"
-                        } hover:bg-pink-100 hover:text-pink-600 transition-all duration-200 text-pink-400`}
+                        } hover:bg-pink-100 hover:text-pink-600 transition-all duration-200 text-black`}
                         onClick={() => handleNotifClick(notif)}
                       >
                         <div className="text-left">

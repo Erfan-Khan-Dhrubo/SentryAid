@@ -6,6 +6,7 @@ import { RiSkull2Fill } from "react-icons/ri";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { NavLink } from "react-router";
 import AdminSidebar from "../Components/Admin/AdminSidebar";
+import { FaChalkboard } from "react-icons/fa";
 
 const AdminRoot = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -13,7 +14,11 @@ const AdminRoot = () => {
   return (
     <div className="flex flex-col lg:flex-row min-h-screen bg-pink-50">
       {/* Mobile Header / Hamburger */}
-      <div className="lg:hidden bg-white shadow-md px-4 py-3 flex items-center justify-between">
+      <div
+        className={`lg:hidden ${
+          isOpen ? "bg-white" : "bg-pink-50"
+        }  shadow-md px-4 py-3 flex items-center justify-between`}
+      >
         <button
           onClick={() => setIsOpen(!isOpen)}
           className="text-gray-700 focus:outline-none"
@@ -61,6 +66,18 @@ const AdminRoot = () => {
             }
           >
             <RiSkull2Fill className="inline mr-2" /> Risk Zones
+          </NavLink>
+          <NavLink
+            to={`/admin/bulletinBoard`}
+            className={({ isActive }) =>
+              `block px-4 py-2 rounded-lg transition-colors duration-200 ${
+                isActive
+                  ? "bg-pink-100 text-pink-600 font-semibold"
+                  : "text-gray-600 hover:bg-pink-50"
+              }`
+            }
+          >
+            <FaChalkboard className="inline mr-2" /> Bulletin Board
           </NavLink>
         </div>
       )}
