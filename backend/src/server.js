@@ -23,11 +23,17 @@ const app = express();
 const PORT = process.env.PORT || 5001;
 
 // Middleware
+// app.use(
+//   cors({
+//     origin: ["http://localhost:5173", "https://your-production-domain.com"],
+//   })
+// );
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: "*", // allow all origins
   })
 );
+
 app.use(express.json());
 
 // API Routes
@@ -42,9 +48,15 @@ app.use("/api/bulletinMsg", BulletinMsgRoutes);
 // Create HTTP server for socket.io
 const server = http.createServer(app);
 
+// const io = new Server(server, {
+//   cors: {
+//     origin: ["http://localhost:5173", "https://your-production-domain.com"],
+//   },
+// });
+
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:5173",
+    origin: "*", // allow all origins
   },
 });
 
