@@ -1,8 +1,12 @@
 # SentryAid 🛡️  
 
-**SentryAid** is a women-focused safety and empowerment platform built with the **MERN stack**.  
-It allows women to **send SOS alerts**, receive **real-time notifications**, and **report volunteers** for misconduct.  
-Admins can broadcast urgent updates, manage reports, and oversee volunteer activity — creating a **secure support ecosystem** for women in emergencies.  
+**SentryAid** is a comprehensive safety and emergency response platform designed specifically for women. Built on the **MERN stack**, the application provides a secure environment where users can **send SOS alerts**, receive **instant notifications**, and **report inappropriate behavior** by volunteers.  
+
+The platform empowers **volunteers** to actively participate in emergency response by **accepting SOS requests**, offering assistance, and maintaining open communication with users via the in-app chat system. Volunteers can manage their availability and contribute to a coordinated and efficient support network.  
+
+Administrators oversee the system by broadcasting urgent updates, managing user and volunteer reports, and ensuring overall safety, thereby creating a **robust ecosystem for rapid response and community support**.
+
+
 
 🔗 **Live Demo:** [Click Here](https://sentryaid-frontend.onrender.com)  
 
