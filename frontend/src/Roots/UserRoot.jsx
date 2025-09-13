@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { fetchSpecific } from "../Utilities/Helper";
 import { Outlet, useParams } from "react-router";
 import UserNavbar from "../Components/User/UserNavbar";
 import { GiHamburgerMenu } from "react-icons/gi";
+import api from "../Utilities/axios";
 
 const UserRoot = () => {
   const [userInfo, setUserInfo] = useState([]);
@@ -11,7 +11,8 @@ const UserRoot = () => {
 
   useEffect(() => {
     const getUser = async () => {
-      const data = await fetchSpecific(`http://localhost:5001/api/users/${id}`);
+      // const data = await fetchSpecific(`http://localhost:5001/api/users/${id}`);
+      const data = await api.get(`/users/${id}`);
       setUserInfo(data);
     };
 
