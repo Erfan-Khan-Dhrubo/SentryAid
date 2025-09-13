@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import axios from "axios";
+import api from "../Utilities/axios";
 
 const VolunteerRanking = () => {
   const [volunteers, setVolunteers] = useState([]);
@@ -24,9 +25,10 @@ const VolunteerRanking = () => {
   useEffect(() => {
     const fetchVolunteers = async () => {
       try {
-        const mockVolunteers = await axios.get(
-          "http://localhost:5001/api/volunteers"
-        );
+        // const mockVolunteers = await axios.get(
+        //   "http://localhost:5001/api/volunteers"     // await api.delete(`/notes/${id}`);
+        // );
+        const mockVolunteers = await api.get(`/volunteers`);
 
         const sortedVolunteers = mockVolunteers.data.sort(
           (a, b) => b.score - a.score
@@ -51,8 +53,11 @@ const VolunteerRanking = () => {
 
       for (const volunteer of volunteersList) {
         try {
-          const response = await axios.get(
-            `http://localhost:5001/api/reports/volunteer/${volunteer._id}/resolved`
+          // const response = await axios.get(
+          //   `http://localhost:5001/api/reports/volunteer/${volunteer._id}/resolved`
+          // );
+          const response = await api.get(
+            `/reports/volunteer/${volunteer._id}/resolved`
           );
           counts[volunteer._id] = response.data.count;
         } catch (error) {
