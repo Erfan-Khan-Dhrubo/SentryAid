@@ -46,9 +46,9 @@ const UserProfile = () => {
     fetchMsg();
     fetchUserReports();
 
-    const interval = setInterval(() => {
-      fetchMsg();
-    }, 10000);
+    // const interval = setInterval(() => {
+    //   fetchMsg();
+    // }, 10000);
 
     return () => clearInterval(interval);
   }, [userInfo._id]);
