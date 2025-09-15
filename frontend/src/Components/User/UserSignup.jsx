@@ -96,7 +96,7 @@ const UserSignup = () => {
           className="w-full mt-4  bg-pink-400 text-white py-2 rounded-lg hover:bg-pink-600 transition duration-300"
           disabled={loading}
         >
-          Signup as User
+          {loading ? "Signup in..." : "Signup as User"}
         </button>
 
         {/* links */}

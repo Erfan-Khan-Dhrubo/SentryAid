@@ -8,19 +8,18 @@ import api from "../../Utilities/axios";
 const VolunteerLogin = () => {
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
     console.log("📡 Attempting to login with:", { name, password }); // log before sending
 
     try {
-      const res = await api.post(
-        `/volunteers/login`,
-        { name, password }
-      );
+      const res = await api.post(`/volunteers/login`, { name, password });
 
       console.log("✅ Backend response:", res.data); // log the response
 
@@ -45,6 +44,8 @@ const VolunteerLogin = () => {
       } else {
         toast.error("Something went wrong. Please try again."); // network or CORS issue
       }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -95,8 +96,9 @@ const VolunteerLogin = () => {
         <button
           type="submit"
           className="w-full mt-4 bg-pink-400 text-white py-2 rounded-lg hover:bg-pink-600 transition duration-300"
+          disabled={loading}
         >
-          Login as Volunteer
+          {loading ? "Logging in..." : "Login as Volunteer"}
         </button>
         <div className="flex justify-between text-sm text-pink-500 mt-2">
           <NavLink to={"/usersLogin"}>Login as User</NavLink>

@@ -8,11 +8,13 @@ import { AlertTriangle } from "lucide-react";
 const UserLogin = () => {
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
     console.log("📡 Attempting to login with:", { name, password }); // log before sending
 
@@ -45,6 +47,8 @@ const UserLogin = () => {
       } else {
         toast.error("Something went wrong. Please try again."); // network or CORS issue
       }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -95,8 +99,9 @@ const UserLogin = () => {
         <button
           type="submit"
           className="w-full mt-4 bg-pink-400 text-white  py-2 rounded-lg hover:bg-pink-600 transition duration-300"
+          disabled={loading}
         >
-          Login as User
+          {loading ? "Logging in..." : "Login as User"}
         </button>
 
         {/* links */}

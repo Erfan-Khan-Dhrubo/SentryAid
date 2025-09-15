@@ -103,7 +103,7 @@ const VolunteerSignup = () => {
           className="w-full mt-4 bg-pink-400 text-white py-2 rounded-lg hover:bg-pink-600 transition duration-300"
           disabled={loading}
         >
-          Signup as Volunteer
+          {loading ? "Signup in..." : "Signup as Volunteer"}
         </button>
 
         <div className="flex justify-between text-sm text-pink-500 mt-2">
