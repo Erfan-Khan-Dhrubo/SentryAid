@@ -323,7 +323,7 @@ const AdminLogin = () => {
               <div className="text-black">
                 <input
                   type="text"
-                  placeholder="Enter your name"
+                  placeholder="Name: admin"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   className="bg-transparent border-b focus:outline-none focus:border-pink-500 py-2 px-1  w-full mt-1"
@@ -335,7 +335,7 @@ const AdminLogin = () => {
               <div className="text-black">
                 <input
                   type="password"
-                  placeholder="Enter your password"
+                  placeholder="Password: 1234"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="bg-transparent border-b focus:outline-none focus:border-pink-500 py-2 px-1  w-full mt-1"
